@@ -1,6 +1,6 @@
 # apps/api
 
-Bootstrap base da API do EcoPickup.
+Foundation estrutural da API do EcoPickup.
 
 Escopo desta fase:
 
@@ -8,6 +8,21 @@ Escopo desta fase:
 - projeto ASP.NET Core .NET 8
 - health endpoint
 - Swagger/OpenAPI
+- foundation de persistencia com EF Core e PostgreSQL
+
+Estrutura backend atual:
+
+- `src/EcoPickup.Api`
+- `src/EcoPickup.Application`
+- `src/EcoPickup.Domain`
+- `src/EcoPickup.Infrastructure`
+
+Persistencia estrutural atual:
+
+- `EcoPickupDbContext`
+- provider Npgsql configurado
+- migration estrutural inicial
+- PostgreSQL local via Docker Compose
 
 Fora de escopo nesta fase:
 

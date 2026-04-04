@@ -3,6 +3,7 @@ using EcoPickup.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace EcoPickup.Infrastructure.DependencyInjection;
 
@@ -23,6 +24,14 @@ public static class InfrastructureServiceCollectionExtensions
         options.UseNpgsql(connectionString);
       }
     });
+
+    if (!string.IsNullOrWhiteSpace(connectionString))
+    {
+      services.AddHealthChecks()
+        .AddDbContextCheck<EcoPickupDbContext>(
+          name: "postgresql",
+          failureStatus: HealthStatus.Unhealthy);
+    }
 
     return services;
   }

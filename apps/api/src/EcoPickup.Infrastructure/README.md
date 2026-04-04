@@ -8,6 +8,9 @@ Current scope:
 - Npgsql provider configuration
 - DbContext bootstrap
 - dependency injection wiring
+- design-time DbContext factory for migrations
+- structural migration baseline
+- database health check wiring
 
 Out of scope:
 

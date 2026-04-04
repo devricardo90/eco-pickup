@@ -333,6 +333,14 @@ Persistence strategy:
 - auditable price breakdown
 - operational history preserved
 
+Current persistence foundation:
+
+- PostgreSQL `16.13` for local development through Docker Compose
+- EF Core migrations managed from `EcoPickup.Infrastructure`
+- design-time factory for `EcoPickupDbContext`
+- structural baseline table `persistence_checkpoints` used only to validate the migration pipeline
+- no product entities introduced at this stage
+
 ---
 
 ## 12. File/Image Storage Direction

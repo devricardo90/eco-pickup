@@ -167,22 +167,25 @@ Subir a base do app web em Next.js com estrutura minima.
 ---
 
 # EPIC-006 - Banco de Dados e Persistencia
-**Status:** READY
+**Status:** DONE
 
 ## Objetivo
-Preparar a camada de banco para suportar o dominio do produto.
+Preparar a camada de banco para suportar a evolucao do dominio sem implementar regras finais do produto.
 
 ## Escopo
 - configurar PostgreSQL
 - definir estrategia de migrations
-- modelar entidades iniciais
-- preparar persistencia
+- preparar persistencia estrutural
+- validar conexao local
 
 ## Criterios de aceite
 - banco sobe localmente
 - estrategia de migration definida
-- entidades iniciais definidas
+- DbContext preparado para evolucao
 - base pronta para evolucao do dominio
+- PostgreSQL validado via Docker Compose
+- migration estrutural aplicada
+- ciclo tecnico minimo de persistencia validado sem feature de produto
 
 ## Dependencias
 - EPIC-004

@@ -27,6 +27,8 @@ Planning
 - EPIC-005 concluida com foundation do frontend consolidada
 - convencoes internas da web registradas em app, components, features, hooks e lib
 - build, typecheck e dev server da web devem permanecer como gate estrutural
+- EPIC-006 concluida com PostgreSQL local, EF Core migrations e validacao basica de persistencia
+- migration estrutural inicial aplicada no banco local
 - features ainda nao devem ser implementadas
 
 ## Objetivo atual
@@ -47,10 +49,10 @@ Manter as foundations tecnica de backend e frontend estaveis sem implementar fea
 
 ## O que falta antes de desenvolver
 - manter a separacao entre foundation tecnica e features de produto
-- abrir a proxima frente estrutural de dominio e persistencia sem pular backlog
+- abrir a proxima frente de acesso e autenticacao sem misturar infraestrutura com regra de negocio
 
 ## Proximo passo recomendado
-Abrir a EPIC-006 - Banco de Dados e Persistencia como proxima frente tecnica estrutural, mantendo o dominio do produto fora desta etapa.
+Abrir a EPIC-007 - Auth e Controle de Acesso, preservando o recorte tecnico antes de avancar para fluxos de produto.
 
 ## Riscos atuais
 - comecar implementacao cedo demais

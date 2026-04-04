@@ -53,6 +53,7 @@ The project follows the **Protocolo Rick**, which means:
 
 ### Infrastructure
 - Docker
+- PostgreSQL 16.13 for local development
 - image storage
 - deployment environment
 - payment integration
@@ -103,6 +104,9 @@ backlog is broken down
 architecture foundation is defined
 execution order is approved
 
-## Next Step
+## Current Technical Baseline
 
-Prepare the full documentation foundation and then start the technical foundation of the monorepo.
+- monorepo foundation completed
+- backend foundation completed
+- frontend foundation completed
+- PostgreSQL local persistence foundation completed through Docker + EF Core
