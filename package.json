@@ -1,0 +1,17 @@
+{
+  "name": "eco-pickup",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "pnpm@10.26.0",
+  "engines": {
+    "node": "24.14.1"
+  },
+  "scripts": {
+    "install": "echo Workspace dependencies are managed with pnpm install",
+    "dev": "pnpm -r --parallel run dev",
+    "build": "pnpm -r run build",
+    "lint": "pnpm -r run lint",
+    "typecheck": "pnpm -r run typecheck",
+    "format": "pnpm -r run format"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "name": "@ecopickup/contracts",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "build": "echo contracts build placeholder",
+    "lint": "echo contracts lint placeholder",
+    "typecheck": "echo contracts typecheck placeholder",
+    "format": "echo contracts format placeholder"
+  }
+}

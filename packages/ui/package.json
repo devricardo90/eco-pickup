@@ -1,0 +1,12 @@
+{
+  "name": "@ecopickup/ui",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "build": "echo ui build placeholder",
+    "lint": "echo ui lint placeholder",
+    "typecheck": "echo ui typecheck placeholder",
+    "format": "echo ui format placeholder"
+  }
+}

@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6" />
+    <PackageReference Include="Scalar.AspNetCore" Version="2.13.19" />
+    <PackageReference Include="Scalar.AspNetCore.Swashbuckle" Version="2.9.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EcoPickup.Application\EcoPickup.Application.csproj" />
+    <ProjectReference Include="..\EcoPickup.Infrastructure\EcoPickup.Infrastructure.csproj" />
+  </ItemGroup>
+</Project>
