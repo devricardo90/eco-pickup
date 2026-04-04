@@ -286,6 +286,22 @@ src/
 
 The exact internal structure may evolve, but should keep domain clarity.
 
+Applied frontend foundation:
+
+- `apps/web/src/app`
+- `apps/web/src/components`
+- `apps/web/src/features`
+- `apps/web/src/hooks`
+- `apps/web/src/lib`
+
+Current frontend foundation includes:
+
+- App Router bootstrap
+- Tailwind CSS baseline
+- TypeScript path alias `@/* -> src/*`
+- placeholder page limited to foundation messaging
+- no product flows, auth screens or admin functionality
+
 ---
 
 ## 10. Monorepo Foundation Decision

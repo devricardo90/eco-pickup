@@ -139,7 +139,7 @@ Subir a base da API ASP.NET Core com estrutura minima de arquitetura.
 ---
 
 # EPIC-005 - Foundation do Frontend
-**Status:** READY
+**Status:** DONE
 
 ## Objetivo
 Subir a base do app web em Next.js com estrutura minima.
@@ -157,6 +157,9 @@ Subir a base do app web em Next.js com estrutura minima.
 - Tailwind configurado
 - estrutura inicial criada
 - documentacao impactada atualizada
+- build validado
+- typecheck validado
+- foundation consolidada sem feature de produto
 
 ## Dependencias
 - EPIC-003

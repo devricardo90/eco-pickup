@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "EcoPickup",
-  description: "Monorepo foundation bootstrap"
+  description: "Frontend foundation bootstrap for EcoPickup"
 };
 
 export default function RootLayout({
