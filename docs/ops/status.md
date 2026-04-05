@@ -34,7 +34,9 @@ Development
 - rota admin protegida validada com roles `USER` e `ADMIN`
 - EPIC-008A concluida com criacao autenticada de pickup request em estado inicial `draft`
 - request passa a persistir descricao, janela de coleta e address vinculada ao usuario autenticado
-- itens, upload, pricing, pagamento e fluxo admin continuam fora do escopo atual
+- EPIC-008B concluida com itens vinculados a `PickupRequest` no mesmo payload de criacao
+- request passa a persistir request + address + items em uma unica operacao autenticada
+- upload, pricing, pagamento e fluxo admin continuam fora do escopo atual
 
 ## Objetivo atual
 Expandir o produto em fatias pequenas a partir do fluxo de pickup request sem quebrar as foundations ja validadas.
@@ -54,16 +56,16 @@ Expandir o produto em fatias pequenas a partir do fluxo de pickup request sem qu
 
 ## O que falta antes de desenvolver
 - manter a separacao entre o recorte atual e os proximos escopos do produto
-- abrir `PickupItem`, upload, pricing e operacao admin em etapas separadas
+- abrir upload, pricing e operacao admin em etapas separadas
 
 ## Proximo passo recomendado
-Abrir a EPIC-008B para modelar `PickupItem` e associar itens a `PickupRequest`, sem antecipar upload, pricing ou fluxo admin.
+Abrir a EPIC-009 para suportar upload de imagens e vinculo futuro com `PickupItem`, sem antecipar pricing ou fluxo admin.
 
 ## Riscos atuais
 - comecar implementacao cedo demais
 - deixar decisoes arquiteturais implicitas
-- misturar `EPIC-008A` com upload, pricing ou pagamento
-- aumentar o endpoint inicial antes da modelagem de itens
+- misturar `EPIC-008B` com upload, pricing ou pagamento
+- expandir o fluxo de itens antes de definir a estrategia de imagem
 - backlog perder o papel de fonte oficial
 
 ## Regra operacional

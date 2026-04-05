@@ -48,7 +48,11 @@ public static class PickupRequestEndpoints
             request.Address.PostalCode,
             request.Address.Floor,
             request.Address.HasElevator,
-            request.Address.AccessNotes)),
+            request.Address.AccessNotes),
+          request.Items.Select(item => new CreatePickupItemCommand(
+            item.Category,
+            item.Description,
+            item.EstimatedSize)).ToArray()),
         cancellationToken);
 
       return Results.Created($"/api/v1/pickup-requests/{pickupRequest.Id}", pickupRequest);
@@ -63,7 +67,8 @@ public static class PickupRequestEndpoints
     string Description,
     DateTime PickupWindowStartUtc,
     DateTime PickupWindowEndUtc,
-    CreatePickupRequestAddressRequest Address);
+    CreatePickupRequestAddressRequest Address,
+    IReadOnlyList<CreatePickupRequestItemRequest> Items);
 
   public sealed record CreatePickupRequestAddressRequest(
     string Street,
@@ -72,4 +77,9 @@ public static class PickupRequestEndpoints
     string? Floor,
     bool HasElevator,
     string? AccessNotes);
+
+  public sealed record CreatePickupRequestItemRequest(
+    string Category,
+    string Description,
+    string EstimatedSize);
 }

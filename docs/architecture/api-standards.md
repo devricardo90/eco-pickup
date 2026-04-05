@@ -249,8 +249,9 @@ Suggested initial direction:
 Current implemented scope:
 
 - `POST /api/v1/pickup-requests` creates an authenticated request in `draft`
-- current payload stores description, pickup window and a single pickup address
-- items, images, pricing and status history are intentionally deferred to later slices
+- current payload stores description, pickup window, a single pickup address and one or more pickup items
+- items require `category`, `description` and `estimatedSize`
+- images, pricing and status history are intentionally deferred to later slices
 
 ### Status / tracking
 

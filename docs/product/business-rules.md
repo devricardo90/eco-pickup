@@ -70,8 +70,9 @@ Once submitted:
 
 Current implementation note:
 
-- EPIC-008A only creates the initial request foundation in `draft`
-- item, image and full submission rules remain deferred to subsequent slices
+- EPIC-008A and EPIC-008B create the request foundation in `draft`
+- the current creation payload already requires at least one item
+- image, pricing, payment and full submission workflow remain deferred to subsequent slices
 
 ---
 
@@ -85,6 +86,12 @@ Each item should capture:
 - description
 - estimated size
 - associated image(s) when available
+
+Current implementation note:
+
+- EPIC-008B persists `category`, `description` and `estimatedSize`
+- accepted sizes are `small`, `medium` and `large`
+- item photos remain out of scope for this slice
 
 Estimated size options for MVP may be normalized to:
 

@@ -28,12 +28,17 @@ public sealed class PickupRequestServiceTests
           "11122",
           "3",
           false,
-          "Ring bell 21")),
+          "Ring bell 21"),
+        [
+          new CreatePickupItemCommand("furniture", "Two-seat sofa", "large")
+        ]),
       CancellationToken.None);
 
     Assert.Equal(userId, pickupRequest.UserId);
     Assert.Equal(PickupRequestStatuses.Draft, pickupRequest.Status);
     Assert.Equal("Stockholm", pickupRequest.Address.City);
+    Assert.Single(pickupRequest.Items);
+    Assert.Equal("furniture", pickupRequest.Items[0].Category);
     Assert.Single(repository.StoredPickupRequests);
   }
 
@@ -57,7 +62,60 @@ public sealed class PickupRequestServiceTests
             "11122",
             null,
             true,
-            null)),
+            null),
+          [
+            new CreatePickupItemCommand("furniture", "Wardrobe", "large")
+          ]),
+        CancellationToken.None));
+  }
+
+  [Fact]
+  public async Task CreateAsync_ShouldThrowWhenItemsAreMissing()
+  {
+    var repository = new InMemoryPickupRequestRepository();
+    var service = new PickupRequestService(repository);
+
+    await Assert.ThrowsAsync<PickupRequestValidationException>(() =>
+      service.CreateAsync(
+        Guid.NewGuid(),
+        new CreatePickupRequestCommand(
+          "Wardrobe",
+          DateTime.UtcNow.AddDays(1),
+          DateTime.UtcNow.AddDays(1).AddHours(2),
+          new CreatePickupRequestAddressCommand(
+            "Main Street 1",
+            "Stockholm",
+            "11122",
+            null,
+            true,
+            null),
+          []),
+        CancellationToken.None));
+  }
+
+  [Fact]
+  public async Task CreateAsync_ShouldThrowWhenItemEstimatedSizeIsInvalid()
+  {
+    var repository = new InMemoryPickupRequestRepository();
+    var service = new PickupRequestService(repository);
+
+    await Assert.ThrowsAsync<PickupRequestValidationException>(() =>
+      service.CreateAsync(
+        Guid.NewGuid(),
+        new CreatePickupRequestCommand(
+          "Wardrobe",
+          DateTime.UtcNow.AddDays(1),
+          DateTime.UtcNow.AddDays(1).AddHours(2),
+          new CreatePickupRequestAddressCommand(
+            "Main Street 1",
+            "Stockholm",
+            "11122",
+            null,
+            true,
+            null),
+          [
+            new CreatePickupItemCommand("furniture", "Wardrobe", "oversized")
+          ]),
         CancellationToken.None));
   }
 

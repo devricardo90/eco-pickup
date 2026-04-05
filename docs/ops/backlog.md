@@ -284,7 +284,7 @@ Entregar o primeiro recorte de negocio para criacao de solicitacao de coleta, ma
 - pagamento
 
 #### EPIC-008B - Pickup Items
-**Status:** READY
+**Status:** DONE
 
 ##### Objetivo
 Expandir a solicitacao para suportar itens associados sem ainda abrir upload de imagem.
@@ -292,17 +292,32 @@ Expandir a solicitacao para suportar itens associados sem ainda abrir upload de 
 ##### Escopo
 - modelar `PickupItem`
 - relacionar item com `PickupRequest`
-- expandir payload de criacao/edicao conforme necessario
-- persistir itens vinculados a solicitacao
+- expandir payload de criacao da request para aceitar items
+- persistir request + address + items juntos
+- adicionar validacoes minimas para items
+- atualizar testes e documentacao impactada
 
 ##### Criterios de aceite
 - `PickupItem` modelado
 - relacao com request funcionando
+- migration criada e aplicada
+- endpoint de criacao expandido com items
 - persistencia validada
+- validacoes minimas presentes
+- testes atualizados e passando
+- Swagger, Scalar e OpenAPI continuam funcionando
 - documentacao impactada atualizada
 
 ##### Dependencias
 - EPIC-008A
+
+##### Fora de escopo
+- upload de imagem
+- `ItemPhoto`
+- pricing
+- fluxo admin
+- timeline completa
+- pagamento
 
 ---
 

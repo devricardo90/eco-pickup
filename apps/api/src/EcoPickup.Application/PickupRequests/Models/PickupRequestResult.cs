@@ -8,4 +8,5 @@ public sealed record PickupRequestResult(
   DateTime PickupWindowStartUtc,
   DateTime PickupWindowEndUtc,
   DateTime CreatedUtc,
-  PickupRequestAddressResult Address);
+  PickupRequestAddressResult Address,
+  IReadOnlyList<PickupItemResult> Items);

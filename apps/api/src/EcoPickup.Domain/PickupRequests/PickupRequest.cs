@@ -17,4 +17,6 @@ public sealed class PickupRequest
   public DateTime CreatedUtc { get; set; }
 
   public Address Address { get; set; } = null!;
+
+  public List<PickupItem> Items { get; set; } = [];
 }

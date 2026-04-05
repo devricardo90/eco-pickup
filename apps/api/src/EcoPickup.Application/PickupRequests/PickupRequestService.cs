@@ -32,9 +32,23 @@ public sealed class PickupRequestService(IPickupRequestRepository pickupRequestR
         Floor = NormalizeOptional(command.Address.Floor),
         HasElevator = command.Address.HasElevator,
         AccessNotes = NormalizeOptional(command.Address.AccessNotes)
-      }
+      },
+      Items = command.Items
+        .Select(item => new PickupItem
+        {
+          Id = Guid.NewGuid(),
+          Category = item.Category.Trim(),
+          Description = item.Description.Trim(),
+          EstimatedSize = NormalizeEstimatedSize(item.EstimatedSize),
+          CreatedUtc = DateTime.UtcNow
+        })
+        .ToList()
     };
     pickupRequest.Address.PickupRequestId = pickupRequest.Id;
+    foreach (var item in pickupRequest.Items)
+    {
+      item.PickupRequestId = pickupRequest.Id;
+    }
 
     await pickupRequestRepository.AddAsync(pickupRequest, cancellationToken);
     await pickupRequestRepository.SaveChangesAsync(cancellationToken);
@@ -71,6 +85,35 @@ public sealed class PickupRequestService(IPickupRequestRepository pickupRequestR
       errors["address.postalCode"] = ["Postal code is required."];
     }
 
+    if (command.Items.Count == 0)
+    {
+      errors["items"] = ["At least one item is required."];
+    }
+
+    for (var index = 0; index < command.Items.Count; index++)
+    {
+      var item = command.Items[index];
+
+      if (string.IsNullOrWhiteSpace(item.Category))
+      {
+        errors[$"items[{index}].category"] = ["Item category is required."];
+      }
+
+      if (string.IsNullOrWhiteSpace(item.Description))
+      {
+        errors[$"items[{index}].description"] = ["Item description is required."];
+      }
+
+      if (string.IsNullOrWhiteSpace(item.EstimatedSize))
+      {
+        errors[$"items[{index}].estimatedSize"] = ["Item estimated size is required."];
+      }
+      else if (!PickupItemSizes.All.Contains(item.EstimatedSize.Trim().ToLowerInvariant()))
+      {
+        errors[$"items[{index}].estimatedSize"] = ["Item estimated size must be one of: small, medium, large."];
+      }
+    }
+
     var pickupWindowStartUtc = EnsureUtc(command.PickupWindowStartUtc);
     var pickupWindowEndUtc = EnsureUtc(command.PickupWindowEndUtc);
 
@@ -101,6 +144,9 @@ public sealed class PickupRequestService(IPickupRequestRepository pickupRequestR
   private static string? NormalizeOptional(string? value) =>
     string.IsNullOrWhiteSpace(value) ? null : value.Trim();
 
+  private static string NormalizeEstimatedSize(string estimatedSize) =>
+    estimatedSize.Trim().ToLowerInvariant();
+
   private static PickupRequestResult ToResult(PickupRequest pickupRequest) =>
     new(
       pickupRequest.Id,
@@ -117,5 +163,13 @@ public sealed class PickupRequestService(IPickupRequestRepository pickupRequestR
         pickupRequest.Address.PostalCode,
         pickupRequest.Address.Floor,
         pickupRequest.Address.HasElevator,
-        pickupRequest.Address.AccessNotes));
+        pickupRequest.Address.AccessNotes),
+      pickupRequest.Items
+        .Select(item => new PickupItemResult(
+          item.Id,
+          item.Category,
+          item.Description,
+          item.EstimatedSize,
+          item.CreatedUtc))
+        .ToArray());
 }
