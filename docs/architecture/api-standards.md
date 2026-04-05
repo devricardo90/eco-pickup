@@ -255,11 +255,13 @@ Current implemented scope:
 - `GET /api/v1/admin/pickup-requests` lists pickup requests for `ADMIN`
 - `GET /api/v1/admin/pickup-requests/{id}` returns admin pickup request detail
 - `PATCH /api/v1/admin/pickup-requests/{id}/review` applies the first admin review decision
+- `PATCH /api/v1/admin/pickup-requests/{id}/pricing` persists the admin pricing breakdown
 - current payload stores description, pickup window, a single pickup address and one or more pickup items
 - items require `category`, `description` and `estimatedSize`
 - item detail responses now include photo metadata for the owning user
 - admin detail responses now include `address`, `items`, `photos` and current `status`
 - admin review now supports `approve` and `reject` with optional admin note
+- request responses now include pricing breakdown when the request has been priced
 - item photo upload is fixed to API-mediated write with private S3-compatible storage
 - upload validation enforces ownership, content type whitelist, max `10 MB` and max `5` photos per `PickupItem`
 - pricing, scheduling and public history/timeline exposure are intentionally deferred to later slices
@@ -305,7 +307,12 @@ Current implemented admin read scope:
 - review action is available through `PATCH /api/v1/admin/pickup-requests/{id}/review`
 - allowed transitions in the current slice are `draft -> under_review`, `draft -> rejected` and `under_review -> rejected`
 - each review action stores a status-history entry with actor, previous status, next status and optional note
-- pricing, scheduling and payment actions remain out of scope
+- pricing action is available through `PATCH /api/v1/admin/pickup-requests/{id}/pricing`
+- pricing persists `basePrice`, `sizeAdjustment`, `floorAdjustment`, `distanceAdjustment`, computed `total` and `currency`
+- pricing is currently allowed only when the request is `under_review`
+- pricing may transition the request to `quoted` or `awaiting_payment`
+- each pricing action stores a status-history entry with actor, previous status, next status and optional note
+- scheduling and payment actions remain out of scope
 
 These are directional standards, not locked implementation details yet.
 

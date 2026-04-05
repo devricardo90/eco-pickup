@@ -289,6 +289,64 @@ public sealed class PickupRequestServiceTests
         CancellationToken.None));
   }
 
+  [Fact]
+  public async Task SetPricingAsync_ShouldPersistBreakdownAndMoveToQuoted()
+  {
+    var repository = new InMemoryPickupRequestRepository();
+    var pickupRequest = CreatePickupRequest(Guid.NewGuid(), "Table", DateTime.UtcNow.AddMinutes(-15));
+    pickupRequest.Status = PickupRequestStatuses.UnderReview;
+    repository.StoredPickupRequests.Add(pickupRequest);
+    var service = new PickupRequestService(repository);
+
+    var result = await service.SetPricingAsync(
+      pickupRequest.Id,
+      Guid.NewGuid(),
+      new SetPickupRequestPricingCommand(199m, 99m, 79m, 50m, "sek", PickupRequestStatuses.Quoted, "Initial quote"),
+      CancellationToken.None);
+
+    Assert.Equal(PickupRequestStatuses.Quoted, result.Status);
+    Assert.NotNull(result.Pricing);
+    Assert.Equal(427m, result.Pricing!.Total);
+    Assert.Equal("SEK", result.Pricing.Currency);
+    Assert.Equal(427m, pickupRequest.PriceTotal);
+    Assert.Equal("pricing", pickupRequest.StatusHistory[^1].Action);
+  }
+
+  [Fact]
+  public async Task SetPricingAsync_ShouldSupportAwaitingPaymentTarget()
+  {
+    var repository = new InMemoryPickupRequestRepository();
+    var pickupRequest = CreatePickupRequest(Guid.NewGuid(), "Sofa", DateTime.UtcNow.AddMinutes(-15));
+    pickupRequest.Status = PickupRequestStatuses.UnderReview;
+    repository.StoredPickupRequests.Add(pickupRequest);
+    var service = new PickupRequestService(repository);
+
+    var result = await service.SetPricingAsync(
+      pickupRequest.Id,
+      Guid.NewGuid(),
+      new SetPickupRequestPricingCommand(200m, 0m, 0m, 0m, "SEK", PickupRequestStatuses.AwaitingPayment, null),
+      CancellationToken.None);
+
+    Assert.Equal(PickupRequestStatuses.AwaitingPayment, result.Status);
+    Assert.Equal(200m, result.Pricing!.Total);
+  }
+
+  [Fact]
+  public async Task SetPricingAsync_ShouldThrowWhenCurrentStatusIsNotUnderReview()
+  {
+    var repository = new InMemoryPickupRequestRepository();
+    var pickupRequest = CreatePickupRequest(Guid.NewGuid(), "Desk", DateTime.UtcNow.AddMinutes(-15));
+    repository.StoredPickupRequests.Add(pickupRequest);
+    var service = new PickupRequestService(repository);
+
+    await Assert.ThrowsAsync<PickupRequestValidationException>(() =>
+      service.SetPricingAsync(
+        pickupRequest.Id,
+        Guid.NewGuid(),
+        new SetPickupRequestPricingCommand(100m, 0m, 0m, 0m, "SEK", PickupRequestStatuses.Quoted, null),
+        CancellationToken.None));
+  }
+
   private sealed class InMemoryPickupRequestRepository : IPickupRequestRepository
   {
     public List<PickupRequest> StoredPickupRequests { get; } = [];

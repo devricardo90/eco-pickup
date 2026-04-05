@@ -45,6 +45,7 @@ Fluxo atual de pickup request:
 - `GET /api/v1/admin/pickup-requests`
 - `GET /api/v1/admin/pickup-requests/{id}`
 - `PATCH /api/v1/admin/pickup-requests/{id}/review`
+- `PATCH /api/v1/admin/pickup-requests/{id}/pricing`
 
 Media atual:
 
@@ -71,6 +72,16 @@ Admin review atual:
 - transicoes permitidas: `draft -> under_review`, `draft -> rejected`, `under_review -> rejected`
 - historico de review persistido por request
 - sem pricing, scheduling ou pagamento neste recorte
+
+Pricing atual:
+
+- pricing administrativo protegido por role `ADMIN`
+- breakdown minimo com `basePrice`, `sizeAdjustment`, `floorAdjustment`, `distanceAdjustment`, `total` e `currency`
+- `total` calculado no backend
+- pricing permitido apenas em request `under_review`
+- transicao para `quoted` ou `awaiting_payment`
+- historico de pricing persistido por request
+- sem scheduling ou payment neste recorte
 
 Fora de escopo nesta fase:
 

@@ -576,7 +576,7 @@ Entregar a primeira acao administrativa controlada para permitir decisao minima 
 ---
 
 # EPIC-011 - Motor de Preco MVP
-**Status:** READY
+**Status:** IN_PROGRESS
 
 ## Objetivo
 Implementar logica de preco simples e auditavel.
@@ -597,6 +597,46 @@ Implementar logica de preco simples e auditavel.
 ## Dependencias
 - EPIC-008
 - EPIC-010
+
+### Fatias de execucao
+
+#### EPIC-011A - Pricing Foundation
+**Status:** DONE
+
+##### Objetivo
+Entregar a fundacao administrativa de pricing com breakdown persistido e transicao controlada de status sem abrir scheduling ou payment.
+
+##### Escopo
+- implementar acao administrativa de pricing
+- restringir acesso a role `ADMIN`
+- modelar breakdown minimo de preco
+- persistir pricing na request
+- suportar `base price`, `size adjustment`, `floor adjustment`, `distance adjustment`, `total` e `currency`
+- aplicar transicao controlada para `quoted` ou `awaiting_payment`
+- adicionar testes aplicaveis
+- atualizar documentacao impactada
+
+##### Criterios de aceite
+- endpoint admin de pricing funcional
+- acesso restrito a `ADMIN`
+- breakdown persistido corretamente
+- total consistente com os componentes
+- transicao de status validada
+- build continua passando
+- testes aplicaveis passam
+- Swagger, Scalar e OpenAPI continuam funcionando
+- documentacao impactada atualizada
+
+##### Dependencias
+- EPIC-010B
+
+##### Fora de escopo
+- payment
+- scheduling
+- workflow administrativo completo
+- cobranca
+- upload
+- review
 
 ---
 

@@ -48,9 +48,11 @@ Development
 - admin agora consegue listar requests e abrir detalhe com `address`, `items`, `photos` e `status`
 - EPIC-010B concluida com review administrativo minimo de approve/reject
 - review admin agora aplica transicoes controladas de status e persiste historico com actor e nota opcional
+- EPIC-011A concluida com pricing foundation administrativa
+- pricing agora persiste breakdown na request e permite transicao controlada para `quoted` ou `awaiting_payment`
 
 ## Objetivo atual
-Expandir o painel admin com o menor proximo recorte operacional sem misturar pricing, scheduling ou pagamento.
+Expandir o fluxo operacional apos pricing sem misturar scheduling com payment no mesmo slice.
 
 ## O que ja existe
 - ideia do produto
@@ -70,7 +72,7 @@ Expandir o painel admin com o menor proximo recorte operacional sem misturar pri
 - abrir painel admin, pricing e pagamento em etapas separadas
 
 ## Proximo passo recomendado
-Abrir a proxima fatia administrativa para pricing foundation ou scheduling foundation, mas nao ambos no mesmo slice.
+Abrir a fundacao de scheduling como proxima fatia isolada, mantendo payment separado.
 
 ## Riscos atuais
 - comecar implementacao cedo demais

@@ -207,12 +207,25 @@ The system should store:
 - priceTotal
 - currency
 
+Current implementation note:
+
+- EPIC-011A now persists pricing directly on `PickupRequest`
+- pricing breakdown includes `priceBase`, `priceSizeAdjustment`, `priceFloorAdjustment`, `priceDistanceAdjustment`, `priceTotal` and `currency`
+- `priceTotal` is computed on the backend as the sum of the active pricing components
+- current pricing flow is admin-driven and isolated from payment
+
 Rules:
 
 - total must equal the sum of all active components
 - currency defaults to SEK
 - admin has final authority over pricing in MVP
 - all quoted requests must preserve the final breakdown used
+
+Current implementation note:
+
+- pricing is currently allowed only after review while the request is `under_review`
+- current target statuses for pricing are `quoted` or `awaiting_payment`
+- repricing after this step remains out of scope for the current slice
 
 ---
 

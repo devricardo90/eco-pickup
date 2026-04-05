@@ -38,6 +38,14 @@ public static class AdminPickupRequestEndpoints
       .Produces(StatusCodes.Status403Forbidden)
       .Produces(StatusCodes.Status404NotFound);
 
+    adminPickupRequestsGroup.MapPatch("/{id:guid}/pricing", SetPricingAsync)
+      .WithName("AdminSetPickupRequestPricing")
+      .Produces<PickupRequestResult>(StatusCodes.Status200OK)
+      .ProducesValidationProblem()
+      .Produces(StatusCodes.Status401Unauthorized)
+      .Produces(StatusCodes.Status403Forbidden)
+      .Produces(StatusCodes.Status404NotFound);
+
     return app;
   }
 
@@ -100,7 +108,58 @@ public static class AdminPickupRequestEndpoints
     }
   }
 
+  private static async Task<IResult> SetPricingAsync(
+    ClaimsPrincipal principal,
+    Guid id,
+    SetPickupRequestPricingRequest request,
+    IPickupRequestService pickupRequestService,
+    CancellationToken cancellationToken)
+  {
+    var subject = principal.FindFirstValue("sub");
+    if (!Guid.TryParse(subject, out var adminUserId))
+    {
+      return Results.Unauthorized();
+    }
+
+    try
+    {
+      var pickupRequest = await pickupRequestService.SetPricingAsync(
+        id,
+        adminUserId,
+        new SetPickupRequestPricingCommand(
+          request.BasePrice,
+          request.SizeAdjustment,
+          request.FloorAdjustment,
+          request.DistanceAdjustment,
+          request.Currency,
+          request.TargetStatus,
+          request.Note),
+        cancellationToken);
+
+      return Results.Ok(pickupRequest);
+    }
+    catch (PickupRequestValidationException ex)
+    {
+      if (ex.Errors.TryGetValue("id", out var idErrors)
+        && idErrors.Contains("Pickup request was not found."))
+      {
+        return Results.NotFound();
+      }
+
+      return Results.ValidationProblem(ex.Errors.ToDictionary(pair => pair.Key, pair => pair.Value));
+    }
+  }
+
   public sealed record ReviewPickupRequestRequest(
     string Decision,
+    string? Note);
+
+  public sealed record SetPickupRequestPricingRequest(
+    decimal BasePrice,
+    decimal SizeAdjustment,
+    decimal FloorAdjustment,
+    decimal DistanceAdjustment,
+    string Currency,
+    string TargetStatus,
     string? Note);
 }

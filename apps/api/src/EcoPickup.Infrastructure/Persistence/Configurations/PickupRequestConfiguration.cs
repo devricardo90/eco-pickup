@@ -33,6 +33,24 @@ public sealed class PickupRequestConfiguration : IEntityTypeConfiguration<Pickup
       .HasMaxLength(32)
       .IsRequired();
 
+    builder.Property(x => x.PriceBase)
+      .HasPrecision(18, 2);
+
+    builder.Property(x => x.PriceSizeAdjustment)
+      .HasPrecision(18, 2);
+
+    builder.Property(x => x.PriceFloorAdjustment)
+      .HasPrecision(18, 2);
+
+    builder.Property(x => x.PriceDistanceAdjustment)
+      .HasPrecision(18, 2);
+
+    builder.Property(x => x.PriceTotal)
+      .HasPrecision(18, 2);
+
+    builder.Property(x => x.PriceCurrency)
+      .HasMaxLength(3);
+
     builder.Property(x => x.CreatedUtc)
       .IsRequired();
 

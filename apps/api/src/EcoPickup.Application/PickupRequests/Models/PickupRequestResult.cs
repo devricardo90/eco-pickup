@@ -5,6 +5,7 @@ public sealed record PickupRequestResult(
   Guid UserId,
   string Description,
   string Status,
+  PickupRequestPricingResult? Pricing,
   DateTime PickupWindowStartUtc,
   DateTime PickupWindowEndUtc,
   DateTime CreatedUtc,

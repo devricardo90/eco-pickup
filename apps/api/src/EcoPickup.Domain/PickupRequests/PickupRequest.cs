@@ -14,6 +14,18 @@ public sealed class PickupRequest
 
   public string Status { get; set; } = PickupRequestStatuses.Draft;
 
+  public decimal? PriceBase { get; set; }
+
+  public decimal? PriceSizeAdjustment { get; set; }
+
+  public decimal? PriceFloorAdjustment { get; set; }
+
+  public decimal? PriceDistanceAdjustment { get; set; }
+
+  public decimal? PriceTotal { get; set; }
+
+  public string? PriceCurrency { get; set; }
+
   public DateTime CreatedUtc { get; set; }
 
   public Address Address { get; set; } = null!;
