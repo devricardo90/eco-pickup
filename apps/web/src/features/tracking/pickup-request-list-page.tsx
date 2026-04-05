@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { PickupRequestList } from "@/components/pickup-request-list";
 import { PickupRequestTrackingState } from "@/components/pickup-request-tracking-state";
 import { requireSession } from "@/lib/auth/session";
@@ -53,6 +54,16 @@ export async function PickupRequestListPage({ scope }: PickupRequestListPageProp
             {copy.title}
           </h1>
           <p className="mt-4 max-w-3xl text-base leading-7 text-slate-700">{copy.description}</p>
+          {scope === "owner" ? (
+            <div className="mt-6">
+              <Link
+                className="inline-flex items-center justify-center rounded-2xl bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800"
+                href="/requests/new"
+              >
+                Create pickup request
+              </Link>
+            </div>
+          ) : null}
         </section>
 
         {!result.ok ? (

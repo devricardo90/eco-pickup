@@ -37,12 +37,14 @@ src/
 - App Router validado
 - Tailwind validado
 - layout e pagina base
+- superficie autenticada de criacao para owner em `/requests/new`
 - dashboard autenticado de owner em `/requests`
 - dashboard autenticado de admin em `/admin/requests`
 - superficie autenticada de detail/tracking para owner em `/tracking/[requestId]`
 - superficie autenticada de detail/tracking para admin em `/admin/tracking/[requestId]`
 - componentes compartilhados para resumo, status atual, metadados, timeline e estados de tela
 - servicos de leitura dos endpoints de list, detail e history
+- submit autenticado de criacao via `POST /api/v1/pickup-requests`
 - testes focados no mapeamento semantico da timeline
 - auth/session foundation com login, register, logout e cookie HTTP-only de sessao
 

@@ -22,3 +22,7 @@ export type AuthSession = {
 export type AuthActionState = {
   error?: string;
 };
+
+export type PickupRequestCreateActionState = {
+  error?: string;
+};

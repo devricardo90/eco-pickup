@@ -971,6 +971,44 @@ Entregar dashboards autenticados de owner e admin para listar pickup requests ex
 - websocket
 - notificacoes
 
+#### EPIC-008C - Web Pickup Request Creation Surface
+**Status:** DONE
+
+##### Objetivo
+Entregar a primeira superficie autenticada de criacao de pickup request na web, consumindo o endpoint existente de criacao sem abrir pricing, scheduling, payment ou mutacoes administrativas.
+
+##### Escopo
+- criar superficie autenticada de criacao em `/requests/new`
+- consumir `POST /api/v1/pickup-requests`
+- capturar descricao, janela de pickup, address e um item inicial
+- reutilizar a sessao autenticada real ja entregue
+- redirecionar para o detail/tracking apos criacao bem-sucedida
+- tratar erro de validacao e erro de request
+- adicionar testes aplicaveis
+- atualizar documentacao impactada
+
+##### Criterios de aceite
+- owner autenticado consegue abrir a superficie de criacao
+- submit usa o contrato backend existente sem alteracao
+- criacao bem-sucedida redireciona para a superficie detail/tracking
+- erros basicos estao tratados
+- nenhuma mutacao administrativa nova foi criada
+- lint, typecheck, build e testes aplicaveis passam
+
+##### Dependencias
+- EPIC-008B
+- EPIC-013C
+- EPIC-013D
+- EPIC-013E
+
+##### Fora de escopo
+- multiplos itens dinamicos
+- upload de foto no frontend
+- pricing
+- scheduling
+- payment
+- mutacoes administrativas
+
 ---
 
 # EPIC-014 - Infra, Deploy e Observabilidade

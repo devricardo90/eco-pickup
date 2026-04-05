@@ -64,9 +64,11 @@ Development
 - owner e admin agora veem resumo do pedido, status atual, metadados e timeline na mesma base visual, sem abrir mutacoes novas
 - EPIC-013E concluida com dashboards autenticados de pickup request para owner e admin
 - as listas agora usam os endpoints existentes de listagem e conectam cada request ao detail/tracking autenticado
+- EPIC-008C concluida com a primeira superficie web autenticada de criacao de pickup request
+- owner agora consegue criar uma request pela web usando a sessao real e o contrato existente de criacao, com redirecionamento para detail/tracking apos sucesso
 
 ## Objetivo atual
-Preparar o proximo slice apos os dashboards autenticados de pickup request sem misturar listagem/visibilidade com mutacoes operacionais novas.
+Preparar o proximo slice apos a superficie web de criacao sem misturar criacao inicial com pricing, scheduling, payment ou mutacoes administrativas.
 
 ## O que ja existe
 - ideia do produto
@@ -86,7 +88,7 @@ Preparar o proximo slice apos os dashboards autenticados de pickup request sem m
 - abrir painel admin, pricing e pagamento em etapas separadas
 
 ## Proximo passo recomendado
-Abrir o proximo recorte operacional apos authenticated pickup request list/dashboard, como pickup request creation surface, execution tracking detalhado ou disposal record.
+Abrir o proximo recorte operacional apos web pickup request creation surface, como pickup request multi-item UX, upload de foto no frontend ou execution tracking detalhado.
 
 ## Riscos atuais
 - comecar implementacao cedo demais

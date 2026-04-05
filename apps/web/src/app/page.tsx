@@ -67,6 +67,7 @@ export default async function HomePage() {
               <li>Next.js 16 App Router foundation</li>
               <li>TypeScript baseline</li>
               <li>Tailwind CSS baseline</li>
+              <li>Authenticated pickup request creation surface for owner using the existing create endpoint</li>
               <li>Authenticated owner/admin list dashboards backed by existing list endpoints</li>
               <li>Authenticated owner/admin detail surfaces composed from existing detail + history endpoints</li>
               <li>Frontend auth/session foundation backed by JWT login and HTTP-only cookies</li>
@@ -93,6 +94,9 @@ export default async function HomePage() {
             <ul className="mt-4 space-y-3 text-sm leading-6 text-emerald-950">
               <li>
                 Owner dashboard: <code>/requests</code>
+              </li>
+              <li>
+                Owner create route: <code>/requests/new</code>
               </li>
               <li>
                 Admin dashboard: <code>/admin/requests</code>
