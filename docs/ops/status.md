@@ -56,9 +56,11 @@ Development
 - payment agora persiste `Payment`, cria payment session, recebe confirmacao segura por webhook e aplica a transicao controlada `awaiting_payment -> paid`
 - EPIC-013A concluida com tracking / history foundation
 - timeline e historico agora podem ser consultados pelo dono autenticado e por `ADMIN` sem abrir novas mutacoes operacionais
+- EPIC-013B concluida com a primeira superficie frontend de tracking/status
+- web agora consome os endpoints de history para owner e admin em rotas read-only com status destacado, timeline legivel e estados de loading/erro/vazio
 
 ## Objetivo atual
-Preparar o proximo slice apos tracking / history foundation sem misturar a timeline com novas mutacoes operacionais.
+Preparar o proximo slice apos a visibilidade frontend de tracking sem misturar acompanhamento com novas mutacoes operacionais.
 
 ## O que ja existe
 - ideia do produto
@@ -78,7 +80,7 @@ Preparar o proximo slice apos tracking / history foundation sem misturar a timel
 - abrir painel admin, pricing e pagamento em etapas separadas
 
 ## Proximo passo recomendado
-Abrir o proximo recorte operacional apos tracking / history foundation, como status execution tracking, disposal record ou consolidacao visual no frontend.
+Abrir o proximo recorte operacional apos a superficie frontend de tracking, como execution tracking detalhado, disposal record ou autenticacao real da web.
 
 ## Riscos atuais
 - comecar implementacao cedo demais

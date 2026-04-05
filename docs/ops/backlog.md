@@ -809,6 +809,48 @@ Entregar a leitura inicial de timeline e historico da pickup request para user e
 - reabertura de payment
 - workflow administrativo completo
 
+#### EPIC-013B - Frontend Tracking / Status Read Surface
+**Status:** DONE
+
+##### Objetivo
+Entregar a primeira superficie visual de acompanhamento no frontend, consumindo os endpoints de history ja existentes para exibir status atual e timeline em modo somente leitura.
+
+##### Escopo
+- consumir `GET /api/v1/pickup-requests/{id}/history`
+- consumir `GET /api/v1/admin/pickup-requests/{id}/history`
+- destacar `currentStatus`
+- renderizar timeline legivel a partir de `events[]`
+- mapear labels humanas para `action`, `fromStatus` e `toStatus`
+- tratar loading, empty state e error state
+- reutilizar componentes entre owner e admin
+- adicionar testes de mapeamento visual
+- atualizar documentacao impactada
+
+##### Criterios de aceite
+- frontend consome os endpoints de history corretamente
+- status atual aparece em destaque
+- timeline renderiza o contrato sem mutacao
+- eventos sistemicos aparecem com ator legivel
+- datas aparecem formatadas corretamente
+- loading, erro e vazio estao tratados
+- nenhuma mutacao nova foi criada
+- testes aplicaveis passam
+- build, lint e typecheck continuam passando
+
+##### Dependencias
+- EPIC-013A
+- EPIC-005
+
+##### Fora de escopo
+- novas mutacoes backend
+- reabertura de review
+- reabertura de pricing
+- reabertura de scheduling
+- reabertura de payment
+- polling
+- websocket
+- notificacoes
+
 ---
 
 # EPIC-014 - Infra, Deploy e Observabilidade

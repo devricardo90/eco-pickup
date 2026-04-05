@@ -10,8 +10,8 @@ export default function HomePage() {
             EcoPickup web bootstrap is stable and intentionally feature-free.
           </h1>
           <p className="mt-4 max-w-3xl text-base leading-7 text-slate-700">
-            This app exists to validate the Next.js foundation, internal folder conventions,
-            Tailwind baseline and development workflow before any product experience is built.
+            This app now keeps the foundation stable while opening the first real read-only
+            product surface: pickup request tracking and timeline visibility.
           </p>
         </section>
 
@@ -24,7 +24,7 @@ export default function HomePage() {
               <li>Next.js 16 App Router foundation</li>
               <li>TypeScript baseline</li>
               <li>Tailwind CSS baseline</li>
-              <li>Folder conventions for app, components, features, hooks and lib</li>
+              <li>Read-only owner/admin tracking routes backed by the API history endpoints</li>
             </ul>
           </article>
 
@@ -33,26 +33,46 @@ export default function HomePage() {
               Explicitly out of scope
             </h2>
             <ul className="mt-4 space-y-3 text-sm leading-6 text-slate-700">
-              <li>User flows and authentication</li>
-              <li>Admin screens and dashboard logic</li>
-              <li>Business forms, API integration and state management</li>
-              <li>Any MVP feature behavior</li>
+              <li>Login and session handling in the frontend</li>
+              <li>Any operational mutation buttons or retry flows</li>
+              <li>Realtime polling, websockets and notifications</li>
+              <li>Scheduling, pricing or payment editing from the web app</li>
             </ul>
           </article>
         </section>
 
-        <section className="rounded-[1.5rem] border border-emerald-950/10 bg-emerald-50/80 p-6 shadow-[0_18px_48px_rgba(16,85,54,0.08)]">
-          <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-900">
-            Current structure
-          </h2>
-          <pre className="mt-4 overflow-x-auto rounded-2xl bg-emerald-950 px-5 py-4 text-sm leading-6 text-emerald-100">
-{`src/
-  app/
-  components/
-  features/
-  hooks/
-  lib/`}
-          </pre>
+        <section className="grid gap-4 md:grid-cols-2">
+          <article className="rounded-[1.5rem] border border-emerald-950/10 bg-emerald-50/80 p-6 shadow-[0_18px_48px_rgba(16,85,54,0.08)]">
+            <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-900">
+              Tracking surfaces
+            </h2>
+            <ul className="mt-4 space-y-3 text-sm leading-6 text-emerald-950">
+              <li>
+                Owner route: <code>/tracking/[requestId]</code>
+              </li>
+              <li>
+                Admin route: <code>/admin/tracking/[requestId]</code>
+              </li>
+              <li>Both routes stay read-only and reuse the same timeline components.</li>
+            </ul>
+          </article>
+
+          <article className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-[0_18px_48px_rgba(15,23,42,0.08)]">
+            <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-700">
+              Required configuration
+            </h2>
+            <ul className="mt-4 space-y-3 text-sm leading-6 text-slate-700">
+              <li>
+                <code>ECOPICKUP_API_BASE_URL</code>
+              </li>
+              <li>
+                <code>ECOPICKUP_WEB_OWNER_ACCESS_TOKEN</code>
+              </li>
+              <li>
+                <code>ECOPICKUP_WEB_ADMIN_ACCESS_TOKEN</code>
+              </li>
+            </ul>
+          </article>
         </section>
       </div>
     </main>
