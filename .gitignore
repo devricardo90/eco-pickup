@@ -18,6 +18,7 @@ logs/
 .turbo/
 tmp/
 temp/
+.dotnet/
 dotnet-install.ps1
 *.tsbuildinfo
 

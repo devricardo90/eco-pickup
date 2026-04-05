@@ -1,4 +1,5 @@
 using EcoPickup.Domain.Identity;
+using EcoPickup.Domain.PickupRequests;
 using EcoPickup.Infrastructure.Persistence.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,6 +9,8 @@ public sealed class EcoPickupDbContext(DbContextOptions<EcoPickupDbContext> opti
   : DbContext(options)
 {
   public DbSet<AuthUser> AuthUsers => Set<AuthUser>();
+  public DbSet<PickupRequest> PickupRequests => Set<PickupRequest>();
+  public DbSet<Address> Addresses => Set<Address>();
 
   public DbSet<PersistenceCheckpoint> PersistenceCheckpoints => Set<PersistenceCheckpoint>();
 

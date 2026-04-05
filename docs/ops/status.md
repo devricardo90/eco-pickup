@@ -1,7 +1,7 @@
 # EcoPickup - Status Executivo Inicial
 
 ## Estado atual
-Projeto em fase de foundation tecnica validada e inicio controlado de desenvolvimento.
+Projeto em development com a primeira fatia de fluxo de negocio aberta de forma controlada.
 
 ## Fase atual da esteira
 Development
@@ -32,10 +32,12 @@ Development
 - EPIC-007 concluida com registro, login, JWT e controle basico de acesso
 - rota autenticada minima validada com `/api/v1/auth/me`
 - rota admin protegida validada com roles `USER` e `ADMIN`
-- features ainda nao devem ser implementadas
+- EPIC-008A concluida com criacao autenticada de pickup request em estado inicial `draft`
+- request passa a persistir descricao, janela de coleta e address vinculada ao usuario autenticado
+- itens, upload, pricing, pagamento e fluxo admin continuam fora do escopo atual
 
 ## Objetivo atual
-Manter as foundations tecnica de backend, frontend, persistencia e auth estaveis sem misturar fluxo de produto.
+Expandir o produto em fatias pequenas a partir do fluxo de pickup request sem quebrar as foundations ja validadas.
 
 ## O que ja existe
 - ideia do produto
@@ -51,18 +53,18 @@ Manter as foundations tecnica de backend, frontend, persistencia e auth estaveis
 - decisao da foundation do monorepo registrada
 
 ## O que falta antes de desenvolver
-- manter a separacao entre foundation tecnica e features de produto
-- abrir a primeira frente de negocio do produto sem quebrar a disciplina de backlog
+- manter a separacao entre o recorte atual e os proximos escopos do produto
+- abrir `PickupItem`, upload, pricing e operacao admin em etapas separadas
 
 ## Proximo passo recomendado
-Abrir a EPIC-008 - Fluxo de Solicitacao de Coleta, usando a base de auth ja validada sem antecipar pagamentos ou painel admin completo.
+Abrir a EPIC-008B para modelar `PickupItem` e associar itens a `PickupRequest`, sem antecipar upload, pricing ou fluxo admin.
 
 ## Riscos atuais
 - comecar implementacao cedo demais
 - deixar decisoes arquiteturais implicitas
-- misturar scaffold estrutural com feature de produto
-- avancar para feature antes de consolidar foundations tecnicas de backend e frontend
+- misturar `EPIC-008A` com upload, pricing ou pagamento
+- aumentar o endpoint inicial antes da modelagem de itens
 - backlog perder o papel de fonte oficial
 
 ## Regra operacional
-Nenhuma feature de produto deve comecar antes do encerramento controlado da etapa de planejamento.
+Cada nova feature deve entrar por fatias controladas, com docs, backlog e validacoes atualizados no mesmo slice.

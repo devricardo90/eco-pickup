@@ -68,6 +68,11 @@ Once submitted:
 
 - the user cannot directly change core operational fields if the request is already under review, quoted, paid, scheduled, or beyond
 
+Current implementation note:
+
+- EPIC-008A only creates the initial request foundation in `draft`
+- item, image and full submission rules remain deferred to subsequent slices
+
 ---
 
 ## 4. Item Rules

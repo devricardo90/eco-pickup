@@ -221,7 +221,7 @@ Permitir cadastro, login e autorizacao por perfil.
 ---
 
 # EPIC-008 - Fluxo de Solicitacao de Coleta
-**Status:** READY
+**Status:** IN_PROGRESS
 
 ## Objetivo
 Permitir ao usuario criar um pedido de coleta completo.
@@ -243,6 +243,66 @@ Permitir ao usuario criar um pedido de coleta completo.
 - EPIC-005
 - EPIC-006
 - EPIC-007
+
+### Fatias de execucao
+
+#### EPIC-008A - Pickup Request Foundation
+**Status:** DONE
+
+##### Objetivo
+Entregar o primeiro recorte de negocio para criacao de solicitacao de coleta, mantendo o fluxo minimo e sem antecipar itens, upload, pricing ou operacao admin.
+
+##### Escopo
+- modelar `PickupRequest`
+- modelar `Address`
+- relacionar request e address
+- criar migration correspondente
+- expor endpoint autenticado minimo de criacao
+- persistir request vinculada ao usuario autenticado
+- atualizar documentacao impactada
+
+##### Criterios de aceite
+- `PickupRequest` modelado
+- `Address` modelado
+- migration criada
+- endpoint `POST /api/v1/pickup-requests` funcional
+- request persistida corretamente
+- vinculo com usuario autenticado funcionando
+- Swagger e Scalar continuam funcionais
+- build continua passando
+- documentacao impactada atualizada
+
+##### Dependencias
+- EPIC-007
+
+##### Fora de escopo
+- `PickupItem`
+- upload de imagem
+- pricing
+- timeline completa
+- fluxo admin
+- pagamento
+
+#### EPIC-008B - Pickup Items
+**Status:** READY
+
+##### Objetivo
+Expandir a solicitacao para suportar itens associados sem ainda abrir upload de imagem.
+
+##### Escopo
+- modelar `PickupItem`
+- relacionar item com `PickupRequest`
+- expandir payload de criacao/edicao conforme necessario
+- persistir itens vinculados a solicitacao
+
+##### Criterios de aceite
+- `PickupItem` modelado
+- relacao com request funcionando
+- persistencia validada
+- documentacao impactada atualizada
+
+##### Dependencias
+- EPIC-008A
 
 ---
 

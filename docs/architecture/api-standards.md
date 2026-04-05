@@ -246,6 +246,12 @@ Suggested initial direction:
 - `GET /api/v1/pickup-requests`
 - `GET /api/v1/pickup-requests/{id}`
 
+Current implemented scope:
+
+- `POST /api/v1/pickup-requests` creates an authenticated request in `draft`
+- current payload stores description, pickup window and a single pickup address
+- items, images, pricing and status history are intentionally deferred to later slices
+
 ### Status / tracking
 
 - `GET /api/v1/pickup-requests/{id}/history`

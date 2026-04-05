@@ -1,4 +1,5 @@
 using EcoPickup.Api.Auth;
+using EcoPickup.Api.PickupRequests;
 using EcoPickup.Infrastructure.Authentication;
 using Scalar.AspNetCore;
 using EcoPickup.Infrastructure.DependencyInjection;
@@ -83,5 +84,6 @@ app.MapGet("/", () => Results.Ok(new
   status = "bootstrap"
 }));
 app.MapAuthEndpoints();
+app.MapPickupRequestEndpoints();
 
 app.Run();

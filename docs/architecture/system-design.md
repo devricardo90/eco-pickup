@@ -260,6 +260,7 @@ Current backend foundation includes:
 - dependency injection wiring for infrastructure
 - PostgreSQL provider configuration prepared for future persistence work
 - auth foundation with register, login, JWT and protected endpoints
+- initial pickup request foundation with `PickupRequest`, `Address` and authenticated draft creation endpoint
 
 ---
 
@@ -340,7 +341,7 @@ Current persistence foundation:
 - EF Core migrations managed from `EcoPickup.Infrastructure`
 - design-time factory for `EcoPickupDbContext`
 - structural baseline table `persistence_checkpoints` used only to validate the migration pipeline
-- no product entities introduced at this stage
+- auth identity tables and the initial `pickup_requests` plus `addresses` model for EPIC-008A
 
 ---
 

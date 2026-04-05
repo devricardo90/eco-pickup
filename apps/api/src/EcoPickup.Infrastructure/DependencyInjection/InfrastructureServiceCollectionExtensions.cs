@@ -1,7 +1,9 @@
 using EcoPickup.Application.Authentication.Abstractions;
+using EcoPickup.Application.PickupRequests.Abstractions;
 using EcoPickup.Application.DependencyInjection;
 using EcoPickup.Infrastructure.Authentication;
 using EcoPickup.Infrastructure.Persistence;
+using EcoPickup.Infrastructure.PickupRequests;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,6 +24,7 @@ public static class InfrastructureServiceCollectionExtensions
     services.AddSingleton<IPasswordHashService, Pbkdf2PasswordHashService>();
     services.AddSingleton<IAccessTokenService, JwtAccessTokenService>();
     services.AddScoped<IAuthUserRepository, AuthUserRepository>();
+    services.AddScoped<IPickupRequestRepository, PickupRequestRepository>();
 
     var connectionString = configuration.GetConnectionString("Database");
 
