@@ -10,6 +10,9 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -85,5 +88,6 @@ app.MapGet("/", () => Results.Ok(new
 }));
 app.MapAuthEndpoints();
 app.MapPickupRequestEndpoints();
+app.MapPickupItemPhotoEndpoints();
 
 app.Run();

@@ -15,4 +15,6 @@ public sealed class PickupItem
   public DateTime CreatedUtc { get; set; }
 
   public PickupRequest PickupRequest { get; set; } = null!;
+
+  public List<ItemPhoto> Photos { get; set; } = [];
 }

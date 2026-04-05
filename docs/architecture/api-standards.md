@@ -251,9 +251,13 @@ Current implemented scope:
 - `POST /api/v1/pickup-requests` creates an authenticated request in `draft`
 - `GET /api/v1/pickup-requests` lists authenticated user requests
 - `GET /api/v1/pickup-requests/{id}` returns authenticated user request detail with ownership enforcement
+- `POST /api/v1/pickup-items/{id}/photos` uploads one authenticated item photo via multipart form-data
 - current payload stores description, pickup window, a single pickup address and one or more pickup items
 - items require `category`, `description` and `estimatedSize`
-- images, pricing and status history are intentionally deferred to later slices
+- item detail responses now include photo metadata for the owning user
+- item photo upload is fixed to API-mediated write with private S3-compatible storage
+- upload validation enforces ownership, content type whitelist, max `10 MB` and max `5` photos per `PickupItem`
+- pricing and status history are intentionally deferred to later slices
 
 Planned near-term direction:
 
@@ -265,11 +269,11 @@ Planned near-term direction:
 
 ### Images
 
-- `POST /api/v1/pickup-requests/{id}/images`
+- `POST /api/v1/pickup-items/{id}/photos`
 
-Recommended foundation before implementation:
+Implemented MVP contract:
 
-- final upload route may move to an item-oriented shape such as `POST /api/v1/pickup-items/{id}/photos`
+- the route is item-oriented as `POST /api/v1/pickup-items/{id}/photos`
 - the contract is fixed to API-mediated upload for MVP
 - content type whitelist is `image/jpeg`, `image/png`, `image/webp`
 - max size is `10 MB`

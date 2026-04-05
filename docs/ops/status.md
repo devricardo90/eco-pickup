@@ -36,14 +36,17 @@ Development
 - request passa a persistir descricao, janela de coleta e address vinculada ao usuario autenticado
 - EPIC-008B concluida com itens vinculados a `PickupRequest` no mesmo payload de criacao
 - request passa a persistir request + address + items em uma unica operacao autenticada
-- upload, pricing, pagamento e fluxo admin continuam fora do escopo atual
+- pricing, pagamento e fluxo admin continuam fora do escopo atual
 - EPIC-009A concluida com fundacao tecnica de midia definida antes do upload real
 - leitura minima de request foi identificada como suporte necessario para ownership e exibicao futura de fotos
 - EPIC-009R concluida com listagem e detalhe de pickup requests para o usuario autenticado
-- leitura atual retorna request, address e items, sem fotos e sem escopo administrativo
+- EPIC-009B concluida com upload real de `ItemPhoto` para `PickupItem`
+- storage S3-compatible validado localmente com MinIO
+- metadata de foto persistida no banco com ownership enforcement, validacao de tipo/tamanho e limite de `5` fotos por item
+- leitura atual retorna request, address, items e fotos do item para o dono autenticado
 
 ## Objetivo atual
-Executar o upload real de fotos sobre uma fundacao de midia ja definida e com leitura minima pronta.
+Abrir a EPIC-010 para leitura e operacao administrativa sobre requests, items e fotos ja entregues.
 
 ## O que ja existe
 - ideia do produto
@@ -60,10 +63,10 @@ Executar o upload real de fotos sobre uma fundacao de midia ja definida e com le
 
 ## O que falta antes de desenvolver
 - manter a separacao entre o recorte atual e os proximos escopos do produto
-- abrir upload real, pricing e operacao admin em etapas separadas
+- abrir painel admin, pricing e pagamento em etapas separadas
 
 ## Proximo passo recomendado
-Abrir a EPIC-009B para implementar upload real de fotos em `PickupItem` usando a fundacao de midia ja definida.
+Abrir a EPIC-010 para expor o painel admin sem misturar pricing ou pagamento.
 
 ## Riscos atuais
 - comecar implementacao cedo demais

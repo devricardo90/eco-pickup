@@ -32,5 +32,10 @@ public sealed class PickupItemConfiguration : IEntityTypeConfiguration<PickupIte
 
     builder.Property(x => x.CreatedUtc)
       .IsRequired();
+
+    builder.HasMany(x => x.Photos)
+      .WithOne(x => x.PickupItem)
+      .HasForeignKey(x => x.PickupItemId)
+      .OnDelete(DeleteBehavior.Cascade);
   }
 }

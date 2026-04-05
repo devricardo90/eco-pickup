@@ -4,6 +4,7 @@ using EcoPickup.Application.DependencyInjection;
 using EcoPickup.Infrastructure.Authentication;
 using EcoPickup.Infrastructure.Persistence;
 using EcoPickup.Infrastructure.PickupRequests;
+using EcoPickup.Infrastructure.Storage;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,6 +26,9 @@ public static class InfrastructureServiceCollectionExtensions
     services.AddSingleton<IAccessTokenService, JwtAccessTokenService>();
     services.AddScoped<IAuthUserRepository, AuthUserRepository>();
     services.AddScoped<IPickupRequestRepository, PickupRequestRepository>();
+    services.AddScoped<IPickupItemPhotoRepository, PickupRequestRepository>();
+    services.Configure<ObjectStorageOptions>(configuration.GetSection(ObjectStorageOptions.SectionName));
+    services.AddSingleton<IItemPhotoStorage, S3ItemPhotoStorage>();
 
     var connectionString = configuration.GetConnectionString("Database");
 

@@ -415,7 +415,7 @@ Garantir leitura minima de pickup request para ownership, verificacao de detalhe
 - pagamento
 
 #### EPIC-009B - Item Photo Upload
-**Status:** READY
+**Status:** DONE
 
 ##### Objetivo
 Implementar upload real de fotos de item sobre a fundacao de midia previamente definida.
@@ -435,6 +435,36 @@ Implementar upload real de fotos de item sobre a fundacao de midia previamente d
 - leitura de fotos no detalhe funcional
 - testes passando
 - Swagger, Scalar e OpenAPI atualizados
+
+##### Fora de escopo
+- painel admin
+- pricing
+- pagamento
+- workflow administrativo completo
+- direct upload
+- reabertura de provider ou estrategia de upload
+
+##### Dependencias
+- EPIC-009A
+- EPIC-009R
+
+#### EPIC-009C - Item Photo Capture Reference
+**Status:** DONE
+
+##### Objetivo
+Registrar um conjunto de referencia para orientar captura e revisao operacional de fotos por item antes da abertura do upload real no produto.
+
+##### Escopo
+- analisar um conjunto de referencia no Stitch para item do tipo sofa
+- adicionar os assets de referencia ao repositorio
+- documentar aderencia das imagens ao fluxo operacional
+- registrar recomendacoes praticas para copy e revisao admin
+
+##### Criterios de aceite
+- conjunto de referencia documentado
+- assets adicionados ao repositorio
+- aderencia das imagens analisada
+- recomendacoes praticas registradas para EPIC-009B
 
 ##### Dependencias
 - EPIC-009A

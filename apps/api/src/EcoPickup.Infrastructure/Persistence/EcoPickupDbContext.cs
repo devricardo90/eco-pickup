@@ -12,6 +12,7 @@ public sealed class EcoPickupDbContext(DbContextOptions<EcoPickupDbContext> opti
   public DbSet<PickupRequest> PickupRequests => Set<PickupRequest>();
   public DbSet<Address> Addresses => Set<Address>();
   public DbSet<PickupItem> PickupItems => Set<PickupItem>();
+  public DbSet<ItemPhoto> ItemPhotos => Set<ItemPhoto>();
 
   public DbSet<PersistenceCheckpoint> PersistenceCheckpoints => Set<PersistenceCheckpoint>();
 

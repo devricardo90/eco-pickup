@@ -16,6 +16,20 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+  minio:
+    image: minio/minio:latest
+    container_name: ecopickup-minio
+    restart: unless-stopped
+    environment:
+      MINIO_ROOT_USER: ${ECOPICKUP_MINIO_ROOT_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${ECOPICKUP_MINIO_ROOT_PASSWORD:-minioadmin}
+    command: server /data --console-address ":9001"
+    ports:
+      - "${ECOPICKUP_MINIO_API_PORT:-9000}:9000"
+      - "${ECOPICKUP_MINIO_CONSOLE_PORT:-9001}:9001"
+    volumes:
+      - ecopickup-minio-data:/data
 
 volumes:
   ecopickup-postgres-data:
+  ecopickup-minio-data:

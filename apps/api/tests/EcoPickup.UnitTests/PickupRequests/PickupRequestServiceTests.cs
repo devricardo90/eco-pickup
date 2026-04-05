@@ -156,6 +156,34 @@ public sealed class PickupRequestServiceTests
     Assert.Null(result);
   }
 
+  [Fact]
+  public async Task GetByIdAsync_ShouldIncludeItemPhotosInRequestDetail()
+  {
+    var repository = new InMemoryPickupRequestRepository();
+    var ownerId = Guid.NewGuid();
+    var pickupRequest = CreatePickupRequest(ownerId, "Dining table", DateTime.UtcNow.AddMinutes(-15));
+    pickupRequest.Items[0].Photos.Add(
+      new ItemPhoto
+      {
+        Id = Guid.NewGuid(),
+        PickupItemId = pickupRequest.Items[0].Id,
+        StorageKey = "pickup-requests/request/items/item/photos/photo.jpg",
+        OriginalFileName = "photo.jpg",
+        ContentType = "image/jpeg",
+        SizeBytes = 512,
+        CreatedUtc = DateTime.UtcNow
+      });
+    repository.StoredPickupRequests.Add(pickupRequest);
+
+    var service = new PickupRequestService(repository);
+
+    var result = await service.GetByIdAsync(pickupRequest.Id, ownerId, CancellationToken.None);
+
+    Assert.NotNull(result);
+    Assert.Single(result.Items[0].Photos);
+    Assert.Equal("photo.jpg", result.Items[0].Photos[0].OriginalFileName);
+  }
+
   private sealed class InMemoryPickupRequestRepository : IPickupRequestRepository
   {
     public List<PickupRequest> StoredPickupRequests { get; } = [];

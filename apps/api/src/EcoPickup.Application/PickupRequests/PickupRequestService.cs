@@ -212,6 +212,16 @@ public sealed class PickupRequestService(IPickupRequestRepository pickupRequestR
           item.Category,
           item.Description,
           item.EstimatedSize,
-          item.CreatedUtc))
+          item.CreatedUtc,
+          item.Photos
+            .OrderBy(photo => photo.CreatedUtc)
+            .Select(photo => new PickupItemPhotoResult(
+              photo.Id,
+              photo.StorageKey,
+              photo.OriginalFileName,
+              photo.ContentType,
+              photo.SizeBytes,
+              photo.CreatedUtc))
+            .ToArray()))
         .ToArray());
 }

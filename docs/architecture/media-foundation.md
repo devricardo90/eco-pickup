@@ -192,3 +192,31 @@ EPIC-009B must not reopen:
 - photo count policy
 
 Those decisions are already fixed in this foundation document.
+
+Implementation note after EPIC-009B:
+
+- `ItemPhoto` is now implemented in code and persisted in PostgreSQL
+- upload runs through `POST /api/v1/pickup-items/{id}/photos`
+- local S3-compatible development flow is validated with MinIO
+- request detail now includes item photo metadata for the authenticated owner
+
+---
+
+## 10. Operational Capture Reference
+
+The repository now includes an initial reference set for furniture photo capture:
+
+- document: `docs/product/item-photo-reference.md`
+- local assets: `docs/assets/stitch/eco-pick-sofa/`
+
+This reference set is intended to guide:
+
+- user-facing upload instructions
+- admin review expectations
+- future category-specific capture guidance
+
+Current working recommendation for MVP:
+
+- keep backend enforcement at the generic media-rule level
+- keep category-specific framing guidance in product and operational documentation
+- do not hardcode sofa-specific photo rules in EPIC-009B

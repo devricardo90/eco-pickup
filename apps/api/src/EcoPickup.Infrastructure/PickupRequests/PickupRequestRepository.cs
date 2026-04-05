@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EcoPickup.Infrastructure.PickupRequests;
 
-public sealed class PickupRequestRepository(EcoPickupDbContext dbContext) : IPickupRequestRepository
+public sealed class PickupRequestRepository(EcoPickupDbContext dbContext) : IPickupRequestRepository, IPickupItemPhotoRepository
 {
   public Task AddAsync(PickupRequest pickupRequest, CancellationToken cancellationToken) =>
     dbContext.PickupRequests.AddAsync(pickupRequest, cancellationToken).AsTask();
@@ -13,8 +13,10 @@ public sealed class PickupRequestRepository(EcoPickupDbContext dbContext) : IPic
   public async Task<IReadOnlyList<PickupRequest>> GetByUserIdAsync(Guid userId, CancellationToken cancellationToken) =>
     await dbContext.PickupRequests
       .AsNoTracking()
+      .AsSplitQuery()
       .Include(pickupRequest => pickupRequest.Address)
       .Include(pickupRequest => pickupRequest.Items)
+      .ThenInclude(item => item.Photos)
       .Where(pickupRequest => pickupRequest.UserId == userId)
       .OrderByDescending(pickupRequest => pickupRequest.CreatedUtc)
       .ToListAsync(cancellationToken);
@@ -22,11 +24,25 @@ public sealed class PickupRequestRepository(EcoPickupDbContext dbContext) : IPic
   public Task<PickupRequest?> GetByIdAsync(Guid id, Guid userId, CancellationToken cancellationToken) =>
     dbContext.PickupRequests
       .AsNoTracking()
+      .AsSplitQuery()
       .Include(pickupRequest => pickupRequest.Address)
       .Include(pickupRequest => pickupRequest.Items)
+      .ThenInclude(item => item.Photos)
       .SingleOrDefaultAsync(
         pickupRequest => pickupRequest.Id == id && pickupRequest.UserId == userId,
         cancellationToken);
+
+  public Task<PickupItem?> GetOwnedItemByIdAsync(Guid itemId, Guid userId, CancellationToken cancellationToken) =>
+    dbContext.PickupItems
+      .AsNoTracking()
+      .Include(item => item.PickupRequest)
+      .Include(item => item.Photos)
+      .SingleOrDefaultAsync(
+        item => item.Id == itemId && item.PickupRequest.UserId == userId,
+        cancellationToken);
+
+  public Task AddPhotoAsync(ItemPhoto photo, CancellationToken cancellationToken) =>
+    dbContext.ItemPhotos.AddAsync(photo, cancellationToken).AsTask();
 
   public Task SaveChangesAsync(CancellationToken cancellationToken) =>
     dbContext.SaveChangesAsync(cancellationToken);

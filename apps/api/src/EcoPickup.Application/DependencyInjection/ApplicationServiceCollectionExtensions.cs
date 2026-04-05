@@ -12,6 +12,7 @@ public static class ApplicationServiceCollectionExtensions
   {
     services.AddScoped<IAuthService, AuthService>();
     services.AddScoped<IPickupRequestService, PickupRequestService>();
+    services.AddScoped<IPickupItemPhotoService, PickupItemPhotoService>();
     return services;
   }
 }

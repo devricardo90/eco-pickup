@@ -5,4 +5,5 @@ public sealed record PickupItemResult(
   string Category,
   string Description,
   string EstimatedSize,
-  DateTime CreatedUtc);
+  DateTime CreatedUtc,
+  IReadOnlyList<PickupItemPhotoResult> Photos);

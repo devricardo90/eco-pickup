@@ -92,14 +92,18 @@ Current implementation note:
 
 - EPIC-008B persists `category`, `description` and `estimatedSize`
 - accepted sizes are `small`, `medium` and `large`
-- item photos remain out of scope for this slice
+- EPIC-009B now persists `ItemPhoto` metadata under `PickupItem`
+- item photo upload is authenticated and ownership-scoped to the request owner
+- allowed content types are `image/jpeg`, `image/png` and `image/webp`
+- max file size is `10 MB`
+- max quantity is `5` photos per item
 
-Planned next-step note:
+Current implementation note:
 
-- item photos will attach to `PickupItem`
-- photo upload must enforce ownership, file type and file size constraints
-- image support should be opened only after media foundation and read/detail support are defined
-- media foundation is now fixed for MVP with API-mediated upload and private object storage
+- item photos attach to `PickupItem`, not directly to `PickupRequest`
+- upload enforcement validates ownership, file type, file signature and file size constraints
+- request detail for the authenticated owner now exposes photo metadata per item
+- objects remain private in storage and are not exposed as public bucket URLs
 
 Estimated size options for MVP may be normalized to:
 
@@ -332,8 +336,8 @@ Can view only:
 Current implementation note:
 
 - user read access currently covers own pickup request list and own pickup request detail
-- read responses currently expose request, address and items only
-- photos remain out of scope until the media slices are delivered
+- read responses now expose request, address, items and item photo metadata for the owner
+- admin-wide photo visibility remains out of scope until the admin slice is opened
 
 ## Admins
 

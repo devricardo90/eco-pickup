@@ -36,6 +36,24 @@ Auth estrutural atual:
 - JWT access token
 - roles `USER` e `ADMIN`
 
+Fluxo atual de pickup request:
+
+- `POST /api/v1/pickup-requests`
+- `GET /api/v1/pickup-requests`
+- `GET /api/v1/pickup-requests/{id}`
+- `POST /api/v1/pickup-items/{id}/photos`
+
+Media atual:
+
+- `ItemPhoto` vinculado a `PickupItem`
+- upload via API com `multipart/form-data`
+- storage S3-compatible via MinIO local e provider compativel em producao
+- ownership enforcement por usuario autenticado
+- tipos permitidos: `image/jpeg`, `image/png`, `image/webp`
+- tamanho maximo por arquivo: `10 MB`
+- limite de `5` fotos por item
+- detalhe da request retorna metadata de fotos por item
+
 Fora de escopo nesta fase:
 
 - regras de dominio
