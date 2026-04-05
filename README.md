@@ -2,32 +2,32 @@
 
 Digital platform for scheduling bulky household item pickups in Sweden.
 
-## Vision
+## MVP Current State
 
-EcoPickup is a product designed to help residents in Sweden schedule the pickup of bulky household items such as furniture and large objects, with a clear operational flow:
+The repository is no longer only in foundation mode. The current MVP already delivers:
 
-- user submits a request
-- uploads item photos
-- chooses pickup window
-- admin reviews and quotes
-- user pays
-- collection is completed
-- final status is tracked end-to-end
+- authenticated owner and admin web surfaces
+- owner create, edit-in-draft and explicit submit flow
+- pickup item photo upload
+- admin review, pricing and scheduling foundations
+- owner quote visibility and payment session start
+- owner tracking/detail with timeline, status and lifecycle messaging
+- status-history tracking across the main request lifecycle
 
 ## Product Goal
 
 Turn a real disposal and logistics problem in Sweden into a structured digital workflow with:
 
-- multilingual UX
-- operational quoting
-- image upload
-- payment integration
-- admin panel
-- request tracking
+- request intake
+- item and photo capture
+- admin review and pricing
+- payment confirmation
+- scheduling and execution tracking
+- final lifecycle visibility for owner and admin
 
-## Initial Scope
+## Delivery Discipline
 
-This repository starts with governance, planning, and project foundation before feature implementation.
+The project started with governance, planning and foundation work before feature implementation, and it still follows that same discipline.
 
 The project follows the **Protocolo Rick**, which means:
 
@@ -95,14 +95,15 @@ Each phase must produce its minimum artifacts before the next one can begin.
 
 ## Current State
 
-Project initialized in governance and planning mode.
+Current delivered MVP slices include:
 
-No feature development should start before:
-
-PRD is registered
-backlog is broken down
-architecture foundation is defined
-execution order is approved
+- request creation and draft editing
+- explicit `draft -> submitted` owner submission
+- owner and admin authenticated dashboards/detail surfaces
+- tracking/history timeline endpoints and UI
+- admin review, pricing and scheduling foundations
+- payment foundation with owner checkout start and webhook confirmation
+- owner messaging for `under_review`, `quoted`, `awaiting_payment`, `paid`, `scheduled`, `in_transit`, `collected`, `completed`, `cancelled` and `rejected`
 
 ## Current Technical Baseline
 
@@ -111,3 +112,12 @@ execution order is approved
 - frontend foundation completed
 - PostgreSQL local persistence foundation completed through Docker + EF Core
 - authentication and access control foundation completed with JWT
+
+## Current Out Of Scope
+
+The current MVP still keeps these areas outside the active scope:
+
+- new operational mutations beyond the existing foundations
+- polling, websockets and notifications
+- full admin execution controls
+- broader deploy/observability work beyond current local foundations

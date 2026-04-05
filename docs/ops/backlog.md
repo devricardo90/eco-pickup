@@ -1336,6 +1336,33 @@ Executar uma segunda rodada curta de QA manual com foco em consistencia entre es
 - redesign
 - refactors amplos
 
+#### EPIC-000U - MVP Documentation Cleanup
+**Status:** DONE
+
+##### Objetivo
+Consolidar README, backlog e status para refletir o estado real do MVP atual sem abrir escopo funcional novo.
+
+##### Escopo
+- revisar README raiz, `apps/api/README.md` e `apps/web/README.md`
+- alinhar backlog e status com o estado entregue das slices owner/admin
+- remover descricoes desatualizadas, ambiguas ou redundantes
+- registrar claramente o que continua fora do escopo atual
+
+##### Criterios de aceite
+- README(s) atualizados com o fluxo MVP atual
+- backlog e status consolidados
+- cleanup estritamente documental
+
+##### Dependencias
+- EPIC-000T
+
+##### Fora de escopo
+- novas funcionalidades
+- novas mutacoes operacionais
+- mudancas de contrato backend
+- refactors de codigo
+- redesign de documentacao
+
 ---
 
 # EPIC-014 - Infra, Deploy e Observabilidade

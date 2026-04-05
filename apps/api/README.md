@@ -1,15 +1,14 @@
 # apps/api
 
-Foundation estrutural da API do EcoPickup.
+API atual do MVP do EcoPickup.
 
-Escopo desta fase:
+Escopo consolidado nesta etapa:
 
-- estrutura inicial do backend
-- projeto ASP.NET Core .NET 8
-- health endpoint
-- Swagger/OpenAPI
-- foundation de persistencia com EF Core e PostgreSQL
-- foundation de autenticacao com JWT
+- ASP.NET Core .NET 8 em camadas
+- Swagger/OpenAPI e Scalar
+- persistencia com EF Core e PostgreSQL
+- autenticacao JWT com roles `USER` e `ADMIN`
+- fluxo owner/admin do MVP ate payment, scheduling e tracking
 
 Estrutura backend atual:
 
@@ -41,12 +40,38 @@ Fluxo atual de pickup request:
 - `POST /api/v1/pickup-requests`
 - `GET /api/v1/pickup-requests`
 - `GET /api/v1/pickup-requests/{id}`
+- `PUT /api/v1/pickup-requests/{id}`
+- `PATCH /api/v1/pickup-requests/{id}/submit`
+- `GET /api/v1/pickup-requests/{id}/history`
 - `POST /api/v1/pickup-items/{id}/photos`
+- `POST /api/v1/pickup-requests/{id}/payments`
 - `GET /api/v1/admin/pickup-requests`
 - `GET /api/v1/admin/pickup-requests/{id}`
+- `GET /api/v1/admin/pickup-requests/{id}/history`
 - `PATCH /api/v1/admin/pickup-requests/{id}/review`
 - `PATCH /api/v1/admin/pickup-requests/{id}/pricing`
 - `PATCH /api/v1/admin/pickup-requests/{id}/scheduling`
+- `POST /api/v1/payments/webhook`
+
+Owner flow atual:
+
+- request nasce em `draft`
+- owner pode editar apenas enquanto estiver em `draft`
+- owner envia por transicao explicita `draft -> submitted`
+- timeline/history read-only exposta para owner
+
+Admin flow atual:
+
+- leitura administrativa protegida por role `ADMIN`
+- review controla `submitted -> under_review`, `submitted -> rejected` e `under_review -> rejected`
+- pricing controla `under_review -> quoted` ou `under_review -> awaiting_payment`
+- scheduling controla `quoted -> scheduled`
+
+Tracking e payment atuais:
+
+- historico persiste eventos de review, pricing, scheduling, submit e payment confirmation
+- payment session owner existe apenas em `awaiting_payment`
+- webhook confiavel confirma `awaiting_payment -> paid`
 
 Media atual:
 
@@ -93,20 +118,9 @@ Scheduling atual:
 - historico de scheduling persistido por request
 - sem payment neste recorte
 
-Payment atual:
-
-- `POST /api/v1/pickup-requests/{id}/payments`
-- `POST /api/v1/payments/webhook`
-- payment foundation com entidade `Payment` relacionada a `PickupRequest`
-- criacao de payment session protegida para o owner autenticado
-- iniciacao permitida apenas quando a request esta em `awaiting_payment`
-- valor e moeda derivados do pricing persistido
-- confirmacao segura via header `X-Payment-Webhook-Secret`
-- transicao controlada `awaiting_payment -> paid` apos confirmacao confiavel
-- historico de pagamento persistido quando a request muda para `paid`
-
 Fora de escopo nesta fase:
 
-- regras de dominio
-- endpoints de negocio
-- integracoes de produto
+- novas mutacoes operacionais alem das ja entregues
+- execution controls administrativos completos
+- polling, notificacoes e realtime
+- novos contratos fora do MVP atual

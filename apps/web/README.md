@@ -1,10 +1,10 @@
 # apps/web
 
-Foundation estrutural da aplicacao web do EcoPickup.
+Aplicacao web atual do MVP do EcoPickup.
 
-## Objetivo desta fase
+## Objetivo atual
 
-Consolidar a base do frontend em Next.js sem implementar features de produto.
+Consolidar as superfices owner/admin ja entregues sem abrir novas frentes funcionais antes da retomada operacional.
 
 ## Estrutura interna aprovada
 
@@ -30,7 +30,7 @@ src/
 - `src/lib`
   - utilitarios e integracoes locais sem acoplamento com UI.
 
-## Escopo entregue nesta fase atual
+## Escopo atual do MVP web
 
 - estrutura inicial Next.js consolidada
 - TypeScript validado
@@ -54,19 +54,34 @@ src/
 - submit autenticado de edicao via `PUT /api/v1/pickup-requests/{id}`
 - submit autenticado de envio via `PATCH /api/v1/pickup-requests/{id}/submit`
 - formulario compartilhado de create/edit com UX de multiplos itens
-- testes focados no mapeamento semantico da timeline
+- testes focados em sessao, editabilidade e mapeamentos semanticos
 - auth/session foundation com login, register, logout e cookie HTTP-only de sessao
 
-## Fora de escopo nesta fase
+## Fluxo owner atualmente documentado
 
-- fluxo de usuario
-- login
-- dashboard real
-- painel admin funcional
-- telas de negocio do EcoPickup
-- integracao com API real
-- estado de produto
-- formularios reais do MVP
+- login e register na web
+- dashboard em `/requests`
+- create em `/requests/new`
+- edit apenas em `draft` por `/tracking/[requestId]/edit`
+- submit explicito para `submitted`
+- detail/tracking em `/tracking/[requestId]`
+- quote visibility, payment start, scheduling visibility e lifecycle messaging sem novas mutacoes alem das ja existentes
+
+## Fluxo admin atualmente documentado
+
+- dashboard em `/admin/requests`
+- detail/tracking em `/admin/tracking/[requestId]`
+- leitura protegida por role `ADMIN`
+- sem execution controls administrativos na web atual
+
+## Fora de escopo nesta etapa
+
+- novas funcionalidades
+- novas mutacoes operacionais
+- novos contratos backend
+- polling, notificacoes e realtime
+- execution controls administrativos completos
+- redesign amplo
 
 ## Configuracao para tracking e auth
 

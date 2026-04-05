@@ -1,10 +1,10 @@
-# EcoPickup - Status Executivo Inicial
+# EcoPickup - Status Executivo
 
 ## Estado atual
-Projeto em development com a primeira fatia de fluxo de negocio aberta de forma controlada.
+Projeto em testing, com MVP owner/admin consolidado e pausa ativa de novas frentes funcionais.
 
 ## Fase atual da esteira
-Development
+Testing
 
 ## Situacao resumida
 - repositorio criado
@@ -88,9 +88,11 @@ Development
 - EPIC-000T concluida com segunda rodada curta de QA manual
 - achados desta rodada ficaram concentrados em drift documental de baixo risco: `apps/api/README.md` ainda descrevia review saindo de `draft`, e `apps/web/README.md` ainda listava `completed` no execution card em vez do lifecycle card
 - documentacao alinhada com o comportamento atual sem abrir nova frente funcional
+- EPIC-000U concluida com cleanup documental final do MVP
+- README raiz, README da API e README da web agora refletem o estado atual entregue, os fluxos owner/admin e os limites explicitos do escopo
 
 ## Objetivo atual
-Projeto pausado para consolidacao transversal do MVP atual antes de abrir novas frentes funcionais.
+Projeto pausado apos consolidacao transversal e cleanup documental do MVP atual, antes de retomar novas frentes funcionais.
 
 ## O que ja existe
 - ideia do produto
@@ -105,12 +107,12 @@ Projeto pausado para consolidacao transversal do MVP atual antes de abrir novas 
 - api standards iniciais registrados
 - decisao da foundation do monorepo registrada
 
-## O que falta antes de desenvolver
-- manter a disciplina de consolidacao antes de abrir novas frentes
-- abrir painel admin, pricing e pagamento em etapas separadas
+## O que falta antes de retomar novas frentes
+- decidir formalmente o encerramento da fase de consolidacao
+- priorizar a proxima frente operacional sem reabrir escopo de forma difusa
 
 ## Proximo passo recomendado
-Proximo passo recomendado: manter a pausa de novas frentes funcionais e decidir entre encerrar a fase de consolidacao ou abrir apenas um pacote pequeno de cleanup documental/README antes de retomar frentes operacionais.
+Proximo passo recomendado: encerrar formalmente a fase de consolidacao do MVP atual e escolher a proxima frente operacional a partir do backlog oficial.
 
 ## Riscos atuais
 - comecar implementacao cedo demais
