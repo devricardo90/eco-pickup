@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  mapPickupRequestExecutionToUi,
   mapPickupRequestListCardToUi,
   mapPickupRequestMetadataToUi,
   mapPickupRequestPaymentToUi,
@@ -168,5 +169,32 @@ describe("mapPickupRequestDetailToUi", () => {
     expect(scheduling).not.toBeNull();
     expect(scheduling?.title).toBe("Pickup scheduled");
     expect(scheduling?.confirmedWindowLabel).toContain("UTC");
+  });
+
+  it("builds execution messaging for in transit", () => {
+    const execution = mapPickupRequestExecutionToUi({
+      ...detail,
+      status: "in_transit"
+    });
+
+    expect(execution).not.toBeNull();
+    expect(execution?.title).toBe("Pickup in transit");
+    expect(execution?.highlightLabel).toContain("UTC");
+  });
+
+  it("builds execution messaging for collected and completed", () => {
+    const collected = mapPickupRequestExecutionToUi({
+      ...detail,
+      status: "collected"
+    });
+    const completed = mapPickupRequestExecutionToUi({
+      ...detail,
+      status: "completed"
+    });
+
+    expect(collected?.title).toBe("Items collected");
+    expect(collected?.highlightLabel).toBeNull();
+    expect(completed?.title).toBe("Request completed");
+    expect(completed?.highlightLabel).toBeNull();
   });
 });

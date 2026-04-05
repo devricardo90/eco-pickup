@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PickupRequestExecutionCard } from "@/components/pickup-request-execution-card";
 import { PickupRequestMetadata } from "@/components/pickup-request-metadata";
 import { PickupRequestPaymentCard } from "@/components/pickup-request-payment-card";
 import { PickupRequestPricingCard } from "@/components/pickup-request-pricing-card";
@@ -14,6 +15,7 @@ import { getPickupRequestDetail } from "@/lib/tracking/getPickupRequestDetail";
 import { getPickupRequestHistory } from "@/lib/tracking/getPickupRequestHistory";
 import { isPickupRequestEditable } from "@/lib/tracking/isPickupRequestEditable";
 import {
+  mapPickupRequestExecutionToUi,
   mapPickupRequestMetadataToUi,
   mapPickupRequestPaymentToUi,
   mapPickupRequestPricingToUi,
@@ -77,6 +79,7 @@ export async function PickupRequestDetailPage({ requestId, scope, notice }: Pick
   const pricing = scope === "owner" ? mapPickupRequestPricingToUi(detailResult.data) : null;
   const payment = scope === "owner" ? mapPickupRequestPaymentToUi(detailResult.data) : null;
   const scheduling = scope === "owner" ? mapPickupRequestSchedulingToUi(detailResult.data) : null;
+  const execution = scope === "owner" ? mapPickupRequestExecutionToUi(detailResult.data) : null;
   const canEdit = scope === "owner" && isPickupRequestEditable(detailResult.data.status);
   const submitAction = scope === "owner" ? submitPickupRequestAction.bind(null, requestId) : null;
   const paymentAction = scope === "owner" ? createPaymentSessionAction.bind(null, requestId) : null;
@@ -135,6 +138,8 @@ export async function PickupRequestDetailPage({ requestId, scope, notice }: Pick
         {payment ? <PickupRequestPaymentCard action={paymentAction} payment={payment} /> : null}
 
         {scheduling ? <PickupRequestSchedulingCard scheduling={scheduling} /> : null}
+
+        {execution ? <PickupRequestExecutionCard execution={execution} /> : null}
 
         {historyResult.ok ? (
           <PickupRequestTimeline events={timelineEvents} />

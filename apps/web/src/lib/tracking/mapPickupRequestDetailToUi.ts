@@ -1,4 +1,5 @@
 import {
+  type PickupRequestExecutionUi,
   type HistoryScope,
   type PickupRequestDetail,
   type PickupRequestListCardUi,
@@ -251,6 +252,45 @@ export function mapPickupRequestSchedulingToUi(detail: PickupRequestDetail): Pic
         detail.scheduling.confirmedPickupWindowEndUtc
       ),
       tone: "scheduled"
+    };
+  }
+
+  return null;
+}
+
+export function mapPickupRequestExecutionToUi(detail: PickupRequestDetail): PickupRequestExecutionUi | null {
+  if (detail.status === "in_transit") {
+    return {
+      title: "Pickup in transit",
+      description:
+        "Your request is currently in the live execution phase. The collection is underway and the team is moving through the confirmed operational flow.",
+      highlightLabel: detail.scheduling
+        ? formatUtcRange(
+            detail.scheduling.confirmedPickupWindowStartUtc,
+            detail.scheduling.confirmedPickupWindowEndUtc
+          )
+        : null,
+      tone: "in_transit"
+    };
+  }
+
+  if (detail.status === "collected") {
+    return {
+      title: "Items collected",
+      description:
+        "Collection has been completed and the request has moved past the pickup step. Any remaining processing now happens after the physical collection.",
+      highlightLabel: null,
+      tone: "collected"
+    };
+  }
+
+  if (detail.status === "completed") {
+    return {
+      title: "Request completed",
+      description:
+        "This pickup request has completed its tracked lifecycle. The main operational steps have finished successfully on this surface.",
+      highlightLabel: null,
+      tone: "completed"
     };
   }
 

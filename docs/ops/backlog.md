@@ -1185,6 +1185,36 @@ Deixar claro para o owner quando a request saiu de `paid` para `scheduled`, dest
 - polling
 - notificacoes
 
+#### EPIC-013F - Owner Execution Tracking Messaging
+**Status:** DONE
+
+##### Objetivo
+Cobrir de forma legivel para o owner os estados `in_transit`, `collected` e `completed` na surface de tracking, usando linguagem mais operacional sem criar novas mutacoes.
+
+##### Escopo
+- criar messaging owner para os estados de execucao
+- destacar o contexto operacional em `in_transit`
+- refletir de forma clara os estados `collected` e `completed`
+- reutilizar detail/tracking e mapeamentos existentes
+- adicionar testes frontend relevantes
+- atualizar documentacao impactada
+
+##### Criterios de aceite
+- owner entende claramente o que significa `in_transit`, `collected` e `completed`
+- a surface permanece coerente com o contrato backend atual
+- nenhuma mutacao nova e criada
+- lint, typecheck, build e testes aplicaveis passam
+
+##### Dependencias
+- EPIC-013D
+- EPIC-011D
+
+##### Fora de escopo
+- novas mutacoes operacionais
+- novos contratos backend
+- polling
+- notificacoes
+
 ---
 
 # EPIC-014 - Infra, Deploy e Observabilidade

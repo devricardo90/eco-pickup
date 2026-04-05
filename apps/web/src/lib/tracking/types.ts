@@ -162,6 +162,13 @@ export type PickupRequestSchedulingUi = {
   tone: "paid" | "scheduled";
 };
 
+export type PickupRequestExecutionUi = {
+  title: string;
+  description: string;
+  highlightLabel: string | null;
+  tone: "in_transit" | "collected" | "completed";
+};
+
 export type PickupRequestListCardUi = {
   id: string;
   title: string;

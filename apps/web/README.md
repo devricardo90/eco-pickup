@@ -47,6 +47,7 @@ src/
 - card owner de pricing/quote visibility para `under_review`, `quoted` e `awaiting_payment`
 - card owner de payment surface para `awaiting_payment` e `paid`
 - card owner de scheduling visibility para o intervalo pos-pagamento e para `scheduled`
+- card owner de execution messaging para `in_transit`, `collected` e `completed`
 - servicos de leitura dos endpoints de list, detail e history
 - submit autenticado de criacao via `POST /api/v1/pickup-requests`
 - submit autenticado de edicao via `PUT /api/v1/pickup-requests/{id}`

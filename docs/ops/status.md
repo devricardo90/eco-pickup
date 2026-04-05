@@ -76,9 +76,11 @@ Development
 - owner agora consegue iniciar checkout em `awaiting_payment` e ver confirmacao clara quando a request estiver `paid`
 - EPIC-011D concluida com owner scheduled visibility
 - owner agora ve claramente o estado pos-pagamento e a janela confirmada quando a request estiver `scheduled`
+- EPIC-013F concluida com owner execution tracking messaging
+- owner agora recebe leitura mais operacional para `in_transit`, `collected` e `completed`
 
 ## Objetivo atual
-Preparar o proximo slice apos a owner scheduled visibility sem misturar esse recorte com novas mutacoes operacionais.
+Preparar o proximo slice apos a owner execution tracking messaging sem misturar esse recorte com novas mutacoes operacionais.
 
 ## O que ja existe
 - ideia do produto
@@ -94,11 +96,11 @@ Preparar o proximo slice apos a owner scheduled visibility sem misturar esse rec
 - decisao da foundation do monorepo registrada
 
 ## O que falta antes de desenvolver
-- manter a separacao entre scheduled visibility owner e os proximos escopos operacionais do produto
+- manter a separacao entre execution messaging owner e os proximos escopos operacionais do produto
 - abrir painel admin, pricing e pagamento em etapas separadas
 
 ## Proximo passo recomendado
-Abrir o proximo recorte operacional apos owner scheduled visibility + post-payment messaging, como owner execution tracking mais clara ou completion messaging.
+Abrir o proximo recorte operacional apos owner execution tracking messaging, como owner completion messaging ampliada ou admin execution controls quando essa frente for aberta.
 
 ## Riscos atuais
 - comecar implementacao cedo demais
