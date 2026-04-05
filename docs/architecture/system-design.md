@@ -259,6 +259,7 @@ Current backend foundation includes:
 - `EcoPickupDbContext` bootstrap without product entities
 - dependency injection wiring for infrastructure
 - PostgreSQL provider configuration prepared for future persistence work
+- auth foundation with register, login, JWT and protected endpoints
 
 ---
 
@@ -381,6 +382,13 @@ Minimum security expectations:
 - input validation
 - backend-side payment verification
 - ownership checks for user resources
+
+Current auth foundation includes:
+
+- password hashing with PBKDF2
+- JWT access token issuance
+- roles `USER` and `ADMIN`
+- protected auth validation endpoints
 
 ---
 

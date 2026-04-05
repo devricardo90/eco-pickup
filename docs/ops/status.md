@@ -1,10 +1,10 @@
 # EcoPickup - Status Executivo Inicial
 
 ## Estado atual
-Projeto em fase inicial de governanca e planejamento.
+Projeto em fase de foundation tecnica validada e inicio controlado de desenvolvimento.
 
 ## Fase atual da esteira
-Planning
+Development
 
 ## Situacao resumida
 - repositorio criado
@@ -29,10 +29,13 @@ Planning
 - build, typecheck e dev server da web devem permanecer como gate estrutural
 - EPIC-006 concluida com PostgreSQL local, EF Core migrations e validacao basica de persistencia
 - migration estrutural inicial aplicada no banco local
+- EPIC-007 concluida com registro, login, JWT e controle basico de acesso
+- rota autenticada minima validada com `/api/v1/auth/me`
+- rota admin protegida validada com roles `USER` e `ADMIN`
 - features ainda nao devem ser implementadas
 
 ## Objetivo atual
-Manter as foundations tecnica de backend e frontend estaveis sem implementar features de produto.
+Manter as foundations tecnica de backend, frontend, persistencia e auth estaveis sem misturar fluxo de produto.
 
 ## O que ja existe
 - ideia do produto
@@ -49,10 +52,10 @@ Manter as foundations tecnica de backend e frontend estaveis sem implementar fea
 
 ## O que falta antes de desenvolver
 - manter a separacao entre foundation tecnica e features de produto
-- abrir a proxima frente de acesso e autenticacao sem misturar infraestrutura com regra de negocio
+- abrir a primeira frente de negocio do produto sem quebrar a disciplina de backlog
 
 ## Proximo passo recomendado
-Abrir a EPIC-007 - Auth e Controle de Acesso, preservando o recorte tecnico antes de avancar para fluxos de produto.
+Abrir a EPIC-008 - Fluxo de Solicitacao de Coleta, usando a base de auth ja validada sem antecipar pagamentos ou painel admin completo.
 
 ## Riscos atuais
 - comecar implementacao cedo demais

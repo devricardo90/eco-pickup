@@ -154,6 +154,7 @@ Auth endpoints direction:
 
 - `POST /api/v1/auth/register`
 - `POST /api/v1/auth/login`
+- `GET /api/v1/auth/me`
 
 Future additions may include:
 
@@ -240,6 +241,7 @@ Suggested initial direction:
 
 ### User-facing
 
+- `GET /api/v1/auth/me`
 - `POST /api/v1/pickup-requests`
 - `GET /api/v1/pickup-requests`
 - `GET /api/v1/pickup-requests/{id}`

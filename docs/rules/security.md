@@ -23,6 +23,9 @@ Estabelecer diretrizes minimas de seguranca para a foundation do projeto.
 - validar entrada em todos os boundaries
 - padronizar erros sem vazar detalhes internos
 - prever separacao entre acessos administrativos e acessos de usuario final
+- armazenar senha apenas com hash seguro
+- emitir tokens JWT com expiracao curta e chave de assinatura controlada
+- manter roles basicas explicitamente separadas entre `USER` e `ADMIN`
 
 ## Infra e operacao
 
@@ -33,7 +36,7 @@ Estabelecer diretrizes minimas de seguranca para a foundation do projeto.
 ## Pendencias para validacao
 
 - requisitos legais especificos da Suecia e da UE aplicaveis ao produto
-- estrategia de autenticacao
+- estrategia de refresh token e revogacao
 - regras de consentimento e retencao
 
 ## Riscos

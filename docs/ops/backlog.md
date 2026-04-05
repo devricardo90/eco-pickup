@@ -193,7 +193,7 @@ Preparar a camada de banco para suportar a evolucao do dominio sem implementar r
 ---
 
 # EPIC-007 - Auth e Controle de Acesso
-**Status:** READY
+**Status:** DONE
 
 ## Objetivo
 Permitir cadastro, login e autorizacao por perfil.
@@ -210,6 +210,9 @@ Permitir cadastro, login e autorizacao por perfil.
 - usuario consegue autenticar
 - JWT emitido corretamente
 - rotas protegidas por perfil
+- senha armazenada com hash seguro
+- endpoint autenticado minimo validado
+- documentacao de auth atualizada
 
 ## Dependencias
 - EPIC-004

@@ -110,3 +110,4 @@ execution order is approved
 - backend foundation completed
 - frontend foundation completed
 - PostgreSQL local persistence foundation completed through Docker + EF Core
+- authentication and access control foundation completed with JWT
