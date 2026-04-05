@@ -252,9 +252,12 @@ Current implemented scope:
 - `GET /api/v1/pickup-requests` lists authenticated user requests
 - `GET /api/v1/pickup-requests/{id}` returns authenticated user request detail with ownership enforcement
 - `POST /api/v1/pickup-items/{id}/photos` uploads one authenticated item photo via multipart form-data
+- `GET /api/v1/admin/pickup-requests` lists pickup requests for `ADMIN`
+- `GET /api/v1/admin/pickup-requests/{id}` returns admin pickup request detail
 - current payload stores description, pickup window, a single pickup address and one or more pickup items
 - items require `category`, `description` and `estimatedSize`
 - item detail responses now include photo metadata for the owning user
+- admin detail responses now include `address`, `items`, `photos` and current `status`
 - item photo upload is fixed to API-mediated write with private S3-compatible storage
 - upload validation enforces ownership, content type whitelist, max `10 MB` and max `5` photos per `PickupItem`
 - pricing and status history are intentionally deferred to later slices
@@ -292,6 +295,12 @@ Implemented MVP contract:
 - `PATCH /api/v1/admin/pickup-requests/{id}/quote`
 - `PATCH /api/v1/admin/pickup-requests/{id}/status`
 - `PATCH /api/v1/admin/pickup-requests/{id}/disposal`
+
+Current implemented admin read scope:
+
+- list and detail are available for `ADMIN` only
+- detail includes `address`, `items`, `photos` and current `status`
+- pricing, approve/reject, scheduling and payment actions remain out of scope
 
 These are directional standards, not locked implementation details yet.
 

@@ -473,7 +473,7 @@ Registrar um conjunto de referencia para orientar captura e revisao operacional 
 ---
 
 # EPIC-010 - Painel Admin
-**Status:** READY
+**Status:** IN_PROGRESS
 
 ## Objetivo
 Permitir operacao administrativa do ciclo da coleta.
@@ -500,6 +500,43 @@ Permitir operacao administrativa do ciclo da coleta.
 - EPIC-007
 - EPIC-008
 - EPIC-009
+
+### Fatias de execucao
+
+#### EPIC-010A - Admin Read Foundation
+**Status:** DONE
+
+##### Objetivo
+Entregar leitura administrativa minima de pickup requests antes de abrir qualquer acao operacional de admin.
+
+##### Escopo
+- listar pickup requests no admin
+- detalhar pickup request no admin
+- restringir acesso a role `ADMIN`
+- retornar `address`, `items`, `photos` e `status`
+- adicionar testes aplicaveis
+- atualizar documentacao impactada
+
+##### Criterios de aceite
+- endpoint admin de listagem funcional
+- endpoint admin de detalhe funcional
+- acesso restrito a `ADMIN`
+- detalhe retorna `address`, `items`, `photos` e `status`
+- build continua passando
+- testes aplicaveis passam
+- Swagger, Scalar e OpenAPI continuam funcionando
+- documentacao impactada atualizada
+
+##### Dependencias
+- EPIC-009B
+
+##### Fora de escopo
+- pricing
+- approve/reject
+- mudanca de status
+- pagamento
+- workflow administrativo completo
+- acoes operacionais
 
 ---
 

@@ -17,4 +17,11 @@ public interface IPickupRequestService
     Guid id,
     Guid userId,
     CancellationToken cancellationToken);
+
+  Task<IReadOnlyList<PickupRequestResult>> GetAllForAdminAsync(
+    CancellationToken cancellationToken);
+
+  Task<PickupRequestResult?> GetByIdForAdminAsync(
+    Guid id,
+    CancellationToken cancellationToken);
 }

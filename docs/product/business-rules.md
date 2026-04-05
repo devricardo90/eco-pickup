@@ -34,6 +34,7 @@ Cannot:
 Can:
 
 - view all pickup requests
+- view address, items, item photos and current status for any request
 - approve or reject requests
 - define or adjust pricing
 - define final scheduling
@@ -345,9 +346,19 @@ Can view:
 
 - all pickup requests
 - operational fields
+- pickup address
+- pickup items
+- item photos
+- current request status
 - pricing
 - status history
 - disposal records
+
+Current implementation note:
+
+- EPIC-010A delivers admin read-only access to request list and detail
+- current admin detail includes `address`, `items`, `photos` and `status`
+- admin actions such as pricing, approve/reject and status mutation remain deferred
 
 ---
 

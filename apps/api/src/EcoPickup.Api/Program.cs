@@ -89,5 +89,6 @@ app.MapGet("/", () => Results.Ok(new
 app.MapAuthEndpoints();
 app.MapPickupRequestEndpoints();
 app.MapPickupItemPhotoEndpoints();
+app.MapAdminPickupRequestEndpoints();
 
 app.Run();

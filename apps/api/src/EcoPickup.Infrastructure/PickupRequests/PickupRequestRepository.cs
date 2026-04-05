@@ -32,6 +32,27 @@ public sealed class PickupRequestRepository(EcoPickupDbContext dbContext) : IPic
         pickupRequest => pickupRequest.Id == id && pickupRequest.UserId == userId,
         cancellationToken);
 
+  public async Task<IReadOnlyList<PickupRequest>> GetAllAsync(CancellationToken cancellationToken) =>
+    await dbContext.PickupRequests
+      .AsNoTracking()
+      .AsSplitQuery()
+      .Include(pickupRequest => pickupRequest.Address)
+      .Include(pickupRequest => pickupRequest.Items)
+      .ThenInclude(item => item.Photos)
+      .OrderByDescending(pickupRequest => pickupRequest.CreatedUtc)
+      .ToListAsync(cancellationToken);
+
+  public Task<PickupRequest?> GetByIdForAdminAsync(Guid id, CancellationToken cancellationToken) =>
+    dbContext.PickupRequests
+      .AsNoTracking()
+      .AsSplitQuery()
+      .Include(pickupRequest => pickupRequest.Address)
+      .Include(pickupRequest => pickupRequest.Items)
+      .ThenInclude(item => item.Photos)
+      .SingleOrDefaultAsync(
+        pickupRequest => pickupRequest.Id == id,
+        cancellationToken);
+
   public Task<PickupItem?> GetOwnedItemByIdAsync(Guid itemId, Guid userId, CancellationToken cancellationToken) =>
     dbContext.PickupItems
       .AsNoTracking()

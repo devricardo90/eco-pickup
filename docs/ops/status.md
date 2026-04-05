@@ -44,9 +44,11 @@ Development
 - storage S3-compatible validado localmente com MinIO
 - metadata de foto persistida no banco com ownership enforcement, validacao de tipo/tamanho e limite de `5` fotos por item
 - leitura atual retorna request, address, items e fotos do item para o dono autenticado
+- EPIC-010A concluida com leitura administrativa minima para `ADMIN`
+- admin agora consegue listar requests e abrir detalhe com `address`, `items`, `photos` e `status`
 
 ## Objetivo atual
-Abrir a EPIC-010 para leitura e operacao administrativa sobre requests, items e fotos ja entregues.
+Expandir o painel admin com o menor proximo recorte operacional sem misturar pricing ou pagamento.
 
 ## O que ja existe
 - ideia do produto
@@ -66,7 +68,7 @@ Abrir a EPIC-010 para leitura e operacao administrativa sobre requests, items e 
 - abrir painel admin, pricing e pagamento em etapas separadas
 
 ## Proximo passo recomendado
-Abrir a EPIC-010 para expor o painel admin sem misturar pricing ou pagamento.
+Abrir a proxima fatia administrativa com a primeira acao operacional controlada, sem misturar pricing ou pagamento.
 
 ## Riscos atuais
 - comecar implementacao cedo demais

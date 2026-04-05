@@ -42,6 +42,8 @@ Fluxo atual de pickup request:
 - `GET /api/v1/pickup-requests`
 - `GET /api/v1/pickup-requests/{id}`
 - `POST /api/v1/pickup-items/{id}/photos`
+- `GET /api/v1/admin/pickup-requests`
+- `GET /api/v1/admin/pickup-requests/{id}`
 
 Media atual:
 
@@ -53,6 +55,13 @@ Media atual:
 - tamanho maximo por arquivo: `10 MB`
 - limite de `5` fotos por item
 - detalhe da request retorna metadata de fotos por item
+
+Admin read atual:
+
+- endpoints administrativos de leitura protegidos por role `ADMIN`
+- listagem administrativa minima de pickup requests
+- detalhe administrativo com `address`, `items`, `photos` e `status`
+- sem pricing, approve/reject, mutacao de status ou pagamento neste recorte
 
 Fora de escopo nesta fase:
 

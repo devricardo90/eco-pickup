@@ -7,6 +7,29 @@ namespace EcoPickup.Application.PickupRequests;
 
 public sealed class PickupRequestService(IPickupRequestRepository pickupRequestRepository) : IPickupRequestService
 {
+  public async Task<IReadOnlyList<PickupRequestResult>> GetAllForAdminAsync(
+    CancellationToken cancellationToken)
+  {
+    var pickupRequests = await pickupRequestRepository.GetAllAsync(cancellationToken);
+    return pickupRequests.Select(ToResult).ToArray();
+  }
+
+  public async Task<PickupRequestResult?> GetByIdForAdminAsync(
+    Guid id,
+    CancellationToken cancellationToken)
+  {
+    if (id == Guid.Empty)
+    {
+      throw new PickupRequestValidationException(new Dictionary<string, string[]>
+      {
+        ["id"] = ["Pickup request id is required."]
+      });
+    }
+
+    var pickupRequest = await pickupRequestRepository.GetByIdForAdminAsync(id, cancellationToken);
+    return pickupRequest is null ? null : ToResult(pickupRequest);
+  }
+
   public async Task<IReadOnlyList<PickupRequestResult>> GetByUserAsync(
     Guid userId,
     CancellationToken cancellationToken)

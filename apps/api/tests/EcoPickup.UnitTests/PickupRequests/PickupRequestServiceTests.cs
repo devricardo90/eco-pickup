@@ -141,6 +141,23 @@ public sealed class PickupRequestServiceTests
   }
 
   [Fact]
+  public async Task GetAllForAdminAsync_ShouldReturnAllRequestsOrderedByCreatedUtcDescending()
+  {
+    var repository = new InMemoryPickupRequestRepository();
+    var olderRequest = CreatePickupRequest(Guid.NewGuid(), "Sofa", DateTime.UtcNow.AddMinutes(-20));
+    var newerRequest = CreatePickupRequest(Guid.NewGuid(), "Refrigerator", DateTime.UtcNow.AddMinutes(-5));
+    repository.StoredPickupRequests.AddRange([olderRequest, newerRequest]);
+
+    var service = new PickupRequestService(repository);
+
+    var pickupRequests = await service.GetAllForAdminAsync(CancellationToken.None);
+
+    Assert.Equal(2, pickupRequests.Count);
+    Assert.Equal(newerRequest.Id, pickupRequests[0].Id);
+    Assert.Equal(olderRequest.Id, pickupRequests[1].Id);
+  }
+
+  [Fact]
   public async Task GetByIdAsync_ShouldReturnNullWhenRequestDoesNotBelongToAuthenticatedUser()
   {
     var repository = new InMemoryPickupRequestRepository();
@@ -184,6 +201,34 @@ public sealed class PickupRequestServiceTests
     Assert.Equal("photo.jpg", result.Items[0].Photos[0].OriginalFileName);
   }
 
+  [Fact]
+  public async Task GetByIdForAdminAsync_ShouldReturnRequestDetailWithPhotosRegardlessOfOwner()
+  {
+    var repository = new InMemoryPickupRequestRepository();
+    var pickupRequest = CreatePickupRequest(Guid.NewGuid(), "Dining table", DateTime.UtcNow.AddMinutes(-15));
+    pickupRequest.Items[0].Photos.Add(
+      new ItemPhoto
+      {
+        Id = Guid.NewGuid(),
+        PickupItemId = pickupRequest.Items[0].Id,
+        StorageKey = "pickup-requests/request/items/item/photos/photo.jpg",
+        OriginalFileName = "photo.jpg",
+        ContentType = "image/jpeg",
+        SizeBytes = 512,
+        CreatedUtc = DateTime.UtcNow
+      });
+    repository.StoredPickupRequests.Add(pickupRequest);
+
+    var service = new PickupRequestService(repository);
+
+    var result = await service.GetByIdForAdminAsync(pickupRequest.Id, CancellationToken.None);
+
+    Assert.NotNull(result);
+    Assert.Equal(pickupRequest.Status, result.Status);
+    Assert.Single(result.Items);
+    Assert.Single(result.Items[0].Photos);
+  }
+
   private sealed class InMemoryPickupRequestRepository : IPickupRequestRepository
   {
     public List<PickupRequest> StoredPickupRequests { get; } = [];
@@ -202,6 +247,14 @@ public sealed class PickupRequestServiceTests
 
     public Task<PickupRequest?> GetByIdAsync(Guid id, Guid userId, CancellationToken cancellationToken) =>
       Task.FromResult(StoredPickupRequests.SingleOrDefault(x => x.Id == id && x.UserId == userId));
+
+    public Task<IReadOnlyList<PickupRequest>> GetAllAsync(CancellationToken cancellationToken) =>
+      Task.FromResult<IReadOnlyList<PickupRequest>>(StoredPickupRequests
+        .OrderByDescending(x => x.CreatedUtc)
+        .ToList());
+
+    public Task<PickupRequest?> GetByIdForAdminAsync(Guid id, CancellationToken cancellationToken) =>
+      Task.FromResult(StoredPickupRequests.SingleOrDefault(x => x.Id == id));
 
     public Task SaveChangesAsync(CancellationToken cancellationToken) =>
       Task.CompletedTask;
