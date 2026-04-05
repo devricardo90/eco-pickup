@@ -678,7 +678,7 @@ Entregar a fundacao administrativa de scheduling com janela operacional confirma
 ---
 
 # EPIC-012 - Pagamentos
-**Status:** READY
+**Status:** IN_PROGRESS
 
 ## Objetivo
 Permitir cobranca do pedido aprovado.
@@ -699,6 +699,48 @@ Permitir cobranca do pedido aprovado.
 ## Dependencias
 - EPIC-010
 - EPIC-011
+
+### Fatias de execucao
+
+#### EPIC-012A - Payment Foundation
+**Status:** DONE
+
+##### Objetivo
+Entregar a fundacao de cobranca e confirmacao de pagamento com persistencia do estado e transicao controlada sem abrir refund, dispute ou conciliacao completa.
+
+##### Escopo
+- definir o modelo minimo de `Payment`
+- relacionar `Payment` com `PickupRequest`
+- implementar criacao de payment session
+- persistir status do pagamento
+- implementar confirmacao segura do pagamento
+- aplicar transicoes controladas de status
+- registrar historico da acao quando aplicavel
+- adicionar testes aplicaveis
+- atualizar documentacao impactada
+
+##### Criterios de aceite
+- modelo `Payment` funcional
+- criacao de cobranca funcional
+- persistencia do estado de pagamento funcionando
+- confirmacao de pagamento funcionando
+- transicoes de status validadas
+- build continua passando
+- testes aplicaveis passam
+- Swagger, Scalar e OpenAPI continuam funcionando
+- documentacao impactada atualizada
+
+##### Dependencias
+- EPIC-011A
+
+##### Fora de escopo
+- workflow administrativo completo
+- refund avancado
+- dispute
+- conciliacao completa
+- reabertura de review
+- reabertura de pricing
+- reabertura de scheduling
 
 ---
 

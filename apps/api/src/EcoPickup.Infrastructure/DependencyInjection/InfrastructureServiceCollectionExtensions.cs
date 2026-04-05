@@ -1,7 +1,9 @@
 using EcoPickup.Application.Authentication.Abstractions;
+using EcoPickup.Application.Payments.Abstractions;
 using EcoPickup.Application.PickupRequests.Abstractions;
 using EcoPickup.Application.DependencyInjection;
 using EcoPickup.Infrastructure.Authentication;
+using EcoPickup.Infrastructure.Payments;
 using EcoPickup.Infrastructure.Persistence;
 using EcoPickup.Infrastructure.PickupRequests;
 using EcoPickup.Infrastructure.Storage;
@@ -25,8 +27,11 @@ public static class InfrastructureServiceCollectionExtensions
     services.AddSingleton<IPasswordHashService, Pbkdf2PasswordHashService>();
     services.AddSingleton<IAccessTokenService, JwtAccessTokenService>();
     services.AddScoped<IAuthUserRepository, AuthUserRepository>();
+    services.AddScoped<IPaymentRepository, PaymentRepository>();
     services.AddScoped<IPickupRequestRepository, PickupRequestRepository>();
     services.AddScoped<IPickupItemPhotoRepository, PickupRequestRepository>();
+    services.Configure<PaymentOptions>(configuration.GetSection(PaymentOptions.SectionName));
+    services.AddSingleton<IPaymentGateway, FakePaymentGateway>();
     services.Configure<ObjectStorageOptions>(configuration.GetSection(ObjectStorageOptions.SectionName));
     services.AddSingleton<IItemPhotoStorage, S3ItemPhotoStorage>();
 

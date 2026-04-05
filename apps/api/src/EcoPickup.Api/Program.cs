@@ -1,4 +1,5 @@
 using EcoPickup.Api.Auth;
+using EcoPickup.Api.Payments;
 using EcoPickup.Api.PickupRequests;
 using EcoPickup.Infrastructure.Authentication;
 using Scalar.AspNetCore;
@@ -90,5 +91,6 @@ app.MapAuthEndpoints();
 app.MapPickupRequestEndpoints();
 app.MapPickupItemPhotoEndpoints();
 app.MapAdminPickupRequestEndpoints();
+app.MapPaymentEndpoints();
 
 app.Run();

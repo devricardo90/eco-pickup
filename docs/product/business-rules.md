@@ -255,6 +255,14 @@ Suggested payment statuses:
 - refunded
 - cancelled
 
+Current implementation note:
+
+- EPIC-012A introduces the first persisted `Payment` model related to `PickupRequest`
+- the current slice implements `pending`, `paid`, `failed` and `cancelled`
+- payment session creation is currently allowed only when the request is `awaiting_payment`
+- payment amount and currency are derived from the persisted pricing breakdown
+- payment confirmation is handled by a secure backend webhook
+
 If payment fails:
 
 - request must not move to `paid`
@@ -262,6 +270,12 @@ If payment fails:
 If payment succeeds:
 
 - request becomes eligible for scheduling/execution
+
+Current implementation note:
+
+- successful confirmation currently applies `awaiting_payment -> paid`
+- failed or cancelled confirmation updates the payment state but keeps the request status unchanged
+- advanced refund, dispute and reconciliation flows remain deferred
 
 ---
 
@@ -308,8 +322,8 @@ Example expected transitions:
 
 Current implementation note:
 
-- current implemented transitions include `draft -> under_review`, `draft -> rejected`, `under_review -> rejected`, `under_review -> quoted`, `under_review -> awaiting_payment` and `quoted -> scheduled`
-- scheduling after `awaiting_payment` remains deferred until the payment slice is opened
+- current implemented transitions include `draft -> under_review`, `draft -> rejected`, `under_review -> rejected`, `under_review -> quoted`, `under_review -> awaiting_payment`, `awaiting_payment -> paid` and `quoted -> scheduled`
+- scheduling after `paid` remains a separate operational step
 
 Alternative transitions:
 
@@ -338,6 +352,7 @@ Current implementation note:
 
 - EPIC-010B now persists review-generated request status history
 - current history entries capture `fromStatus`, `toStatus`, `action`, `actorUserId`, `note` and `createdUtc`
+- EPIC-012A now also records a request status-history entry when payment confirmation moves the request to `paid`
 
 ---
 

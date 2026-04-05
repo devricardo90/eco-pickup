@@ -341,7 +341,7 @@ Current persistence foundation:
 - EF Core migrations managed from `EcoPickup.Infrastructure`
 - design-time factory for `EcoPickupDbContext`
 - structural baseline table `persistence_checkpoints` used only to validate the migration pipeline
-- auth identity tables and the current `pickup_requests`, `addresses`, `pickup_items`, `item_photos`, `pickup_request_status_history`, pricing columns and confirmed scheduling window foundation for request/admin evolution
+- auth identity tables and the current `pickup_requests`, `addresses`, `pickup_items`, `item_photos`, `pickup_request_status_history`, `payments`, pricing columns and confirmed scheduling window foundation for request/admin evolution
 
 ---
 
@@ -380,6 +380,13 @@ MVP expectations:
 - callback/webhook confirmation
 - persisted payment state
 - synchronized request status updates after trusted confirmation
+
+Current implementation direction:
+
+- `Payment` is now persisted as a request-scoped entity with provider session identifiers, amount, currency and provider result metadata
+- payment session creation currently uses a provider abstraction with a fake checkout adapter for foundation validation
+- webhook confirmation is authenticated with a backend secret and updates both payment state and request status only after trusted confirmation
+- successful confirmation currently applies the controlled transition `awaiting_payment -> paid`
 
 ---
 

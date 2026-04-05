@@ -36,5 +36,7 @@ public sealed class PickupRequest
 
   public List<PickupItem> Items { get; set; } = [];
 
+  public List<Payment> Payments { get; set; } = [];
+
   public List<PickupRequestStatusHistory> StatusHistory { get; set; } = [];
 }

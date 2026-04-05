@@ -93,6 +93,18 @@ Scheduling atual:
 - historico de scheduling persistido por request
 - sem payment neste recorte
 
+Payment atual:
+
+- `POST /api/v1/pickup-requests/{id}/payments`
+- `POST /api/v1/payments/webhook`
+- payment foundation com entidade `Payment` relacionada a `PickupRequest`
+- criacao de payment session protegida para o owner autenticado
+- iniciacao permitida apenas quando a request esta em `awaiting_payment`
+- valor e moeda derivados do pricing persistido
+- confirmacao segura via header `X-Payment-Webhook-Secret`
+- transicao controlada `awaiting_payment -> paid` apos confirmacao confiavel
+- historico de pagamento persistido quando a request muda para `paid`
+
 Fora de escopo nesta fase:
 
 - regras de dominio

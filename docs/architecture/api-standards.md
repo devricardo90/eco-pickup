@@ -257,6 +257,8 @@ Current implemented scope:
 - `PATCH /api/v1/admin/pickup-requests/{id}/review` applies the first admin review decision
 - `PATCH /api/v1/admin/pickup-requests/{id}/pricing` persists the admin pricing breakdown
 - `PATCH /api/v1/admin/pickup-requests/{id}/scheduling` persists the confirmed pickup window
+- `POST /api/v1/pickup-requests/{id}/payments` creates a payment session for the authenticated owner
+- `POST /api/v1/payments/webhook` confirms payment status through a secure backend webhook
 - current payload stores description, pickup window, a single pickup address and one or more pickup items
 - items require `category`, `description` and `estimatedSize`
 - item detail responses now include photo metadata for the owning user
@@ -264,9 +266,10 @@ Current implemented scope:
 - admin review now supports `approve` and `reject` with optional admin note
 - request responses now include pricing breakdown when the request has been priced
 - request responses now include confirmed scheduling data when the request has been scheduled
+- payment session creation and confirmation are now implemented through dedicated payment endpoints
 - item photo upload is fixed to API-mediated write with private S3-compatible storage
 - upload validation enforces ownership, content type whitelist, max `10 MB` and max `5` photos per `PickupItem`
-- pricing, scheduling and public history/timeline exposure are intentionally deferred to later slices
+- public history/timeline exposure and advanced payment-provider features are intentionally deferred to later slices
 
 Planned near-term direction:
 
@@ -292,6 +295,16 @@ Implemented MVP contract:
 ### Payments
 
 - `POST /api/v1/pickup-requests/{id}/payments`
+
+Current implemented payment scope:
+
+- payment session creation is available for the authenticated owner
+- payment can currently start only when request status is `awaiting_payment`
+- payment amount is derived from the persisted pricing total
+- confirmation happens through `POST /api/v1/payments/webhook`
+- webhook confirmation requires the backend secret header `X-Payment-Webhook-Secret`
+- successful confirmation transitions `awaiting_payment -> paid`
+- failed or cancelled payment updates payment state without changing request status
 
 ### Admin
 

@@ -52,9 +52,11 @@ Development
 - pricing agora persiste breakdown na request e permite transicao controlada para `quoted` ou `awaiting_payment`
 - EPIC-011B concluida com scheduling foundation administrativa
 - scheduling agora persiste a janela operacional confirmada e permite transicao controlada para `scheduled`
+- EPIC-012A concluida com payment foundation
+- payment agora persiste `Payment`, cria payment session, recebe confirmacao segura por webhook e aplica a transicao controlada `awaiting_payment -> paid`
 
 ## Objetivo atual
-Abrir o proximo slice de payment sem misturar cobranca com outras mutacoes operacionais.
+Preparar o proximo slice apos a foundation de payment sem misturar cobranca com workflow administrativo completo.
 
 ## O que ja existe
 - ideia do produto
@@ -74,7 +76,7 @@ Abrir o proximo slice de payment sem misturar cobranca com outras mutacoes opera
 - abrir painel admin, pricing e pagamento em etapas separadas
 
 ## Proximo passo recomendado
-Abrir a payment foundation como proxima fatia isolada sobre requests ja revisadas, precificadas e, quando aplicavel, agendadas.
+Abrir o proximo recorte operacional apos payment foundation, como timeline/tracking ou consolidacao do fluxo pago para execucao.
 
 ## Riscos atuais
 - comecar implementacao cedo demais

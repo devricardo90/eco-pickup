@@ -68,6 +68,11 @@ public sealed class PickupRequestConfiguration : IEntityTypeConfiguration<Pickup
       .HasForeignKey(x => x.PickupRequestId)
       .OnDelete(DeleteBehavior.Cascade);
 
+    builder.HasMany(x => x.Payments)
+      .WithOne(x => x.PickupRequest)
+      .HasForeignKey(x => x.PickupRequestId)
+      .OnDelete(DeleteBehavior.Cascade);
+
     builder.HasMany(x => x.StatusHistory)
       .WithOne(x => x.PickupRequest)
       .HasForeignKey(x => x.PickupRequestId)
