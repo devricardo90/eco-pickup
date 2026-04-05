@@ -37,10 +37,10 @@ src/
 - App Router validado
 - Tailwind validado
 - layout e pagina base
-- superficie read-only de tracking para owner em `/tracking/[requestId]`
-- superficie read-only de tracking para admin em `/admin/tracking/[requestId]`
-- componentes compartilhados para status atual, timeline e estados de tela
-- servico de leitura dos endpoints de history
+- superficie autenticada de detail/tracking para owner em `/tracking/[requestId]`
+- superficie autenticada de detail/tracking para admin em `/admin/tracking/[requestId]`
+- componentes compartilhados para resumo, status atual, metadados, timeline e estados de tela
+- servicos de leitura dos endpoints de detail e history
 - testes focados no mapeamento semantico da timeline
 - auth/session foundation com login, register, logout e cookie HTTP-only de sessao
 

@@ -60,9 +60,11 @@ Development
 - web agora consome os endpoints de history para owner e admin em rotas read-only com status destacado, timeline legivel e estados de loading/erro/vazio
 - EPIC-013C concluida com auth/session foundation na web
 - tracking owner/admin agora usa sessao autenticada real via cookie HTTP-only em vez de tokens manuais por env
+- EPIC-013D concluida com a composicao autenticada de pickup request detail + tracking
+- owner e admin agora veem resumo do pedido, status atual, metadados e timeline na mesma base visual, sem abrir mutacoes novas
 
 ## Objetivo atual
-Preparar o proximo slice apos auth/session foundation da web sem misturar identidade com mutacoes operacionais novas.
+Preparar o proximo slice apos a composicao autenticada de detail/tracking sem misturar visibilidade com mutacoes operacionais novas.
 
 ## O que ja existe
 - ideia do produto
@@ -82,7 +84,7 @@ Preparar o proximo slice apos auth/session foundation da web sem misturar identi
 - abrir painel admin, pricing e pagamento em etapas separadas
 
 ## Proximo passo recomendado
-Abrir o proximo recorte operacional apos auth/session foundation, como execution tracking detalhado, pickup request detail surface ou disposal record.
+Abrir o proximo recorte operacional apos detail/tracking composition, como execution tracking detalhado, pickup list/dashboard autenticado ou disposal record.
 
 ## Riscos atuais
 - comecar implementacao cedo demais

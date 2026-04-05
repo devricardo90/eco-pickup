@@ -1,12 +1,10 @@
 type PickupRequestStatusCardProps = {
-  requestId: string;
   currentStatus: string;
   lastUpdatedLabel: string;
   totalEvents: number;
 };
 
 export function PickupRequestStatusCard({
-  requestId,
   currentStatus,
   lastUpdatedLabel,
   totalEvents
@@ -17,12 +15,6 @@ export function PickupRequestStatusCard({
         Current status
       </span>
       <div className="mt-6 grid gap-4 md:grid-cols-3">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-            Pickup request
-          </p>
-          <p className="mt-2 break-all text-sm text-slate-700">{requestId}</p>
-        </div>
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
             Status

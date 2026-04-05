@@ -27,14 +27,14 @@ export default async function HomePage() {
                   className="inline-flex items-center justify-center rounded-2xl bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800"
                   href="/tracking/demo-request-id"
                 >
-                  Open owner tracking
+                  Open owner detail
                 </Link>
                 {session.user.role === "ADMIN" ? (
                   <Link
                     className="inline-flex items-center justify-center rounded-2xl border border-emerald-900/15 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-950 transition hover:border-emerald-900/30"
                     href="/admin/tracking/demo-request-id"
                   >
-                    Open admin tracking
+                    Open admin detail
                   </Link>
                 ) : null}
                 <LogoutForm />
@@ -67,7 +67,7 @@ export default async function HomePage() {
               <li>Next.js 16 App Router foundation</li>
               <li>TypeScript baseline</li>
               <li>Tailwind CSS baseline</li>
-              <li>Read-only owner/admin tracking routes backed by the API history endpoints</li>
+              <li>Authenticated owner/admin detail surfaces composed from existing detail + history endpoints</li>
               <li>Frontend auth/session foundation backed by JWT login and HTTP-only cookies</li>
             </ul>
           </article>
@@ -87,7 +87,7 @@ export default async function HomePage() {
         <section className="grid gap-4 md:grid-cols-2">
           <article className="rounded-[1.5rem] border border-emerald-950/10 bg-emerald-50/80 p-6 shadow-[0_18px_48px_rgba(16,85,54,0.08)]">
             <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-900">
-              Tracking surfaces
+              Detail surfaces
             </h2>
             <ul className="mt-4 space-y-3 text-sm leading-6 text-emerald-950">
               <li>
@@ -96,7 +96,7 @@ export default async function HomePage() {
               <li>
                 Admin route: <code>/admin/tracking/[requestId]</code>
               </li>
-              <li>Both routes stay read-only and reuse the same timeline components.</li>
+              <li>Both routes stay read-only and reuse the same summary, metadata and timeline composition.</li>
             </ul>
           </article>
 

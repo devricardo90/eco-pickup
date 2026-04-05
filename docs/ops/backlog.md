@@ -890,6 +890,50 @@ Entregar a fundacao de autenticacao e sessao da web para substituir tokens manua
 - polling
 - websocket
 
+#### EPIC-013D - Pickup Request Detail + Tracking Composition
+**Status:** DONE
+
+##### Objetivo
+Consolidar em uma unica superficie autenticada o resumo do pedido, status atual, timeline e metadados relevantes para owner e admin, consumindo apenas os endpoints ja existentes.
+
+##### Escopo
+- criar superficie autenticada de pickup request detail
+- compor resumo do pedido, status atual, timeline e metadados relevantes
+- reutilizar a base visual e de transformacao entre owner e admin
+- manter owner detail usando sessao autenticada real
+- manter admin detail exigindo role `ADMIN`
+- tratar loading, empty state e error state
+- preservar contratos backend existentes
+- adicionar testes aplicaveis
+- atualizar documentacao impactada
+
+##### Criterios de aceite
+- existe uma superficie autenticada unica de detail/tracking
+- owner so acessa o que e dele
+- admin acessa a superficie administrativa protegida
+- resumo do pedido aparece em destaque
+- currentStatus aparece claramente
+- timeline usa os endpoints existentes sem alterar contrato
+- eventos sistemicos sao legiveis
+- estados de loading, erro e vazio estao cobertos
+- nenhuma mutacao nova foi introduzida
+- lint, typecheck, build e testes aplicaveis passam
+
+##### Dependencias
+- EPIC-013A
+- EPIC-013B
+- EPIC-013C
+
+##### Fora de escopo
+- editar pedido
+- reabrir fluxo
+- redefinir preco
+- reagendar
+- confirmar manualmente pagamento
+- polling
+- websocket
+- notificacoes
+
 ---
 
 # EPIC-014 - Infra, Deploy e Observabilidade

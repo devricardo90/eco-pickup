@@ -1,4 +1,4 @@
-import { PickupRequestTrackingPage } from "@/features/tracking/pickup-request-tracking-page";
+import { PickupRequestDetailPage } from "@/features/tracking/pickup-request-detail-page";
 
 export const dynamic = "force-dynamic";
 
@@ -8,5 +8,5 @@ export default async function TrackingPage({
   params: Promise<{ requestId: string }>;
 }) {
   const { requestId } = await params;
-  return <PickupRequestTrackingPage requestId={requestId} scope="owner" />;
+  return <PickupRequestDetailPage requestId={requestId} scope="owner" />;
 }
