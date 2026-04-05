@@ -4,6 +4,7 @@ import {
   mapPickupRequestMetadataToUi,
   mapPickupRequestPaymentToUi,
   mapPickupRequestPricingToUi,
+  mapPickupRequestSchedulingToUi,
   mapPickupRequestSummaryToUi
 } from "@/lib/tracking/mapPickupRequestDetailToUi";
 import type { PickupRequestDetail } from "@/lib/tracking/types";
@@ -144,5 +145,28 @@ describe("mapPickupRequestDetailToUi", () => {
     expect(payment?.title).toBe("Payment confirmed");
     expect(payment?.actionLabel).toBeNull();
     expect(payment?.amountLabel).toContain("SEK");
+  });
+
+  it("builds a post-payment scheduling pending state", () => {
+    const scheduling = mapPickupRequestSchedulingToUi({
+      ...detail,
+      status: "paid",
+      scheduling: null
+    });
+
+    expect(scheduling).not.toBeNull();
+    expect(scheduling?.title).toBe("Payment complete");
+    expect(scheduling?.confirmedWindowLabel).toBeNull();
+  });
+
+  it("builds a scheduled state with confirmed window", () => {
+    const scheduling = mapPickupRequestSchedulingToUi({
+      ...detail,
+      status: "scheduled"
+    });
+
+    expect(scheduling).not.toBeNull();
+    expect(scheduling?.title).toBe("Pickup scheduled");
+    expect(scheduling?.confirmedWindowLabel).toContain("UTC");
   });
 });

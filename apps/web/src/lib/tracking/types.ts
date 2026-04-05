@@ -155,6 +155,13 @@ export type PickupRequestPaymentUi = {
   tone: "awaiting_payment" | "paid";
 };
 
+export type PickupRequestSchedulingUi = {
+  title: string;
+  description: string;
+  confirmedWindowLabel: string | null;
+  tone: "paid" | "scheduled";
+};
+
 export type PickupRequestListCardUi = {
   id: string;
   title: string;

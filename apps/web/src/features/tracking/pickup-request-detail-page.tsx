@@ -2,6 +2,7 @@ import Link from "next/link";
 import { PickupRequestMetadata } from "@/components/pickup-request-metadata";
 import { PickupRequestPaymentCard } from "@/components/pickup-request-payment-card";
 import { PickupRequestPricingCard } from "@/components/pickup-request-pricing-card";
+import { PickupRequestSchedulingCard } from "@/components/pickup-request-scheduling-card";
 import { PickupRequestStatusCard } from "@/components/pickup-request-status-card";
 import { PickupRequestSubmitForm } from "@/components/pickup-request-submit-form";
 import { PickupRequestSummary } from "@/components/pickup-request-summary";
@@ -16,6 +17,7 @@ import {
   mapPickupRequestMetadataToUi,
   mapPickupRequestPaymentToUi,
   mapPickupRequestPricingToUi,
+  mapPickupRequestSchedulingToUi,
   mapPickupRequestSummaryToUi
 } from "@/lib/tracking/mapPickupRequestDetailToUi";
 import { mapStatusLabel, mapTimelineEventToUi } from "@/lib/tracking/mapTimelineEventToUi";
@@ -74,6 +76,7 @@ export async function PickupRequestDetailPage({ requestId, scope, notice }: Pick
   const metadataEntries = mapPickupRequestMetadataToUi(detailResult.data);
   const pricing = scope === "owner" ? mapPickupRequestPricingToUi(detailResult.data) : null;
   const payment = scope === "owner" ? mapPickupRequestPaymentToUi(detailResult.data) : null;
+  const scheduling = scope === "owner" ? mapPickupRequestSchedulingToUi(detailResult.data) : null;
   const canEdit = scope === "owner" && isPickupRequestEditable(detailResult.data.status);
   const submitAction = scope === "owner" ? submitPickupRequestAction.bind(null, requestId) : null;
   const paymentAction = scope === "owner" ? createPaymentSessionAction.bind(null, requestId) : null;
@@ -130,6 +133,8 @@ export async function PickupRequestDetailPage({ requestId, scope, notice }: Pick
         {pricing ? <PickupRequestPricingCard pricing={pricing} /> : null}
 
         {payment ? <PickupRequestPaymentCard action={paymentAction} payment={payment} /> : null}
+
+        {scheduling ? <PickupRequestSchedulingCard scheduling={scheduling} /> : null}
 
         {historyResult.ok ? (
           <PickupRequestTimeline events={timelineEvents} />

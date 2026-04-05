@@ -5,6 +5,7 @@ import {
   type PickupRequestMetadataEntry,
   type PickupRequestPaymentUi,
   type PickupRequestPricingUi,
+  type PickupRequestSchedulingUi,
   type PickupRequestSummaryUi
 } from "@/lib/tracking/types";
 import { formatTimelineDate, mapStatusLabel } from "@/lib/tracking/mapTimelineEventToUi";
@@ -223,6 +224,33 @@ export function mapPickupRequestPaymentToUi(detail: PickupRequestDetail): Pickup
       amountLabel: formatCurrency(detail.pricing.total, detail.pricing.currency),
       actionLabel: null,
       tone: "paid"
+    };
+  }
+
+  return null;
+}
+
+export function mapPickupRequestSchedulingToUi(detail: PickupRequestDetail): PickupRequestSchedulingUi | null {
+  if (detail.status === "paid") {
+    return {
+      title: "Payment complete",
+      description:
+        "Payment is confirmed. The next operational step is schedule confirmation, which will appear here once the pickup window is locked.",
+      confirmedWindowLabel: null,
+      tone: "paid"
+    };
+  }
+
+  if (detail.status === "scheduled" && detail.scheduling) {
+    return {
+      title: "Pickup scheduled",
+      description:
+        "Your pickup window has been confirmed. Use this time range as the current operational collection window.",
+      confirmedWindowLabel: formatUtcRange(
+        detail.scheduling.confirmedPickupWindowStartUtc,
+        detail.scheduling.confirmedPickupWindowEndUtc
+      ),
+      tone: "scheduled"
     };
   }
 

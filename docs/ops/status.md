@@ -74,9 +74,11 @@ Development
 - owner agora visualiza pricing persistido com clareza durante `under_review`, `quoted` e `awaiting_payment`
 - EPIC-012B concluida com owner payment surface
 - owner agora consegue iniciar checkout em `awaiting_payment` e ver confirmacao clara quando a request estiver `paid`
+- EPIC-011D concluida com owner scheduled visibility
+- owner agora ve claramente o estado pos-pagamento e a janela confirmada quando a request estiver `scheduled`
 
 ## Objetivo atual
-Preparar o proximo slice apos a owner payment surface sem misturar esse recorte com novas mutacoes operacionais.
+Preparar o proximo slice apos a owner scheduled visibility sem misturar esse recorte com novas mutacoes operacionais.
 
 ## O que ja existe
 - ideia do produto
@@ -92,11 +94,11 @@ Preparar o proximo slice apos a owner payment surface sem misturar esse recorte 
 - decisao da foundation do monorepo registrada
 
 ## O que falta antes de desenvolver
-- manter a separacao entre payment surface owner e os proximos escopos operacionais do produto
+- manter a separacao entre scheduled visibility owner e os proximos escopos operacionais do produto
 - abrir painel admin, pricing e pagamento em etapas separadas
 
 ## Proximo passo recomendado
-Abrir o proximo recorte operacional apos owner payment surface, como scheduling visibility mais clara ou paid-to-scheduled owner messaging.
+Abrir o proximo recorte operacional apos owner scheduled visibility + post-payment messaging, como owner execution tracking mais clara ou completion messaging.
 
 ## Riscos atuais
 - comecar implementacao cedo demais

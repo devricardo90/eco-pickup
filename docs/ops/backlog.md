@@ -1154,6 +1154,37 @@ Expor para o owner a superficie de pagamento sobre os endpoints ja existentes de
 - polling
 - notificacoes
 
+#### EPIC-011D - Owner Scheduled Visibility + Post-Payment Messaging
+**Status:** DONE
+
+##### Objetivo
+Deixar claro para o owner quando a request saiu de `paid` para `scheduled`, destacando a janela confirmada de coleta e a mensagem operacional pos-pagamento sem abrir novas mutacoes.
+
+##### Escopo
+- criar visibilidade owner para o estado pos-pagamento
+- destacar a janela confirmada quando a request estiver `scheduled`
+- mostrar mensagem clara quando o pagamento estiver confirmado, mas o agendamento ainda nao tiver sido fechado
+- reutilizar detail/tracking e mapeamentos existentes
+- adicionar testes frontend relevantes
+- atualizar documentacao impactada
+
+##### Criterios de aceite
+- owner entende claramente a diferenca entre `paid` e `scheduled`
+- janela confirmada aparece em destaque quando disponivel
+- nenhuma mutacao backend nova e criada
+- lint, typecheck, build e testes aplicaveis passam
+
+##### Dependencias
+- EPIC-011B
+- EPIC-012B
+- EPIC-013D
+
+##### Fora de escopo
+- novas mutacoes operacionais
+- novos contratos backend
+- polling
+- notificacoes
+
 ---
 
 # EPIC-014 - Infra, Deploy e Observabilidade
