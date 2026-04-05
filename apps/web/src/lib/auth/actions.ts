@@ -171,9 +171,7 @@ export async function createPickupRequestAction(
     const submitResult = await submitPickupRequest(result.data.id, session.accessToken);
 
     if (!submitResult.ok) {
-      return {
-        error: submitResult.error
-      };
+      redirect(`/tracking/${result.data.id}?submitFailed=1`);
     }
 
     redirect(`/tracking/${submitResult.data.id}?submitted=1`);
@@ -215,9 +213,7 @@ export async function updatePickupRequestAction(
     const submitResult = await submitPickupRequest(result.data.id, session.accessToken);
 
     if (!submitResult.ok) {
-      return {
-        error: submitResult.error
-      };
+      redirect(`/tracking/${result.data.id}?submitFailed=1`);
     }
 
     redirect(`/tracking/${submitResult.data.id}?submitted=1`);

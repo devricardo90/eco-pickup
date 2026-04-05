@@ -1276,6 +1276,37 @@ Executar uma revisao transversal do MVP web/backend entregue para validar coeren
 - polling
 - notificacoes
 
+#### EPIC-000S - MVP Bug Bash / Manual QA
+**Status:** DONE
+
+##### Objetivo
+Executar uma rodada curta de QA manual sobre o MVP entregue para validar comportamento real, guardas, mensagens e consistencia entre summary, status, timeline, cards semanticos e CTAs.
+
+##### Escopo
+- validar fluxo owner ponta a ponta
+- validar superfices admin existentes em modo leitura
+- revisar estados vazios, erros, sucessos e bloqueios
+- registrar bugs reais com correcao objetiva
+- aplicar apenas correcoes pequenas e seguras
+
+##### Criterios de aceite
+- checklist curto de QA executado
+- bugs reais registrados com severidade e reproducao
+- apenas correcao de baixo risco aplicada quando necessaria
+- backlog e status atualizados
+- lint, typecheck, build e testes do frontend executados
+
+##### Dependencias
+- EPIC-000R
+- MVP atual entregue ate EPIC-013G
+
+##### Fora de escopo
+- novas funcionalidades
+- novas mutacoes operacionais
+- novos contratos backend
+- redesign amplo
+- novas dependencias
+
 ---
 
 # EPIC-014 - Infra, Deploy e Observabilidade

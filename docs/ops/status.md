@@ -82,6 +82,9 @@ Development
 - owner agora ve encerramento mais claro para `completed`, `cancelled` e `rejected`
 - EPIC-000R concluida com revisao transversal do MVP
 - a consolidacao atual identificou um ajuste pequeno de baixo risco: evitar duplicidade de cards semanticos no estado `completed`
+- EPIC-000S concluida com rodada curta de bug bash/manual QA no MVP
+- bug real corrigido no fluxo owner: quando `create and submit` ou `save and submit` falhavam na etapa de submissao, o draft ja persistido nao era comunicado com clareza ao usuario
+- owner tracking agora recebe notice explicito de `draft saved but submission did not complete`, evitando percepcao errada de perda de dados
 
 ## Objetivo atual
 Projeto pausado para consolidacao transversal do MVP atual antes de abrir novas frentes funcionais.
@@ -104,7 +107,7 @@ Projeto pausado para consolidacao transversal do MVP atual antes de abrir novas 
 - abrir painel admin, pricing e pagamento em etapas separadas
 
 ## Proximo passo recomendado
-Proximo passo recomendado: decidir entre abrir admin execution controls ou executar uma rodada objetiva de bugfixes priorizados a partir da revisao transversal.
+Proximo passo recomendado: manter a pausa de novas frentes funcionais e decidir se vale uma segunda rodada curta de QA manual com seed real de dados antes de retomar frentes operacionais.
 
 ## Riscos atuais
 - comecar implementacao cedo demais

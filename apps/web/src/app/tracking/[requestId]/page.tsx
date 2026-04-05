@@ -1,4 +1,5 @@
 import { PickupRequestDetailPage } from "@/features/tracking/pickup-request-detail-page";
+import { getTrackingNotice } from "@/lib/tracking/getTrackingNotice";
 
 export const dynamic = "force-dynamic";
 
@@ -7,19 +8,13 @@ export default async function TrackingPage({
   searchParams
 }: {
   params: Promise<{ requestId: string }>;
-  searchParams: Promise<{ saved?: string; submitted?: string }>;
+  searchParams: Promise<{ saved?: string; submitted?: string; submitFailed?: string }>;
 }) {
   const { requestId } = await params;
-  const { saved, submitted } = await searchParams;
+  const search = await searchParams;
   return (
     <PickupRequestDetailPage
-      notice={
-        submitted === "1"
-          ? "Pickup request submitted successfully."
-          : saved === "1"
-            ? "Pickup request saved as draft."
-            : null
-      }
+      notice={getTrackingNotice(search)}
       requestId={requestId}
       scope="owner"
     />
