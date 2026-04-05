@@ -37,9 +37,13 @@ Development
 - EPIC-008B concluida com itens vinculados a `PickupRequest` no mesmo payload de criacao
 - request passa a persistir request + address + items em uma unica operacao autenticada
 - upload, pricing, pagamento e fluxo admin continuam fora do escopo atual
+- EPIC-009A aberta em planejamento para fundacao de midia antes do upload real
+- leitura minima de request foi identificada como suporte necessario para ownership e exibicao futura de fotos
+- EPIC-009R concluida com listagem e detalhe de pickup requests para o usuario autenticado
+- leitura atual retorna request, address e items, sem fotos e sem escopo administrativo
 
 ## Objetivo atual
-Expandir o produto em fatias pequenas a partir do fluxo de pickup request sem quebrar as foundations ja validadas.
+Fechar a fundacao de midia em nivel tecnico agora que a leitura minima do recurso ja existe.
 
 ## O que ja existe
 - ideia do produto
@@ -56,16 +60,19 @@ Expandir o produto em fatias pequenas a partir do fluxo de pickup request sem qu
 
 ## O que falta antes de desenvolver
 - manter a separacao entre o recorte atual e os proximos escopos do produto
-- abrir upload, pricing e operacao admin em etapas separadas
+- fechar a decisao de media foundation
+- abrir upload real, pricing e operacao admin em etapas separadas
 
 ## Proximo passo recomendado
-Abrir a EPIC-009 para suportar upload de imagens e vinculo futuro com `PickupItem`, sem antecipar pricing ou fluxo admin.
+Concluir tecnicamente a EPIC-009A com decisao de storage, modelo `ItemPhoto`, constraints de upload e ownership, preparando depois a EPIC-009B de upload real.
 
 ## Riscos atuais
 - comecar implementacao cedo demais
 - deixar decisoes arquiteturais implicitas
-- misturar `EPIC-008B` com upload, pricing ou pagamento
-- expandir o fluxo de itens antes de definir a estrategia de imagem
+- misturar fundacao de midia com upload real no mesmo slice
+- abrir admin ou pricing sem base visual suficiente
+- definir storage ou ownership de forma implicita
+- expandir queries de usuario para escopo administrativo antes da hora
 - backlog perder o papel de fonte oficial
 
 ## Regra operacional

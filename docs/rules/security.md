@@ -26,6 +26,11 @@ Estabelecer diretrizes minimas de seguranca para a foundation do projeto.
 - armazenar senha apenas com hash seguro
 - emitir tokens JWT com expiracao curta e chave de assinatura controlada
 - manter roles basicas explicitamente separadas entre `USER` e `ADMIN`
+- ownership de midia deve seguir o recurso pai (`PickupRequest` / `PickupItem`)
+- upload de arquivo deve usar whitelist explicita de content types
+- limites de tamanho devem ser definidos antes da exposicao de endpoint de upload
+- nomes ou chaves de arquivo nao devem confiar em input livre do usuario como identificador final
+- leitura e download de midia devem exigir verificacao de ownership ou papel administrativo
 
 ## Infra e operacao
 

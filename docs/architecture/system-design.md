@@ -358,6 +358,17 @@ Storage requirements:
 
 The provider may be defined later, but architecture should assume external object storage.
 
+Current planning direction for media foundation:
+
+- media must attach to `PickupItem`, not directly to `PickupRequest`
+- `ItemPhoto` should preserve at minimum: id, pickupItemId, storageKey, originalFileName, contentType, sizeBytes, createdUtc
+- ownership must follow the parent request owner or admin authorization
+- upload strategy must be explicitly chosen before implementation:
+  - direct upload with signed URL
+  - upload through API with backend-managed storage write
+- a read foundation for `GET /api/v1/pickup-requests` and `GET /api/v1/pickup-requests/{id}` is recommended before real upload so photos can later be exposed in a stable detail shape
+- media foundation should define constraints first, then upload mechanics in a separate slice
+
 ---
 
 ## 13. Payment Integration Direction

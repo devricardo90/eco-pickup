@@ -19,6 +19,19 @@ public static class PickupRequestEndpoints
       .ProducesValidationProblem()
       .Produces(StatusCodes.Status401Unauthorized);
 
+    pickupRequestsGroup.MapGet("/", GetByUserAsync)
+      .WithName("GetPickupRequests")
+      .Produces<IReadOnlyList<PickupRequestResult>>(StatusCodes.Status200OK)
+      .ProducesValidationProblem()
+      .Produces(StatusCodes.Status401Unauthorized);
+
+    pickupRequestsGroup.MapGet("/{id:guid}", GetByIdAsync)
+      .WithName("GetPickupRequestById")
+      .Produces<PickupRequestResult>(StatusCodes.Status200OK)
+      .ProducesValidationProblem()
+      .Produces(StatusCodes.Status401Unauthorized)
+      .Produces(StatusCodes.Status404NotFound);
+
     return app;
   }
 
@@ -56,6 +69,51 @@ public static class PickupRequestEndpoints
         cancellationToken);
 
       return Results.Created($"/api/v1/pickup-requests/{pickupRequest.Id}", pickupRequest);
+    }
+    catch (PickupRequestValidationException ex)
+    {
+      return Results.ValidationProblem(ex.Errors.ToDictionary(pair => pair.Key, pair => pair.Value));
+    }
+  }
+
+  private static async Task<IResult> GetByUserAsync(
+    ClaimsPrincipal principal,
+    IPickupRequestService pickupRequestService,
+    CancellationToken cancellationToken)
+  {
+    var subject = principal.FindFirstValue("sub");
+    if (!Guid.TryParse(subject, out var userId))
+    {
+      return Results.Unauthorized();
+    }
+
+    try
+    {
+      var pickupRequests = await pickupRequestService.GetByUserAsync(userId, cancellationToken);
+      return Results.Ok(pickupRequests);
+    }
+    catch (PickupRequestValidationException ex)
+    {
+      return Results.ValidationProblem(ex.Errors.ToDictionary(pair => pair.Key, pair => pair.Value));
+    }
+  }
+
+  private static async Task<IResult> GetByIdAsync(
+    ClaimsPrincipal principal,
+    Guid id,
+    IPickupRequestService pickupRequestService,
+    CancellationToken cancellationToken)
+  {
+    var subject = principal.FindFirstValue("sub");
+    if (!Guid.TryParse(subject, out var userId))
+    {
+      return Results.Unauthorized();
+    }
+
+    try
+    {
+      var pickupRequest = await pickupRequestService.GetByIdAsync(id, userId, cancellationToken);
+      return pickupRequest is null ? Results.NotFound() : Results.Ok(pickupRequest);
     }
     catch (PickupRequestValidationException ex)
     {

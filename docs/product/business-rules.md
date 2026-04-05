@@ -73,6 +73,7 @@ Current implementation note:
 - EPIC-008A and EPIC-008B create the request foundation in `draft`
 - the current creation payload already requires at least one item
 - image, pricing, payment and full submission workflow remain deferred to subsequent slices
+- media foundation must be defined before real image upload
 
 ---
 
@@ -92,6 +93,12 @@ Current implementation note:
 - EPIC-008B persists `category`, `description` and `estimatedSize`
 - accepted sizes are `small`, `medium` and `large`
 - item photos remain out of scope for this slice
+
+Planned next-step note:
+
+- item photos will attach to `PickupItem`
+- photo upload must enforce ownership, file type and file size constraints
+- image support should be opened only after media foundation and read/detail support are defined
 
 Estimated size options for MVP may be normalized to:
 
@@ -320,6 +327,12 @@ Can view only:
 - their own pickup requests
 - their own request statuses
 - their own payment-related flow
+
+Current implementation note:
+
+- user read access currently covers own pickup request list and own pickup request detail
+- read responses currently expose request, address and items only
+- photos remain out of scope until the media slices are delivered
 
 ## Admins
 

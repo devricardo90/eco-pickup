@@ -119,6 +119,43 @@ public sealed class PickupRequestServiceTests
         CancellationToken.None));
   }
 
+  [Fact]
+  public async Task GetByUserAsync_ShouldReturnOnlyAuthenticatedUserRequests()
+  {
+    var repository = new InMemoryPickupRequestRepository();
+    var userId = Guid.NewGuid();
+    repository.StoredPickupRequests.AddRange(
+    [
+      CreatePickupRequest(userId, "Sofa", DateTime.UtcNow.AddMinutes(-10)),
+      CreatePickupRequest(Guid.NewGuid(), "Wardrobe", DateTime.UtcNow.AddMinutes(-5))
+    ]);
+
+    var service = new PickupRequestService(repository);
+
+    var pickupRequests = await service.GetByUserAsync(userId, CancellationToken.None);
+
+    Assert.Single(pickupRequests);
+    Assert.Equal(userId, pickupRequests[0].UserId);
+    Assert.Equal("Sofa", pickupRequests[0].Description);
+    Assert.Single(pickupRequests[0].Items);
+  }
+
+  [Fact]
+  public async Task GetByIdAsync_ShouldReturnNullWhenRequestDoesNotBelongToAuthenticatedUser()
+  {
+    var repository = new InMemoryPickupRequestRepository();
+    var ownerId = Guid.NewGuid();
+    var otherUserId = Guid.NewGuid();
+    var pickupRequest = CreatePickupRequest(ownerId, "Desk", DateTime.UtcNow.AddMinutes(-15));
+    repository.StoredPickupRequests.Add(pickupRequest);
+
+    var service = new PickupRequestService(repository);
+
+    var result = await service.GetByIdAsync(pickupRequest.Id, otherUserId, CancellationToken.None);
+
+    Assert.Null(result);
+  }
+
   private sealed class InMemoryPickupRequestRepository : IPickupRequestRepository
   {
     public List<PickupRequest> StoredPickupRequests { get; } = [];
@@ -129,7 +166,53 @@ public sealed class PickupRequestServiceTests
       return Task.CompletedTask;
     }
 
+    public Task<IReadOnlyList<PickupRequest>> GetByUserIdAsync(Guid userId, CancellationToken cancellationToken) =>
+      Task.FromResult<IReadOnlyList<PickupRequest>>(StoredPickupRequests
+        .Where(x => x.UserId == userId)
+        .OrderByDescending(x => x.CreatedUtc)
+        .ToList());
+
+    public Task<PickupRequest?> GetByIdAsync(Guid id, Guid userId, CancellationToken cancellationToken) =>
+      Task.FromResult(StoredPickupRequests.SingleOrDefault(x => x.Id == id && x.UserId == userId));
+
     public Task SaveChangesAsync(CancellationToken cancellationToken) =>
       Task.CompletedTask;
+  }
+
+  private static PickupRequest CreatePickupRequest(Guid userId, string description, DateTime createdUtc)
+  {
+    var pickupRequestId = Guid.NewGuid();
+
+    return new PickupRequest
+    {
+      Id = pickupRequestId,
+      UserId = userId,
+      Description = description,
+      Status = PickupRequestStatuses.Draft,
+      PickupWindowStartUtc = DateTime.UtcNow.AddDays(1),
+      PickupWindowEndUtc = DateTime.UtcNow.AddDays(1).AddHours(2),
+      CreatedUtc = createdUtc,
+      Address = new Address
+      {
+        Id = Guid.NewGuid(),
+        PickupRequestId = pickupRequestId,
+        Street = "Main Street 1",
+        City = "Stockholm",
+        PostalCode = "11122",
+        HasElevator = true
+      },
+      Items =
+      [
+        new PickupItem
+        {
+          Id = Guid.NewGuid(),
+          PickupRequestId = pickupRequestId,
+          Category = "furniture",
+          Description = description,
+          EstimatedSize = PickupItemSizes.Medium,
+          CreatedUtc = createdUtc.AddMinutes(1)
+        }
+      ]
+    };
   }
 }

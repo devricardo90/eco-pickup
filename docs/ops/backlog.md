@@ -322,7 +322,7 @@ Expandir a solicitacao para suportar itens associados sem ainda abrir upload de 
 ---
 
 # EPIC-009 - Upload de Imagens
-**Status:** READY
+**Status:** IN_PROGRESS
 
 ## Objetivo
 Permitir upload e associacao de fotos aos itens da solicitacao.
@@ -341,6 +341,104 @@ Permitir upload e associacao de fotos aos itens da solicitacao.
 
 ## Dependencias
 - EPIC-008
+
+### Fatias de execucao
+
+#### EPIC-009A - Media Foundation
+**Status:** READY
+
+##### Objetivo
+Definir a fundacao de midia antes do upload real, preservando o dominio e evitando acoplamento prematuro com storage, admin ou pricing.
+
+##### Escopo
+- definir estrategia de storage
+- decidir entre upload direto ou upload via API
+- modelar `ItemPhoto`
+- definir vinculo entre `ItemPhoto` e `PickupItem`
+- definir ownership, autorizacao e regras de seguranca
+- definir convencao de chave/nome de arquivo
+- definir limites de tipo e tamanho
+- registrar contratos e documentacao da fundacao de midia
+- registrar a necessidade de leitura minima de request para sustentar exibicao futura
+
+##### Criterios de aceite
+- estrategia de storage definida
+- fluxo tecnico de upload decidido
+- modelo `ItemPhoto` definido documentalmente
+- ownership e regras de seguranca definidos
+- limites e constraints documentados
+- backlog e arquitetura atualizados
+- proximo recorte de upload real preparado sem ambiguidade
+
+##### Dependencias
+- EPIC-008B
+
+##### Fora de escopo
+- upload real de arquivo
+- endpoint de upload
+- persistencia de metadata em banco
+- exibicao de foto no frontend
+- painel admin
+- pricing
+- pagamento
+
+#### EPIC-009R - Pickup Request Read Foundation
+**Status:** DONE
+
+##### Objetivo
+Garantir leitura minima de pickup request para ownership, verificacao de detalhe e base futura de exibicao de fotos.
+
+##### Escopo
+- `GET /api/v1/pickup-requests`
+- `GET /api/v1/pickup-requests/{id}`
+- ownership minimo para usuario autenticado
+- retorno de request com address e items
+
+##### Criterios de aceite
+- listagem minima disponivel
+- detalhe minimo disponivel
+- ownership validado
+- retorno com request, address e items funcionando
+- testes aplicaveis passando
+- Swagger, Scalar e OpenAPI continuam funcionais
+- documentacao impactada atualizada
+
+##### Dependencias
+- EPIC-008B
+
+##### Fora de escopo
+- fotos
+- `ItemPhoto`
+- queries administrativas
+- painel admin
+- pricing
+- pagamento
+
+#### EPIC-009B - Item Photo Upload
+**Status:** READY
+
+##### Objetivo
+Implementar upload real de fotos de item sobre a fundacao de midia previamente definida.
+
+##### Escopo
+- endpoint de upload
+- persistencia de metadata
+- vinculo com `PickupItem`
+- validacoes de tipo/tamanho
+- leitura das fotos no detalhe da request
+- testes e documentacao impactada
+
+##### Criterios de aceite
+- upload funcional
+- metadata persistida
+- ownership validado
+- leitura de fotos no detalhe funcional
+- testes passando
+- Swagger, Scalar e OpenAPI atualizados
+
+##### Dependencias
+- EPIC-009A
+- EPIC-009R
 
 ---
 

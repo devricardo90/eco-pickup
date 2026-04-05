@@ -7,6 +7,47 @@ namespace EcoPickup.Application.PickupRequests;
 
 public sealed class PickupRequestService(IPickupRequestRepository pickupRequestRepository) : IPickupRequestService
 {
+  public async Task<IReadOnlyList<PickupRequestResult>> GetByUserAsync(
+    Guid userId,
+    CancellationToken cancellationToken)
+  {
+    if (userId == Guid.Empty)
+    {
+      throw new PickupRequestValidationException(new Dictionary<string, string[]>
+      {
+        ["userId"] = ["Authenticated user is required."]
+      });
+    }
+
+    var pickupRequests = await pickupRequestRepository.GetByUserIdAsync(userId, cancellationToken);
+    return pickupRequests.Select(ToResult).ToArray();
+  }
+
+  public async Task<PickupRequestResult?> GetByIdAsync(
+    Guid id,
+    Guid userId,
+    CancellationToken cancellationToken)
+  {
+    if (id == Guid.Empty)
+    {
+      throw new PickupRequestValidationException(new Dictionary<string, string[]>
+      {
+        ["id"] = ["Pickup request id is required."]
+      });
+    }
+
+    if (userId == Guid.Empty)
+    {
+      throw new PickupRequestValidationException(new Dictionary<string, string[]>
+      {
+        ["userId"] = ["Authenticated user is required."]
+      });
+    }
+
+    var pickupRequest = await pickupRequestRepository.GetByIdAsync(id, userId, cancellationToken);
+    return pickupRequest is null ? null : ToResult(pickupRequest);
+  }
+
   public async Task<PickupRequestResult> CreateAsync(
     Guid userId,
     CreatePickupRequestCommand command,
@@ -165,6 +206,7 @@ public sealed class PickupRequestService(IPickupRequestRepository pickupRequestR
         pickupRequest.Address.HasElevator,
         pickupRequest.Address.AccessNotes),
       pickupRequest.Items
+        .OrderBy(item => item.CreatedUtc)
         .Select(item => new PickupItemResult(
           item.Id,
           item.Category,

@@ -249,9 +249,15 @@ Suggested initial direction:
 Current implemented scope:
 
 - `POST /api/v1/pickup-requests` creates an authenticated request in `draft`
+- `GET /api/v1/pickup-requests` lists authenticated user requests
+- `GET /api/v1/pickup-requests/{id}` returns authenticated user request detail with ownership enforcement
 - current payload stores description, pickup window, a single pickup address and one or more pickup items
 - items require `category`, `description` and `estimatedSize`
 - images, pricing and status history are intentionally deferred to later slices
+
+Planned near-term direction:
+
+- define media contracts before exposing `POST /api/v1/pickup-requests/{id}/images` or item-level upload routes
 
 ### Status / tracking
 
@@ -260,6 +266,11 @@ Current implemented scope:
 ### Images
 
 - `POST /api/v1/pickup-requests/{id}/images`
+
+Recommended foundation before implementation:
+
+- final upload route may move to an item-oriented shape such as `POST /api/v1/pickup-items/{id}/photos`
+- the contract must define content type whitelist, size limit, ownership enforcement and storage semantics before upload is implemented
 
 ### Payments
 
