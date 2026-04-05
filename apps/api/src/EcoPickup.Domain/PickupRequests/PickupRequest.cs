@@ -19,4 +19,6 @@ public sealed class PickupRequest
   public Address Address { get; set; } = null!;
 
   public List<PickupItem> Items { get; set; } = [];
+
+  public List<PickupRequestStatusHistory> StatusHistory { get; set; } = [];
 }

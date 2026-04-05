@@ -254,13 +254,15 @@ Current implemented scope:
 - `POST /api/v1/pickup-items/{id}/photos` uploads one authenticated item photo via multipart form-data
 - `GET /api/v1/admin/pickup-requests` lists pickup requests for `ADMIN`
 - `GET /api/v1/admin/pickup-requests/{id}` returns admin pickup request detail
+- `PATCH /api/v1/admin/pickup-requests/{id}/review` applies the first admin review decision
 - current payload stores description, pickup window, a single pickup address and one or more pickup items
 - items require `category`, `description` and `estimatedSize`
 - item detail responses now include photo metadata for the owning user
 - admin detail responses now include `address`, `items`, `photos` and current `status`
+- admin review now supports `approve` and `reject` with optional admin note
 - item photo upload is fixed to API-mediated write with private S3-compatible storage
 - upload validation enforces ownership, content type whitelist, max `10 MB` and max `5` photos per `PickupItem`
-- pricing and status history are intentionally deferred to later slices
+- pricing, scheduling and public history/timeline exposure are intentionally deferred to later slices
 
 Planned near-term direction:
 
@@ -300,7 +302,10 @@ Current implemented admin read scope:
 
 - list and detail are available for `ADMIN` only
 - detail includes `address`, `items`, `photos` and current `status`
-- pricing, approve/reject, scheduling and payment actions remain out of scope
+- review action is available through `PATCH /api/v1/admin/pickup-requests/{id}/review`
+- allowed transitions in the current slice are `draft -> under_review`, `draft -> rejected` and `under_review -> rejected`
+- each review action stores a status-history entry with actor, previous status, next status and optional note
+- pricing, scheduling and payment actions remain out of scope
 
 These are directional standards, not locked implementation details yet.
 

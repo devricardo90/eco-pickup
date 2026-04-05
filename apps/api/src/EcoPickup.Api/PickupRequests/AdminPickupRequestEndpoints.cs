@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using EcoPickup.Application.PickupRequests.Abstractions;
 using EcoPickup.Application.PickupRequests.Exceptions;
 using EcoPickup.Application.PickupRequests.Models;
@@ -23,6 +24,14 @@ public static class AdminPickupRequestEndpoints
 
     adminPickupRequestsGroup.MapGet("/{id:guid}", GetByIdAsync)
       .WithName("AdminGetPickupRequestById")
+      .Produces<PickupRequestResult>(StatusCodes.Status200OK)
+      .ProducesValidationProblem()
+      .Produces(StatusCodes.Status401Unauthorized)
+      .Produces(StatusCodes.Status403Forbidden)
+      .Produces(StatusCodes.Status404NotFound);
+
+    adminPickupRequestsGroup.MapPatch("/{id:guid}/review", ReviewAsync)
+      .WithName("AdminReviewPickupRequest")
       .Produces<PickupRequestResult>(StatusCodes.Status200OK)
       .ProducesValidationProblem()
       .Produces(StatusCodes.Status401Unauthorized)
@@ -55,4 +64,43 @@ public static class AdminPickupRequestEndpoints
       return Results.ValidationProblem(ex.Errors.ToDictionary(pair => pair.Key, pair => pair.Value));
     }
   }
+
+  private static async Task<IResult> ReviewAsync(
+    ClaimsPrincipal principal,
+    Guid id,
+    ReviewPickupRequestRequest request,
+    IPickupRequestService pickupRequestService,
+    CancellationToken cancellationToken)
+  {
+    var subject = principal.FindFirstValue("sub");
+    if (!Guid.TryParse(subject, out var adminUserId))
+    {
+      return Results.Unauthorized();
+    }
+
+    try
+    {
+      var pickupRequest = await pickupRequestService.ReviewAsync(
+        id,
+        adminUserId,
+        new ReviewPickupRequestCommand(request.Decision, request.Note),
+        cancellationToken);
+
+      return Results.Ok(pickupRequest);
+    }
+    catch (PickupRequestValidationException ex)
+    {
+      if (ex.Errors.TryGetValue("id", out var idErrors)
+        && idErrors.Contains("Pickup request was not found."))
+      {
+        return Results.NotFound();
+      }
+
+      return Results.ValidationProblem(ex.Errors.ToDictionary(pair => pair.Key, pair => pair.Value));
+    }
+  }
+
+  public sealed record ReviewPickupRequestRequest(
+    string Decision,
+    string? Note);
 }

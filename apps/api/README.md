@@ -44,6 +44,7 @@ Fluxo atual de pickup request:
 - `POST /api/v1/pickup-items/{id}/photos`
 - `GET /api/v1/admin/pickup-requests`
 - `GET /api/v1/admin/pickup-requests/{id}`
+- `PATCH /api/v1/admin/pickup-requests/{id}/review`
 
 Media atual:
 
@@ -61,7 +62,15 @@ Admin read atual:
 - endpoints administrativos de leitura protegidos por role `ADMIN`
 - listagem administrativa minima de pickup requests
 - detalhe administrativo com `address`, `items`, `photos` e `status`
-- sem pricing, approve/reject, mutacao de status ou pagamento neste recorte
+
+Admin review atual:
+
+- review minimo protegido por role `ADMIN`
+- decisao `approve` ou `reject`
+- nota administrativa opcional
+- transicoes permitidas: `draft -> under_review`, `draft -> rejected`, `under_review -> rejected`
+- historico de review persistido por request
+- sem pricing, scheduling ou pagamento neste recorte
 
 Fora de escopo nesta fase:
 

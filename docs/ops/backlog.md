@@ -538,6 +538,41 @@ Entregar leitura administrativa minima de pickup requests antes de abrir qualque
 - workflow administrativo completo
 - acoes operacionais
 
+#### EPIC-010B - Admin Review Foundation
+**Status:** DONE
+
+##### Objetivo
+Entregar a primeira acao administrativa controlada para permitir decisao minima de review sem abrir pricing, scheduling ou pagamento.
+
+##### Escopo
+- implementar approve/reject administrativo
+- restringir acesso a role `ADMIN`
+- validar transicoes controladas de status
+- registrar historico da acao administrativa
+- aceitar nota administrativa opcional
+- adicionar testes aplicaveis
+- atualizar documentacao impactada
+
+##### Criterios de aceite
+- endpoint admin de approve/reject funcional
+- acesso restrito a `ADMIN`
+- transicoes de status validadas
+- historico da acao registrado
+- build continua passando
+- testes aplicaveis passam
+- Swagger, Scalar e OpenAPI continuam funcionando
+- documentacao impactada atualizada
+
+##### Dependencias
+- EPIC-010A
+
+##### Fora de escopo
+- pricing
+- scheduling
+- pagamento
+- workflow administrativo completo
+- acoes operacionais alem de review
+
 ---
 
 # EPIC-011 - Motor de Preco MVP

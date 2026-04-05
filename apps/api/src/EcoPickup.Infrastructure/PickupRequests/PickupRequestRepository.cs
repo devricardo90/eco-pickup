@@ -53,6 +53,13 @@ public sealed class PickupRequestRepository(EcoPickupDbContext dbContext) : IPic
         pickupRequest => pickupRequest.Id == id,
         cancellationToken);
 
+  public Task<PickupRequest?> GetTrackedByIdAsync(Guid id, CancellationToken cancellationToken) =>
+    dbContext.PickupRequests
+      .Include(pickupRequest => pickupRequest.StatusHistory)
+      .SingleOrDefaultAsync(
+        pickupRequest => pickupRequest.Id == id,
+        cancellationToken);
+
   public Task<PickupItem?> GetOwnedItemByIdAsync(Guid itemId, Guid userId, CancellationToken cancellationToken) =>
     dbContext.PickupItems
       .AsNoTracking()

@@ -7,6 +7,72 @@ namespace EcoPickup.Application.PickupRequests;
 
 public sealed class PickupRequestService(IPickupRequestRepository pickupRequestRepository) : IPickupRequestService
 {
+  public async Task<PickupRequestResult> ReviewAsync(
+    Guid id,
+    Guid adminUserId,
+    ReviewPickupRequestCommand command,
+    CancellationToken cancellationToken)
+  {
+    var errors = new Dictionary<string, string[]>();
+
+    if (id == Guid.Empty)
+    {
+      errors["id"] = ["Pickup request id is required."];
+    }
+
+    if (adminUserId == Guid.Empty)
+    {
+      errors["adminUserId"] = ["Authenticated admin user is required."];
+    }
+
+    var decision = command.Decision.Trim().ToLowerInvariant();
+    if (!PickupRequestReviewDecisions.IsSupported(decision))
+    {
+      errors["decision"] = ["Decision must be one of: approve, reject."];
+    }
+
+    var normalizedNote = NormalizeOptional(command.Note);
+    if (normalizedNote is not null && normalizedNote.Length > 1000)
+    {
+      errors["note"] = ["Note must be 1000 characters or fewer."];
+    }
+
+    if (errors.Count > 0)
+    {
+      throw new PickupRequestValidationException(errors);
+    }
+
+    var pickupRequest = await pickupRequestRepository.GetTrackedByIdAsync(id, cancellationToken);
+    if (pickupRequest is null)
+    {
+      throw new PickupRequestValidationException(new Dictionary<string, string[]>
+      {
+        ["id"] = ["Pickup request was not found."]
+      });
+    }
+
+    var nextStatus = ResolveNextReviewStatus(pickupRequest.Status, decision);
+    pickupRequest.StatusHistory.Add(new PickupRequestStatusHistory
+    {
+      Id = Guid.NewGuid(),
+      PickupRequestId = pickupRequest.Id,
+      FromStatus = pickupRequest.Status,
+      ToStatus = nextStatus,
+      Action = decision,
+      ActorUserId = adminUserId,
+      Note = normalizedNote,
+      CreatedUtc = DateTime.UtcNow
+    });
+    pickupRequest.Status = nextStatus;
+
+    await pickupRequestRepository.SaveChangesAsync(cancellationToken);
+
+    var refreshedPickupRequest = await pickupRequestRepository.GetByIdForAdminAsync(id, cancellationToken)
+      ?? throw new InvalidOperationException("Pickup request should exist after review.");
+
+    return ToResult(refreshedPickupRequest);
+  }
+
   public async Task<IReadOnlyList<PickupRequestResult>> GetAllForAdminAsync(
     CancellationToken cancellationToken)
   {
@@ -210,6 +276,18 @@ public sealed class PickupRequestService(IPickupRequestRepository pickupRequestR
 
   private static string NormalizeEstimatedSize(string estimatedSize) =>
     estimatedSize.Trim().ToLowerInvariant();
+
+  private static string ResolveNextReviewStatus(string currentStatus, string decision) =>
+    (currentStatus, decision) switch
+    {
+      (PickupRequestStatuses.Draft, PickupRequestReviewDecisions.Approve) => PickupRequestStatuses.UnderReview,
+      (PickupRequestStatuses.Draft, PickupRequestReviewDecisions.Reject) => PickupRequestStatuses.Rejected,
+      (PickupRequestStatuses.UnderReview, PickupRequestReviewDecisions.Reject) => PickupRequestStatuses.Rejected,
+      _ => throw new PickupRequestValidationException(new Dictionary<string, string[]>
+      {
+        ["status"] = [$"Decision '{decision}' is not allowed when request status is '{currentStatus}'."]
+      })
+    };
 
   private static PickupRequestResult ToResult(PickupRequest pickupRequest) =>
     new(

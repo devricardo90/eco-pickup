@@ -229,6 +229,66 @@ public sealed class PickupRequestServiceTests
     Assert.Single(result.Items[0].Photos);
   }
 
+  [Fact]
+  public async Task ReviewAsync_ShouldApproveDraftRequestAndRegisterHistory()
+  {
+    var repository = new InMemoryPickupRequestRepository();
+    var pickupRequest = CreatePickupRequest(Guid.NewGuid(), "Dining table", DateTime.UtcNow.AddMinutes(-15));
+    repository.StoredPickupRequests.Add(pickupRequest);
+    var service = new PickupRequestService(repository);
+    var adminUserId = Guid.NewGuid();
+
+    var result = await service.ReviewAsync(
+      pickupRequest.Id,
+      adminUserId,
+      new ReviewPickupRequestCommand("approve", null),
+      CancellationToken.None);
+
+    Assert.Equal(PickupRequestStatuses.UnderReview, result.Status);
+    Assert.Single(pickupRequest.StatusHistory);
+    Assert.Equal(PickupRequestStatuses.Draft, pickupRequest.StatusHistory[0].FromStatus);
+    Assert.Equal(PickupRequestStatuses.UnderReview, pickupRequest.StatusHistory[0].ToStatus);
+    Assert.Equal("approve", pickupRequest.StatusHistory[0].Action);
+    Assert.Equal(adminUserId, pickupRequest.StatusHistory[0].ActorUserId);
+  }
+
+  [Fact]
+  public async Task ReviewAsync_ShouldRejectUnderReviewRequestAndPersistNote()
+  {
+    var repository = new InMemoryPickupRequestRepository();
+    var pickupRequest = CreatePickupRequest(Guid.NewGuid(), "Wardrobe", DateTime.UtcNow.AddMinutes(-15));
+    pickupRequest.Status = PickupRequestStatuses.UnderReview;
+    repository.StoredPickupRequests.Add(pickupRequest);
+    var service = new PickupRequestService(repository);
+
+    var result = await service.ReviewAsync(
+      pickupRequest.Id,
+      Guid.NewGuid(),
+      new ReviewPickupRequestCommand("reject", "Broken legs"),
+      CancellationToken.None);
+
+    Assert.Equal(PickupRequestStatuses.Rejected, result.Status);
+    Assert.Single(pickupRequest.StatusHistory);
+    Assert.Equal("Broken legs", pickupRequest.StatusHistory[0].Note);
+  }
+
+  [Fact]
+  public async Task ReviewAsync_ShouldThrowWhenTransitionIsInvalid()
+  {
+    var repository = new InMemoryPickupRequestRepository();
+    var pickupRequest = CreatePickupRequest(Guid.NewGuid(), "Sofa", DateTime.UtcNow.AddMinutes(-15));
+    pickupRequest.Status = PickupRequestStatuses.Rejected;
+    repository.StoredPickupRequests.Add(pickupRequest);
+    var service = new PickupRequestService(repository);
+
+    await Assert.ThrowsAsync<PickupRequestValidationException>(() =>
+      service.ReviewAsync(
+        pickupRequest.Id,
+        Guid.NewGuid(),
+        new ReviewPickupRequestCommand("approve", null),
+        CancellationToken.None));
+  }
+
   private sealed class InMemoryPickupRequestRepository : IPickupRequestRepository
   {
     public List<PickupRequest> StoredPickupRequests { get; } = [];
@@ -254,6 +314,9 @@ public sealed class PickupRequestServiceTests
         .ToList());
 
     public Task<PickupRequest?> GetByIdForAdminAsync(Guid id, CancellationToken cancellationToken) =>
+      Task.FromResult(StoredPickupRequests.SingleOrDefault(x => x.Id == id));
+
+    public Task<PickupRequest?> GetTrackedByIdAsync(Guid id, CancellationToken cancellationToken) =>
       Task.FromResult(StoredPickupRequests.SingleOrDefault(x => x.Id == id));
 
     public Task SaveChangesAsync(CancellationToken cancellationToken) =>

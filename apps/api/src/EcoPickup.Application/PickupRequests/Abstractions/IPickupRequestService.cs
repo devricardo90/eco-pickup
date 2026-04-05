@@ -24,4 +24,10 @@ public interface IPickupRequestService
   Task<PickupRequestResult?> GetByIdForAdminAsync(
     Guid id,
     CancellationToken cancellationToken);
+
+  Task<PickupRequestResult> ReviewAsync(
+    Guid id,
+    Guid adminUserId,
+    ReviewPickupRequestCommand command,
+    CancellationToken cancellationToken);
 }

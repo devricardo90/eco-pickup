@@ -46,9 +46,11 @@ Development
 - leitura atual retorna request, address, items e fotos do item para o dono autenticado
 - EPIC-010A concluida com leitura administrativa minima para `ADMIN`
 - admin agora consegue listar requests e abrir detalhe com `address`, `items`, `photos` e `status`
+- EPIC-010B concluida com review administrativo minimo de approve/reject
+- review admin agora aplica transicoes controladas de status e persiste historico com actor e nota opcional
 
 ## Objetivo atual
-Expandir o painel admin com o menor proximo recorte operacional sem misturar pricing ou pagamento.
+Expandir o painel admin com o menor proximo recorte operacional sem misturar pricing, scheduling ou pagamento.
 
 ## O que ja existe
 - ideia do produto
@@ -68,7 +70,7 @@ Expandir o painel admin com o menor proximo recorte operacional sem misturar pri
 - abrir painel admin, pricing e pagamento em etapas separadas
 
 ## Proximo passo recomendado
-Abrir a proxima fatia administrativa com a primeira acao operacional controlada, sem misturar pricing ou pagamento.
+Abrir a proxima fatia administrativa para pricing foundation ou scheduling foundation, mas nao ambos no mesmo slice.
 
 ## Riscos atuais
 - comecar implementacao cedo demais

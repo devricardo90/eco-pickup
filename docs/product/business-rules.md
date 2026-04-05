@@ -164,6 +164,14 @@ Admin may:
 - reject
 - request internal clarification workflow in future versions, but not required for MVP
 
+Current implementation note:
+
+- EPIC-010B opens the first controlled admin review action
+- `approve` currently moves `draft -> under_review`
+- `reject` currently moves `draft -> rejected` or `under_review -> rejected`
+- admin review may include an optional note
+- pricing and scheduling remain deferred
+
 If rejected:
 
 - request status becomes `rejected`
@@ -294,12 +302,18 @@ Every meaningful request status change must generate a status history record.
 Each record should contain:
 
 - request id
+- previous status
 - new status
 - timestamp
 - actor when available
 - optional note
 
 This history is the source for timeline tracking.
+
+Current implementation note:
+
+- EPIC-010B now persists review-generated request status history
+- current history entries capture `fromStatus`, `toStatus`, `action`, `actorUserId`, `note` and `createdUtc`
 
 ---
 
