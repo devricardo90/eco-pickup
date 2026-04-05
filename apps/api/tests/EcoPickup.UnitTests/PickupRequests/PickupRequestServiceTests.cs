@@ -347,6 +347,48 @@ public sealed class PickupRequestServiceTests
         CancellationToken.None));
   }
 
+  [Fact]
+  public async Task SetSchedulingAsync_ShouldPersistConfirmedWindowAndMoveToScheduled()
+  {
+    var repository = new InMemoryPickupRequestRepository();
+    var pickupRequest = CreatePickupRequest(Guid.NewGuid(), "Sofa", DateTime.UtcNow.AddMinutes(-15));
+    pickupRequest.Status = PickupRequestStatuses.Quoted;
+    repository.StoredPickupRequests.Add(pickupRequest);
+    var service = new PickupRequestService(repository);
+    var confirmedStartUtc = DateTime.UtcNow.AddDays(2);
+    var confirmedEndUtc = confirmedStartUtc.AddHours(2);
+
+    var result = await service.SetSchedulingAsync(
+      pickupRequest.Id,
+      Guid.NewGuid(),
+      new SetPickupRequestSchedulingCommand(confirmedStartUtc, confirmedEndUtc, "Driver window confirmed"),
+      CancellationToken.None);
+
+    Assert.Equal(PickupRequestStatuses.Scheduled, result.Status);
+    Assert.NotNull(result.Scheduling);
+    Assert.Equal(confirmedStartUtc, result.Scheduling!.ConfirmedPickupWindowStartUtc);
+    Assert.Equal(confirmedEndUtc, result.Scheduling.ConfirmedPickupWindowEndUtc);
+    Assert.Equal(PickupRequestStatuses.Scheduled, pickupRequest.Status);
+    Assert.Equal("scheduling", pickupRequest.StatusHistory[^1].Action);
+  }
+
+  [Fact]
+  public async Task SetSchedulingAsync_ShouldThrowWhenCurrentStatusIsNotQuoted()
+  {
+    var repository = new InMemoryPickupRequestRepository();
+    var pickupRequest = CreatePickupRequest(Guid.NewGuid(), "Desk", DateTime.UtcNow.AddMinutes(-15));
+    pickupRequest.Status = PickupRequestStatuses.UnderReview;
+    repository.StoredPickupRequests.Add(pickupRequest);
+    var service = new PickupRequestService(repository);
+
+    await Assert.ThrowsAsync<PickupRequestValidationException>(() =>
+      service.SetSchedulingAsync(
+        pickupRequest.Id,
+        Guid.NewGuid(),
+        new SetPickupRequestSchedulingCommand(DateTime.UtcNow.AddDays(2), DateTime.UtcNow.AddDays(2).AddHours(1), null),
+        CancellationToken.None));
+  }
+
   private sealed class InMemoryPickupRequestRepository : IPickupRequestRepository
   {
     public List<PickupRequest> StoredPickupRequests { get; } = [];

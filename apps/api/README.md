@@ -46,6 +46,7 @@ Fluxo atual de pickup request:
 - `GET /api/v1/admin/pickup-requests/{id}`
 - `PATCH /api/v1/admin/pickup-requests/{id}/review`
 - `PATCH /api/v1/admin/pickup-requests/{id}/pricing`
+- `PATCH /api/v1/admin/pickup-requests/{id}/scheduling`
 
 Media atual:
 
@@ -82,6 +83,15 @@ Pricing atual:
 - transicao para `quoted` ou `awaiting_payment`
 - historico de pricing persistido por request
 - sem scheduling ou payment neste recorte
+
+Scheduling atual:
+
+- scheduling administrativo protegido por role `ADMIN`
+- janela operacional confirmada com `confirmedPickupWindowStartUtc` e `confirmedPickupWindowEndUtc`
+- scheduling permitido apenas em request `quoted`
+- transicao para `scheduled`
+- historico de scheduling persistido por request
+- sem payment neste recorte
 
 Fora de escopo nesta fase:
 

@@ -638,6 +638,43 @@ Entregar a fundacao administrativa de pricing com breakdown persistido e transic
 - upload
 - review
 
+#### EPIC-011B - Scheduling Foundation
+**Status:** DONE
+
+##### Objetivo
+Entregar a fundacao administrativa de scheduling com janela operacional confirmada e transicao controlada para `scheduled`, sem abrir payment.
+
+##### Escopo
+- implementar acao administrativa de scheduling
+- restringir acesso a role `ADMIN`
+- modelar e persistir os campos minimos de agendamento
+- aplicar transicao controlada para `scheduled`
+- registrar historico da acao administrativa
+- adicionar testes aplicaveis
+- atualizar documentacao impactada
+
+##### Criterios de aceite
+- endpoint admin de scheduling funcional
+- acesso restrito a `ADMIN`
+- dados de scheduling persistidos corretamente
+- transicao de status validada
+- historico registrado
+- build continua passando
+- testes aplicaveis passam
+- Swagger, Scalar e OpenAPI continuam funcionando
+- documentacao impactada atualizada
+
+##### Dependencias
+- EPIC-011A
+
+##### Fora de escopo
+- payment
+- workflow administrativo completo
+- cobranca
+- review
+- upload
+- pricing
+
 ---
 
 # EPIC-012 - Pagamentos

@@ -341,7 +341,7 @@ Current persistence foundation:
 - EF Core migrations managed from `EcoPickup.Infrastructure`
 - design-time factory for `EcoPickupDbContext`
 - structural baseline table `persistence_checkpoints` used only to validate the migration pipeline
-- auth identity tables and the current `pickup_requests`, `addresses`, `pickup_items`, `item_photos`, `pickup_request_status_history` and pricing columns foundation for request/admin evolution
+- auth identity tables and the current `pickup_requests`, `addresses`, `pickup_items`, `item_photos`, `pickup_request_status_history`, pricing columns and confirmed scheduling window foundation for request/admin evolution
 
 ---
 

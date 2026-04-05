@@ -51,6 +51,10 @@ public sealed class PickupRequestConfiguration : IEntityTypeConfiguration<Pickup
     builder.Property(x => x.PriceCurrency)
       .HasMaxLength(3);
 
+    builder.Property(x => x.ConfirmedPickupWindowStartUtc);
+
+    builder.Property(x => x.ConfirmedPickupWindowEndUtc);
+
     builder.Property(x => x.CreatedUtc)
       .IsRequired();
 

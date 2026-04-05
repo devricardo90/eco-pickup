@@ -6,6 +6,7 @@ public sealed record PickupRequestResult(
   string Description,
   string Status,
   PickupRequestPricingResult? Pricing,
+  PickupRequestSchedulingResult? Scheduling,
   DateTime PickupWindowStartUtc,
   DateTime PickupWindowEndUtc,
   DateTime CreatedUtc,

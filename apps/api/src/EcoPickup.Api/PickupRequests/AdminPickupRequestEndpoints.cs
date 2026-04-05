@@ -46,6 +46,14 @@ public static class AdminPickupRequestEndpoints
       .Produces(StatusCodes.Status403Forbidden)
       .Produces(StatusCodes.Status404NotFound);
 
+    adminPickupRequestsGroup.MapPatch("/{id:guid}/scheduling", SetSchedulingAsync)
+      .WithName("AdminSetPickupRequestScheduling")
+      .Produces<PickupRequestResult>(StatusCodes.Status200OK)
+      .ProducesValidationProblem()
+      .Produces(StatusCodes.Status401Unauthorized)
+      .Produces(StatusCodes.Status403Forbidden)
+      .Produces(StatusCodes.Status404NotFound);
+
     return app;
   }
 
@@ -150,6 +158,44 @@ public static class AdminPickupRequestEndpoints
     }
   }
 
+  private static async Task<IResult> SetSchedulingAsync(
+    ClaimsPrincipal principal,
+    Guid id,
+    SetPickupRequestSchedulingRequest request,
+    IPickupRequestService pickupRequestService,
+    CancellationToken cancellationToken)
+  {
+    var subject = principal.FindFirstValue("sub");
+    if (!Guid.TryParse(subject, out var adminUserId))
+    {
+      return Results.Unauthorized();
+    }
+
+    try
+    {
+      var pickupRequest = await pickupRequestService.SetSchedulingAsync(
+        id,
+        adminUserId,
+        new SetPickupRequestSchedulingCommand(
+          request.ConfirmedPickupWindowStartUtc,
+          request.ConfirmedPickupWindowEndUtc,
+          request.Note),
+        cancellationToken);
+
+      return Results.Ok(pickupRequest);
+    }
+    catch (PickupRequestValidationException ex)
+    {
+      if (ex.Errors.TryGetValue("id", out var idErrors)
+        && idErrors.Contains("Pickup request was not found."))
+      {
+        return Results.NotFound();
+      }
+
+      return Results.ValidationProblem(ex.Errors.ToDictionary(pair => pair.Key, pair => pair.Value));
+    }
+  }
+
   public sealed record ReviewPickupRequestRequest(
     string Decision,
     string? Note);
@@ -161,5 +207,10 @@ public static class AdminPickupRequestEndpoints
     decimal DistanceAdjustment,
     string Currency,
     string TargetStatus,
+    string? Note);
+
+  public sealed record SetPickupRequestSchedulingRequest(
+    DateTime ConfirmedPickupWindowStartUtc,
+    DateTime ConfirmedPickupWindowEndUtc,
     string? Note);
 }

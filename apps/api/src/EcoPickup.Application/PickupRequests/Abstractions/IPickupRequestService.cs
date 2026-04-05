@@ -36,4 +36,10 @@ public interface IPickupRequestService
     Guid adminUserId,
     SetPickupRequestPricingCommand command,
     CancellationToken cancellationToken);
+
+  Task<PickupRequestResult> SetSchedulingAsync(
+    Guid id,
+    Guid adminUserId,
+    SetPickupRequestSchedulingCommand command,
+    CancellationToken cancellationToken);
 }

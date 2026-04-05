@@ -26,6 +26,10 @@ public sealed class PickupRequest
 
   public string? PriceCurrency { get; set; }
 
+  public DateTime? ConfirmedPickupWindowStartUtc { get; set; }
+
+  public DateTime? ConfirmedPickupWindowEndUtc { get; set; }
+
   public DateTime CreatedUtc { get; set; }
 
   public Address Address { get; set; } = null!;

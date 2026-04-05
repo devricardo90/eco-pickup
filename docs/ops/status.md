@@ -50,9 +50,11 @@ Development
 - review admin agora aplica transicoes controladas de status e persiste historico com actor e nota opcional
 - EPIC-011A concluida com pricing foundation administrativa
 - pricing agora persiste breakdown na request e permite transicao controlada para `quoted` ou `awaiting_payment`
+- EPIC-011B concluida com scheduling foundation administrativa
+- scheduling agora persiste a janela operacional confirmada e permite transicao controlada para `scheduled`
 
 ## Objetivo atual
-Expandir o fluxo operacional apos pricing sem misturar scheduling com payment no mesmo slice.
+Abrir o proximo slice de payment sem misturar cobranca com outras mutacoes operacionais.
 
 ## O que ja existe
 - ideia do produto
@@ -72,7 +74,7 @@ Expandir o fluxo operacional apos pricing sem misturar scheduling com payment no
 - abrir painel admin, pricing e pagamento em etapas separadas
 
 ## Proximo passo recomendado
-Abrir a fundacao de scheduling como proxima fatia isolada, mantendo payment separado.
+Abrir a payment foundation como proxima fatia isolada sobre requests ja revisadas, precificadas e, quando aplicavel, agendadas.
 
 ## Riscos atuais
 - comecar implementacao cedo demais

@@ -152,6 +152,12 @@ Rules:
 - admin may confirm a more specific operational time later
 - user preference does not guarantee final scheduling until admin confirmation
 
+Current implementation note:
+
+- EPIC-011B introduces an admin-confirmed operational pickup window
+- the current scheduling slice stores `confirmedPickupWindowStartUtc` and `confirmedPickupWindowEndUtc`
+- the user-provided pickup window remains preserved as the original preference
+
 ---
 
 ## 7. Review and Approval Rules
@@ -299,6 +305,11 @@ Example expected transitions:
 - scheduled -> in_transit
 - in_transit -> collected
 - collected -> completed
+
+Current implementation note:
+
+- current implemented transitions include `draft -> under_review`, `draft -> rejected`, `under_review -> rejected`, `under_review -> quoted`, `under_review -> awaiting_payment` and `quoted -> scheduled`
+- scheduling after `awaiting_payment` remains deferred until the payment slice is opened
 
 Alternative transitions:
 
