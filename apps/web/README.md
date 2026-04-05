@@ -42,6 +42,7 @@ src/
 - componentes compartilhados para status atual, timeline e estados de tela
 - servico de leitura dos endpoints de history
 - testes focados no mapeamento semantico da timeline
+- auth/session foundation com login, register, logout e cookie HTTP-only de sessao
 
 ## Fora de escopo nesta fase
 
@@ -54,12 +55,10 @@ src/
 - estado de produto
 - formularios reais do MVP
 
-## Configuracao para tracking
+## Configuracao para tracking e auth
 
 Para habilitar a leitura real do backend no frontend:
 
 - definir `ECOPICKUP_API_BASE_URL`
-- definir `ECOPICKUP_WEB_OWNER_ACCESS_TOKEN`
-- definir `ECOPICKUP_WEB_ADMIN_ACCESS_TOKEN`
 
-Sem essas variaveis, as rotas de tracking continuam renderizando a superficie, mas mostram estado de configuracao pendente em vez de tentar mutacoes ou fallback ambiguo.
+As rotas de tracking agora usam a sessao autenticada da web. Nao dependem mais de tokens manuais por env.

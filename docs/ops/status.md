@@ -58,9 +58,11 @@ Development
 - timeline e historico agora podem ser consultados pelo dono autenticado e por `ADMIN` sem abrir novas mutacoes operacionais
 - EPIC-013B concluida com a primeira superficie frontend de tracking/status
 - web agora consome os endpoints de history para owner e admin em rotas read-only com status destacado, timeline legivel e estados de loading/erro/vazio
+- EPIC-013C concluida com auth/session foundation na web
+- tracking owner/admin agora usa sessao autenticada real via cookie HTTP-only em vez de tokens manuais por env
 
 ## Objetivo atual
-Preparar o proximo slice apos a visibilidade frontend de tracking sem misturar acompanhamento com novas mutacoes operacionais.
+Preparar o proximo slice apos auth/session foundation da web sem misturar identidade com mutacoes operacionais novas.
 
 ## O que ja existe
 - ideia do produto
@@ -80,7 +82,7 @@ Preparar o proximo slice apos a visibilidade frontend de tracking sem misturar a
 - abrir painel admin, pricing e pagamento em etapas separadas
 
 ## Proximo passo recomendado
-Abrir o proximo recorte operacional apos a superficie frontend de tracking, como execution tracking detalhado, disposal record ou autenticacao real da web.
+Abrir o proximo recorte operacional apos auth/session foundation, como execution tracking detalhado, pickup request detail surface ou disposal record.
 
 ## Riscos atuais
 - comecar implementacao cedo demais

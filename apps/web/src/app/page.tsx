@@ -1,4 +1,11 @@
-export default function HomePage() {
+import Link from "next/link";
+import { LogoutForm } from "@/components/logout-form";
+import { SessionSummary } from "@/components/session-summary";
+import { getSession } from "@/lib/auth/session";
+
+export default async function HomePage() {
+  const session = await getSession();
+
   return (
     <main className="min-h-screen bg-[radial-gradient(circle_at_top,_#f0f7ee,_#e2ecd6_45%,_#d3dfc8_100%)] px-6 py-16 text-slate-900">
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-8">
@@ -13,6 +20,42 @@ export default function HomePage() {
             This app now keeps the foundation stable while opening the first real read-only
             product surface: pickup request tracking and timeline visibility.
           </p>
+          <div className="mt-6 flex flex-wrap items-center gap-3">
+            {session ? (
+              <>
+                <Link
+                  className="inline-flex items-center justify-center rounded-2xl bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800"
+                  href="/tracking/demo-request-id"
+                >
+                  Open owner tracking
+                </Link>
+                {session.user.role === "ADMIN" ? (
+                  <Link
+                    className="inline-flex items-center justify-center rounded-2xl border border-emerald-900/15 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-950 transition hover:border-emerald-900/30"
+                    href="/admin/tracking/demo-request-id"
+                  >
+                    Open admin tracking
+                  </Link>
+                ) : null}
+                <LogoutForm />
+              </>
+            ) : (
+              <>
+                <Link
+                  className="inline-flex items-center justify-center rounded-2xl bg-slate-950 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800"
+                  href="/auth/login"
+                >
+                  Sign in
+                </Link>
+                <Link
+                  className="inline-flex items-center justify-center rounded-2xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-800 transition hover:border-slate-400 hover:bg-slate-50"
+                  href="/auth/register"
+                >
+                  Register
+                </Link>
+              </>
+            )}
+          </div>
         </section>
 
         <section className="grid gap-4 md:grid-cols-2">
@@ -25,6 +68,7 @@ export default function HomePage() {
               <li>TypeScript baseline</li>
               <li>Tailwind CSS baseline</li>
               <li>Read-only owner/admin tracking routes backed by the API history endpoints</li>
+              <li>Frontend auth/session foundation backed by JWT login and HTTP-only cookies</li>
             </ul>
           </article>
 
@@ -33,7 +77,6 @@ export default function HomePage() {
               Explicitly out of scope
             </h2>
             <ul className="mt-4 space-y-3 text-sm leading-6 text-slate-700">
-              <li>Login and session handling in the frontend</li>
               <li>Any operational mutation buttons or retry flows</li>
               <li>Realtime polling, websockets and notifications</li>
               <li>Scheduling, pricing or payment editing from the web app</li>
@@ -57,22 +100,7 @@ export default function HomePage() {
             </ul>
           </article>
 
-          <article className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-[0_18px_48px_rgba(15,23,42,0.08)]">
-            <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-700">
-              Required configuration
-            </h2>
-            <ul className="mt-4 space-y-3 text-sm leading-6 text-slate-700">
-              <li>
-                <code>ECOPICKUP_API_BASE_URL</code>
-              </li>
-              <li>
-                <code>ECOPICKUP_WEB_OWNER_ACCESS_TOKEN</code>
-              </li>
-              <li>
-                <code>ECOPICKUP_WEB_ADMIN_ACCESS_TOKEN</code>
-              </li>
-            </ul>
-          </article>
+          <SessionSummary session={session} />
         </section>
       </div>
     </main>

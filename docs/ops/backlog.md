@@ -851,6 +851,45 @@ Entregar a primeira superficie visual de acompanhamento no frontend, consumindo 
 - websocket
 - notificacoes
 
+#### EPIC-013C - Web Auth / Session Foundation
+**Status:** DONE
+
+##### Objetivo
+Entregar a fundacao de autenticacao e sessao da web para substituir tokens manuais por env por contexto autenticado real, preservando a timeline como superficie read-only.
+
+##### Escopo
+- consumir `POST /api/v1/auth/login`
+- consumir `POST /api/v1/auth/register`
+- consumir `GET /api/v1/auth/me` quando necessario para sessao
+- criar sessao web com cookie HTTP-only
+- proteger a superficie owner por sessao autenticada
+- proteger a superficie admin por role `ADMIN`
+- adicionar login, register e logout na web
+- atualizar a leitura de tracking para usar a sessao real
+- adicionar testes aplicaveis
+- atualizar documentacao impactada
+
+##### Criterios de aceite
+- login funcional no frontend
+- register funcional no frontend
+- sessao web persistida em cookie HTTP-only
+- owner tracking usa sessao autenticada real
+- admin tracking exige role `ADMIN`
+- nenhuma mutacao operacional nova foi criada
+- lint, typecheck, build e testes aplicaveis passam
+
+##### Dependencias
+- EPIC-007
+- EPIC-013B
+
+##### Fora de escopo
+- refresh token
+- reset de senha
+- perfil completo de usuario
+- mutacoes operacionais no frontend
+- polling
+- websocket
+
 ---
 
 # EPIC-014 - Infra, Deploy e Observabilidade

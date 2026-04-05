@@ -1,6 +1,7 @@
 import { PickupRequestStatusCard } from "@/components/pickup-request-status-card";
 import { PickupRequestTimeline } from "@/components/pickup-request-timeline";
 import { PickupRequestTrackingState } from "@/components/pickup-request-tracking-state";
+import { requireSession } from "@/lib/auth/session";
 import { getPickupRequestHistory } from "@/lib/tracking/getPickupRequestHistory";
 import { mapStatusLabel, mapTimelineEventToUi } from "@/lib/tracking/mapTimelineEventToUi";
 import type { HistoryScope } from "@/lib/tracking/types";
@@ -29,7 +30,8 @@ export async function PickupRequestTrackingPage({
   requestId,
   scope
 }: PickupRequestTrackingPageProps) {
-  const historyResult = await getPickupRequestHistory(requestId, scope);
+  const session = await requireSession(scope === "admin" ? "ADMIN" : undefined);
+  const historyResult = await getPickupRequestHistory(requestId, scope, session.accessToken);
   const copy = scopeCopy[scope];
 
   return (

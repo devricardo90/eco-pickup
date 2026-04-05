@@ -4,8 +4,6 @@ import {
   type PickupRequestHistoryResult
 } from "@/lib/tracking/types";
 
-const ownerToken = process.env.ECOPICKUP_WEB_OWNER_ACCESS_TOKEN;
-const adminToken = process.env.ECOPICKUP_WEB_ADMIN_ACCESS_TOKEN;
 const apiBaseUrl = process.env.ECOPICKUP_API_BASE_URL;
 
 function getHistoryPath(requestId: string, scope: HistoryScope) {
@@ -14,13 +12,10 @@ function getHistoryPath(requestId: string, scope: HistoryScope) {
     : `/api/v1/pickup-requests/${requestId}/history`;
 }
 
-function getAccessToken(scope: HistoryScope) {
-  return scope === "admin" ? adminToken : ownerToken;
-}
-
 export async function getPickupRequestHistory(
   requestId: string,
-  scope: HistoryScope
+  scope: HistoryScope,
+  accessToken: string
 ): Promise<PickupRequestHistoryResult> {
   if (!apiBaseUrl) {
     return {
@@ -30,15 +25,11 @@ export async function getPickupRequestHistory(
     };
   }
 
-  const accessToken = getAccessToken(scope);
   if (!accessToken) {
     return {
       ok: false,
       kind: "configuration",
-      message:
-        scope === "admin"
-          ? "Admin tracking is not configured yet. Set ECOPICKUP_WEB_ADMIN_ACCESS_TOKEN to enable this view."
-          : "Owner tracking is not configured yet. Set ECOPICKUP_WEB_OWNER_ACCESS_TOKEN to enable this view."
+      message: "Tracking requires an authenticated web session."
     };
   }
 
