@@ -183,20 +183,14 @@ describe("mapPickupRequestDetailToUi", () => {
     expect(execution?.highlightLabel).toContain("UTC");
   });
 
-  it("builds execution messaging for collected and completed", () => {
+  it("builds execution messaging for collected", () => {
     const collected = mapPickupRequestExecutionToUi({
       ...detail,
       status: "collected"
     });
-    const completed = mapPickupRequestExecutionToUi({
-      ...detail,
-      status: "completed"
-    });
 
     expect(collected?.title).toBe("Items collected");
     expect(collected?.highlightLabel).toBeNull();
-    expect(completed?.title).toBe("Request completed");
-    expect(completed?.highlightLabel).toBeNull();
   });
 
   it("builds lifecycle messaging for completed, cancelled and rejected", () => {

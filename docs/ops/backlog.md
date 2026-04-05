@@ -1245,6 +1245,37 @@ Reforcar a leitura final do lifecycle owner para `completed`, `cancelled` e `rej
 - polling
 - notificacoes
 
+#### EPIC-000R - MVP Transversal Review / Stabilization
+**Status:** DONE
+
+##### Objetivo
+Executar uma revisao transversal do MVP web/backend entregue para validar coerencia entre estados, contratos, guards, rotas e messaging, aplicando apenas correcoes pequenas e de baixo risco.
+
+##### Escopo
+- revisar fluxo owner ponta a ponta
+- revisar consistencia de status e transicoes entre backend e frontend
+- revisar guards owner/admin
+- revisar messaging semantica, empty state, error state e success state
+- revisar nomes, tipos e contratos do frontend
+- revisar testes existentes e gaps pequenos
+- aplicar apenas ajustes pequenos de consolidacao quando necessarios
+
+##### Criterios de aceite
+- revisao transversal executada
+- achados priorizados registrados
+- apenas ajustes pequenos e de baixo risco aplicados
+- gates relevantes executados
+
+##### Dependencias
+- MVP atual entregue ate EPIC-013G
+
+##### Fora de escopo
+- novas mutacoes operacionais
+- novos contratos backend
+- redesign amplo
+- polling
+- notificacoes
+
 ---
 
 # EPIC-014 - Infra, Deploy e Observabilidade

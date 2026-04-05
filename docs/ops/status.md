@@ -80,9 +80,11 @@ Development
 - owner agora recebe leitura mais operacional para `in_transit`, `collected` e `completed`
 - EPIC-013G concluida com owner final completion messaging
 - owner agora ve encerramento mais claro para `completed`, `cancelled` e `rejected`
+- EPIC-000R concluida com revisao transversal do MVP
+- a consolidacao atual identificou um ajuste pequeno de baixo risco: evitar duplicidade de cards semanticos no estado `completed`
 
 ## Objetivo atual
-Preparar o proximo slice apos a owner final completion messaging sem misturar esse recorte com novas mutacoes operacionais.
+Projeto pausado para consolidacao transversal do MVP atual antes de abrir novas frentes funcionais.
 
 ## O que ja existe
 - ideia do produto
@@ -98,11 +100,11 @@ Preparar o proximo slice apos a owner final completion messaging sem misturar es
 - decisao da foundation do monorepo registrada
 
 ## O que falta antes de desenvolver
-- manter a separacao entre completion messaging owner e os proximos escopos operacionais do produto
+- manter a disciplina de consolidacao antes de abrir novas frentes
 - abrir painel admin, pricing e pagamento em etapas separadas
 
 ## Proximo passo recomendado
-Abrir o proximo recorte operacional apos owner final completion messaging, como admin execution controls ou superfícies finais de disposal/completion quando essa frente for aberta.
+Proximo passo recomendado: decidir entre abrir admin execution controls ou executar uma rodada objetiva de bugfixes priorizados a partir da revisao transversal.
 
 ## Riscos atuais
 - comecar implementacao cedo demais

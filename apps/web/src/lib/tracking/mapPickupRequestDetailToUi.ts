@@ -285,16 +285,6 @@ export function mapPickupRequestExecutionToUi(detail: PickupRequestDetail): Pick
     };
   }
 
-  if (detail.status === "completed") {
-    return {
-      title: "Request completed",
-      description:
-        "This pickup request has completed its tracked lifecycle. The main operational steps have finished successfully on this surface.",
-      highlightLabel: null,
-      tone: "completed"
-    };
-  }
-
   return null;
 }
 
