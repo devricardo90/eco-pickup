@@ -20,5 +20,7 @@ public interface IPickupRequestRepository
 
   Task<PickupRequest?> GetTrackedByIdAsync(Guid id, CancellationToken cancellationToken);
 
+  Task<PickupRequest?> GetTrackedByIdForUserAsync(Guid id, Guid userId, CancellationToken cancellationToken);
+
   Task SaveChangesAsync(CancellationToken cancellationToken);
 }

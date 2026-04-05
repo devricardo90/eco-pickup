@@ -66,9 +66,11 @@ Development
 - as listas agora usam os endpoints existentes de listagem e conectam cada request ao detail/tracking autenticado
 - EPIC-008C concluida com a primeira superficie web autenticada de criacao de pickup request
 - owner agora consegue criar uma request pela web usando a sessao real e o contrato existente de criacao, com redirecionamento para detail/tracking apos sucesso
+- EPIC-008D concluida com UX de multiplos itens e edicao owner limitada a `draft`
+- owner agora consegue editar requests em `draft` pela web, com bloqueio explicito apos entrada em fluxo operacional
 
 ## Objetivo atual
-Preparar o proximo slice apos a superficie web de criacao sem misturar criacao inicial com pricing, scheduling, payment ou mutacoes administrativas.
+Preparar o proximo slice apos a edicao owner inicial sem misturar esse recorte com pricing, scheduling, payment ou mutacoes administrativas.
 
 ## O que ja existe
 - ideia do produto
@@ -84,11 +86,11 @@ Preparar o proximo slice apos a superficie web de criacao sem misturar criacao i
 - decisao da foundation do monorepo registrada
 
 ## O que falta antes de desenvolver
-- manter a separacao entre o recorte atual e os proximos escopos do produto
+- manter a separacao entre a edicao owner inicial e os proximos escopos do produto
 - abrir painel admin, pricing e pagamento em etapas separadas
 
 ## Proximo passo recomendado
-Abrir o proximo recorte operacional apos web pickup request creation surface, como pickup request multi-item UX, upload de foto no frontend ou execution tracking detalhado.
+Abrir o proximo recorte operacional apos owner draft editing + multi-item UX, como upload de foto no frontend, submission semantics ou execution tracking detalhado.
 
 ## Riscos atuais
 - comecar implementacao cedo demais

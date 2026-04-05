@@ -32,6 +32,13 @@ public static class PickupRequestEndpoints
       .Produces(StatusCodes.Status401Unauthorized)
       .Produces(StatusCodes.Status404NotFound);
 
+    pickupRequestsGroup.MapPut("/{id:guid}", UpdateAsync)
+      .WithName("UpdatePickupRequest")
+      .Produces<PickupRequestResult>(StatusCodes.Status200OK)
+      .ProducesValidationProblem()
+      .Produces(StatusCodes.Status401Unauthorized)
+      .Produces(StatusCodes.Status404NotFound);
+
     pickupRequestsGroup.MapGet("/{id:guid}/history", GetHistoryByIdAsync)
       .WithName("GetPickupRequestHistoryById")
       .Produces<PickupRequestTimelineResult>(StatusCodes.Status200OK)
@@ -124,6 +131,54 @@ public static class PickupRequestEndpoints
     }
     catch (PickupRequestValidationException ex)
     {
+      return Results.ValidationProblem(ex.Errors.ToDictionary(pair => pair.Key, pair => pair.Value));
+    }
+  }
+
+  private static async Task<IResult> UpdateAsync(
+    ClaimsPrincipal principal,
+    Guid id,
+    CreatePickupRequestRequest request,
+    IPickupRequestService pickupRequestService,
+    CancellationToken cancellationToken)
+  {
+    var subject = principal.FindFirstValue("sub");
+    if (!Guid.TryParse(subject, out var userId))
+    {
+      return Results.Unauthorized();
+    }
+
+    try
+    {
+      var pickupRequest = await pickupRequestService.UpdateAsync(
+        id,
+        userId,
+        new UpdatePickupRequestCommand(
+          request.Description,
+          request.PickupWindowStartUtc,
+          request.PickupWindowEndUtc,
+          new CreatePickupRequestAddressCommand(
+            request.Address.Street,
+            request.Address.City,
+            request.Address.PostalCode,
+            request.Address.Floor,
+            request.Address.HasElevator,
+            request.Address.AccessNotes),
+          request.Items.Select(item => new CreatePickupItemCommand(
+            item.Category,
+            item.Description,
+            item.EstimatedSize)).ToArray()),
+        cancellationToken);
+
+      return Results.Ok(pickupRequest);
+    }
+    catch (PickupRequestValidationException ex)
+    {
+      if (ex.Errors.TryGetValue("id", out var idErrors) && idErrors.Contains("Pickup request was not found."))
+      {
+        return Results.NotFound();
+      }
+
       return Results.ValidationProblem(ex.Errors.ToDictionary(pair => pair.Key, pair => pair.Value));
     }
   }

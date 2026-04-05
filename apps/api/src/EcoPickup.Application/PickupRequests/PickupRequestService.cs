@@ -7,6 +7,53 @@ namespace EcoPickup.Application.PickupRequests;
 
 public sealed class PickupRequestService(IPickupRequestRepository pickupRequestRepository) : IPickupRequestService
 {
+  public async Task<PickupRequestResult> UpdateAsync(
+    Guid id,
+    Guid userId,
+    UpdatePickupRequestCommand command,
+    CancellationToken cancellationToken)
+  {
+    Validate(id, userId, command);
+
+    var pickupRequest = await pickupRequestRepository.GetTrackedByIdForUserAsync(id, userId, cancellationToken);
+    if (pickupRequest is null)
+    {
+      throw new PickupRequestValidationException(new Dictionary<string, string[]>
+      {
+        ["id"] = ["Pickup request was not found."]
+      });
+    }
+
+    EnsureEditableStatus(pickupRequest.Status);
+
+    pickupRequest.Description = command.Description.Trim();
+    pickupRequest.PickupWindowStartUtc = EnsureUtc(command.PickupWindowStartUtc);
+    pickupRequest.PickupWindowEndUtc = EnsureUtc(command.PickupWindowEndUtc);
+    pickupRequest.Address.Street = command.Address.Street.Trim();
+    pickupRequest.Address.City = command.Address.City.Trim();
+    pickupRequest.Address.PostalCode = command.Address.PostalCode.Trim();
+    pickupRequest.Address.Floor = NormalizeOptional(command.Address.Floor);
+    pickupRequest.Address.HasElevator = command.Address.HasElevator;
+    pickupRequest.Address.AccessNotes = NormalizeOptional(command.Address.AccessNotes);
+    pickupRequest.Items.Clear();
+    pickupRequest.Items.AddRange(command.Items.Select(item => new PickupItem
+    {
+      Id = Guid.NewGuid(),
+      PickupRequestId = pickupRequest.Id,
+      Category = item.Category.Trim(),
+      Description = item.Description.Trim(),
+      EstimatedSize = NormalizeEstimatedSize(item.EstimatedSize),
+      CreatedUtc = DateTime.UtcNow
+    }));
+
+    await pickupRequestRepository.SaveChangesAsync(cancellationToken);
+
+    var refreshedPickupRequest = await pickupRequestRepository.GetByIdAsync(id, userId, cancellationToken)
+      ?? throw new InvalidOperationException("Pickup request should exist after update.");
+
+    return ToResult(refreshedPickupRequest);
+  }
+
   public async Task<PickupRequestResult> SetSchedulingAsync(
     Guid id,
     Guid adminUserId,
@@ -402,43 +449,77 @@ public sealed class PickupRequestService(IPickupRequestRepository pickupRequestR
     return ToResult(pickupRequest);
   }
 
+  private static void Validate(Guid id, Guid userId, UpdatePickupRequestCommand command)
+  {
+    var errors = new Dictionary<string, string[]>();
+
+    if (id == Guid.Empty)
+    {
+      errors["id"] = ["Pickup request id is required."];
+    }
+
+    ValidateInto(errors, userId, command.Description, command.PickupWindowStartUtc, command.PickupWindowEndUtc, command.Address, command.Items);
+
+    if (errors.Count > 0)
+    {
+      throw new PickupRequestValidationException(errors);
+    }
+  }
+
   private static void Validate(Guid userId, CreatePickupRequestCommand command)
   {
     var errors = new Dictionary<string, string[]>();
 
+    ValidateInto(errors, userId, command.Description, command.PickupWindowStartUtc, command.PickupWindowEndUtc, command.Address, command.Items);
+
+    if (errors.Count > 0)
+    {
+      throw new PickupRequestValidationException(errors);
+    }
+  }
+
+  private static void ValidateInto(
+    Dictionary<string, string[]> errors,
+    Guid userId,
+    string description,
+    DateTime pickupWindowStartUtcValue,
+    DateTime pickupWindowEndUtcValue,
+    CreatePickupRequestAddressCommand address,
+    IReadOnlyList<CreatePickupItemCommand> items)
+  {
     if (userId == Guid.Empty)
     {
       errors["userId"] = ["Authenticated user is required."];
     }
 
-    if (string.IsNullOrWhiteSpace(command.Description))
+    if (string.IsNullOrWhiteSpace(description))
     {
       errors["description"] = ["Description is required."];
     }
 
-    if (string.IsNullOrWhiteSpace(command.Address.Street))
+    if (string.IsNullOrWhiteSpace(address.Street))
     {
       errors["address.street"] = ["Street is required."];
     }
 
-    if (string.IsNullOrWhiteSpace(command.Address.City))
+    if (string.IsNullOrWhiteSpace(address.City))
     {
       errors["address.city"] = ["City is required."];
     }
 
-    if (string.IsNullOrWhiteSpace(command.Address.PostalCode))
+    if (string.IsNullOrWhiteSpace(address.PostalCode))
     {
       errors["address.postalCode"] = ["Postal code is required."];
     }
 
-    if (command.Items.Count == 0)
+    if (items.Count == 0)
     {
       errors["items"] = ["At least one item is required."];
     }
 
-    for (var index = 0; index < command.Items.Count; index++)
+    for (var index = 0; index < items.Count; index++)
     {
-      var item = command.Items[index];
+      var item = items[index];
 
       if (string.IsNullOrWhiteSpace(item.Category))
       {
@@ -460,8 +541,8 @@ public sealed class PickupRequestService(IPickupRequestRepository pickupRequestR
       }
     }
 
-    var pickupWindowStartUtc = EnsureUtc(command.PickupWindowStartUtc);
-    var pickupWindowEndUtc = EnsureUtc(command.PickupWindowEndUtc);
+    var pickupWindowStartUtc = EnsureUtc(pickupWindowStartUtcValue);
+    var pickupWindowEndUtc = EnsureUtc(pickupWindowEndUtcValue);
 
     if (pickupWindowStartUtc <= DateTime.UtcNow)
     {
@@ -473,10 +554,6 @@ public sealed class PickupRequestService(IPickupRequestRepository pickupRequestR
       errors["pickupWindowEndUtc"] = ["Pickup window end must be after start."];
     }
 
-    if (errors.Count > 0)
-    {
-      throw new PickupRequestValidationException(errors);
-    }
   }
 
   private static DateTime EnsureUtc(DateTime value) =>
@@ -492,6 +569,19 @@ public sealed class PickupRequestService(IPickupRequestRepository pickupRequestR
 
   private static string NormalizeEstimatedSize(string estimatedSize) =>
     estimatedSize.Trim().ToLowerInvariant();
+
+  private static void EnsureEditableStatus(string currentStatus)
+  {
+    if (currentStatus == PickupRequestStatuses.Draft)
+    {
+      return;
+    }
+
+    throw new PickupRequestValidationException(new Dictionary<string, string[]>
+    {
+      ["status"] = [$"Editing is not allowed when request status is '{currentStatus}'."]
+    });
+  }
 
   private static string ResolveNextReviewStatus(string currentStatus, string decision) =>
     (currentStatus, decision) switch

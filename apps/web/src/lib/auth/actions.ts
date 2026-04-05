@@ -3,13 +3,63 @@
 import { redirect } from "next/navigation";
 import { clearSession, getSession, setSession } from "@/lib/auth/session";
 import { createPickupRequest } from "@/lib/tracking/createPickupRequest";
-import { buildCreatePickupRequestPayload } from "@/lib/tracking/createPickupRequestPayload";
-import type { AuthActionState, PickupRequestCreateActionState } from "@/lib/auth/types";
+import { updatePickupRequest } from "@/lib/tracking/updatePickupRequest";
+import { buildPickupRequestPayload } from "@/lib/tracking/createPickupRequestPayload";
+import type { AuthActionState, PickupRequestFormActionState } from "@/lib/auth/types";
 import { loginWithApi, registerWithApi } from "@/lib/auth/api";
 
 function readString(formData: FormData, key: string) {
   const value = formData.get(key);
   return typeof value === "string" ? value.trim() : "";
+}
+
+function readStringList(formData: FormData, key: string) {
+  return formData
+    .getAll(key)
+    .filter((value): value is string => typeof value === "string")
+    .map((value) => value.trim());
+}
+
+function readPickupRequestForm(formData: FormData) {
+  const itemCategories = readStringList(formData, "itemCategory[]");
+  const itemDescriptions = readStringList(formData, "itemDescription[]");
+  const itemEstimatedSizes = readStringList(formData, "itemEstimatedSize[]");
+
+  return {
+    description: readString(formData, "description"),
+    pickupWindowDate: readString(formData, "pickupWindowDate"),
+    pickupWindowStartTime: readString(formData, "pickupWindowStartTime"),
+    pickupWindowEndTime: readString(formData, "pickupWindowEndTime"),
+    street: readString(formData, "street"),
+    city: readString(formData, "city"),
+    postalCode: readString(formData, "postalCode"),
+    floor: readString(formData, "floor"),
+    accessNotes: readString(formData, "accessNotes"),
+    hasElevator: formData.get("hasElevator") === "on",
+    items: itemCategories.map((category, index) => ({
+      category,
+      description: itemDescriptions[index] ?? "",
+      estimatedSize: itemEstimatedSizes[index] ?? ""
+    }))
+  };
+}
+
+function validatePickupRequestForm(input: ReturnType<typeof readPickupRequestForm>) {
+  if (
+    !input.description ||
+    !input.pickupWindowDate ||
+    !input.pickupWindowStartTime ||
+    !input.pickupWindowEndTime ||
+    !input.street ||
+    !input.city ||
+    !input.postalCode ||
+    input.items.length === 0 ||
+    input.items.some((item) => !item.category || !item.description || !item.estimatedSize)
+  ) {
+    return "Complete the required request, address and item fields before submitting.";
+  }
+
+  return null;
 }
 
 export async function loginAction(
@@ -80,9 +130,9 @@ export async function logoutAction() {
 }
 
 export async function createPickupRequestAction(
-  _previousState: PickupRequestCreateActionState,
+  _previousState: PickupRequestFormActionState,
   formData: FormData
-): Promise<PickupRequestCreateActionState> {
+): Promise<PickupRequestFormActionState> {
   const session = await getSession();
   if (!session) {
     return {
@@ -90,54 +140,17 @@ export async function createPickupRequestAction(
     };
   }
 
-  const description = readString(formData, "description");
-  const pickupWindowDate = readString(formData, "pickupWindowDate");
-  const pickupWindowStartTime = readString(formData, "pickupWindowStartTime");
-  const pickupWindowEndTime = readString(formData, "pickupWindowEndTime");
-  const street = readString(formData, "street");
-  const city = readString(formData, "city");
-  const postalCode = readString(formData, "postalCode");
-  const floor = readString(formData, "floor");
-  const accessNotes = readString(formData, "accessNotes");
-  const itemCategory = readString(formData, "itemCategory");
-  const itemDescription = readString(formData, "itemDescription");
-  const itemEstimatedSize = readString(formData, "itemEstimatedSize");
-  const hasElevator = formData.get("hasElevator") === "on";
-
-  if (
-    !description ||
-    !pickupWindowDate ||
-    !pickupWindowStartTime ||
-    !pickupWindowEndTime ||
-    !street ||
-    !city ||
-    !postalCode ||
-    !itemCategory ||
-    !itemDescription ||
-    !itemEstimatedSize
-  ) {
+  const input = readPickupRequestForm(formData);
+  const validationError = validatePickupRequestForm(input);
+  if (validationError) {
     return {
-      error: "Complete the required request, address and item fields before submitting."
+      error: validationError
     };
   }
 
   const result = await createPickupRequest(
     session.accessToken,
-    buildCreatePickupRequestPayload({
-      description,
-      pickupWindowDate,
-      pickupWindowStartTime,
-      pickupWindowEndTime,
-      street,
-      city,
-      postalCode,
-      floor,
-      hasElevator,
-      accessNotes,
-      itemCategory,
-      itemDescription,
-      itemEstimatedSize
-    })
+    buildPickupRequestPayload(input)
   );
 
   if (!result.ok) {
@@ -147,4 +160,35 @@ export async function createPickupRequestAction(
   }
 
   redirect(`/tracking/${result.data.id}`);
+}
+
+export async function updatePickupRequestAction(
+  requestId: string,
+  _previousState: PickupRequestFormActionState,
+  formData: FormData
+): Promise<PickupRequestFormActionState> {
+  const session = await getSession();
+  if (!session) {
+    return {
+      error: "You need an active session before editing a pickup request."
+    };
+  }
+
+  const input = readPickupRequestForm(formData);
+  const validationError = validatePickupRequestForm(input);
+  if (validationError) {
+    return {
+      error: validationError
+    };
+  }
+
+  const result = await updatePickupRequest(requestId, session.accessToken, buildPickupRequestPayload(input));
+
+  if (!result.ok) {
+    return {
+      error: result.error
+    };
+  }
+
+  redirect(`/tracking/${result.data.id}?updated=1`);
 }

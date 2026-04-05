@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { PickupRequestMetadata } from "@/components/pickup-request-metadata";
 import { PickupRequestStatusCard } from "@/components/pickup-request-status-card";
 import { PickupRequestSummary } from "@/components/pickup-request-summary";
@@ -6,6 +7,7 @@ import { PickupRequestTrackingState } from "@/components/pickup-request-tracking
 import { requireSession } from "@/lib/auth/session";
 import { getPickupRequestDetail } from "@/lib/tracking/getPickupRequestDetail";
 import { getPickupRequestHistory } from "@/lib/tracking/getPickupRequestHistory";
+import { isPickupRequestEditable } from "@/lib/tracking/isPickupRequestEditable";
 import {
   mapPickupRequestMetadataToUi,
   mapPickupRequestSummaryToUi
@@ -16,6 +18,7 @@ import type { HistoryScope } from "@/lib/tracking/types";
 type PickupRequestDetailPageProps = {
   requestId: string;
   scope: HistoryScope;
+  notice?: string | null;
 };
 
 const scopeCopy: Record<HistoryScope, { badge: string; title: string; description: string }> = {
@@ -33,7 +36,7 @@ const scopeCopy: Record<HistoryScope, { badge: string; title: string; descriptio
   }
 };
 
-export async function PickupRequestDetailPage({ requestId, scope }: PickupRequestDetailPageProps) {
+export async function PickupRequestDetailPage({ requestId, scope, notice }: PickupRequestDetailPageProps) {
   const session = await requireSession(scope === "admin" ? "ADMIN" : undefined);
   const [detailResult, historyResult] = await Promise.all([
     getPickupRequestDetail(requestId, scope, session.accessToken),
@@ -63,6 +66,7 @@ export async function PickupRequestDetailPage({ requestId, scope }: PickupReques
     : "No updates yet";
   const summary = mapPickupRequestSummaryToUi(detailResult.data, lastUpdatedLabel);
   const metadataEntries = mapPickupRequestMetadataToUi(detailResult.data);
+  const canEdit = scope === "owner" && isPickupRequestEditable(detailResult.data.status);
 
   return (
     <main className="min-h-screen bg-[radial-gradient(circle_at_top,_#f0f7ee,_#e2ecd6_45%,_#d3dfc8_100%)] px-6 py-16 text-slate-900">
@@ -75,7 +79,29 @@ export async function PickupRequestDetailPage({ requestId, scope }: PickupReques
             {copy.title}
           </h1>
           <p className="mt-4 max-w-3xl text-base leading-7 text-slate-700">{copy.description}</p>
+          {scope === "owner" ? (
+            <div className="mt-6 flex flex-wrap items-center gap-3">
+              {canEdit ? (
+                <Link
+                  className="inline-flex items-center justify-center rounded-2xl bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
+                  href={`/tracking/${requestId}/edit`}
+                >
+                  Edit request
+                </Link>
+              ) : (
+                <p className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">
+                  Editing is locked once operational review starts.
+                </p>
+              )}
+            </div>
+          ) : null}
         </section>
+
+        {notice ? (
+          <section className="rounded-[1.5rem] border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm text-emerald-950 shadow-[0_18px_48px_rgba(15,23,42,0.05)]">
+            {notice}
+          </section>
+        ) : null}
 
         <PickupRequestSummary summary={summary} />
 

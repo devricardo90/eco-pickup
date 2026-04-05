@@ -43,6 +43,94 @@ public sealed class PickupRequestServiceTests
   }
 
   [Fact]
+  public async Task UpdateAsync_ShouldReplaceDraftRequestFieldsAndItemsForOwner()
+  {
+    var repository = new InMemoryPickupRequestRepository();
+    var ownerId = Guid.NewGuid();
+    var pickupRequest = CreatePickupRequest(ownerId, "Old sofa", DateTime.UtcNow.AddMinutes(-15));
+    repository.StoredPickupRequests.Add(pickupRequest);
+    var service = new PickupRequestService(repository);
+
+    var result = await service.UpdateAsync(
+      pickupRequest.Id,
+      ownerId,
+      new UpdatePickupRequestCommand(
+        "Updated request",
+        DateTime.UtcNow.AddDays(3),
+        DateTime.UtcNow.AddDays(3).AddHours(2),
+        new CreatePickupRequestAddressCommand(
+          "Updated Street 2",
+          "Gothenburg",
+          "22233",
+          "5",
+          false,
+          "Call when outside"),
+        [
+          new CreatePickupItemCommand("furniture", "Bookshelf", "large"),
+          new CreatePickupItemCommand("appliance", "Microwave", "small")
+        ]),
+      CancellationToken.None);
+
+    Assert.Equal("Updated request", result.Description);
+    Assert.Equal("Gothenburg", result.Address.City);
+    Assert.Equal(2, result.Items.Count);
+    Assert.Equal(["furniture", "appliance"], result.Items.Select(item => item.Category).ToArray());
+    Assert.All(repository.StoredPickupRequests[0].Items, item => Assert.Equal(pickupRequest.Id, item.PickupRequestId));
+  }
+
+  [Fact]
+  public async Task UpdateAsync_ShouldThrowWhenRequestDoesNotBelongToOwner()
+  {
+    var repository = new InMemoryPickupRequestRepository();
+    var pickupRequest = CreatePickupRequest(Guid.NewGuid(), "Desk", DateTime.UtcNow.AddMinutes(-15));
+    repository.StoredPickupRequests.Add(pickupRequest);
+    var service = new PickupRequestService(repository);
+
+    var exception = await Assert.ThrowsAsync<PickupRequestValidationException>(() =>
+      service.UpdateAsync(
+        pickupRequest.Id,
+        Guid.NewGuid(),
+        new UpdatePickupRequestCommand(
+          "Updated desk",
+          DateTime.UtcNow.AddDays(2),
+          DateTime.UtcNow.AddDays(2).AddHours(1),
+          new CreatePickupRequestAddressCommand("Street", "City", "12345", null, true, null),
+          [
+            new CreatePickupItemCommand("furniture", "Desk", "medium")
+          ]),
+        CancellationToken.None));
+
+    Assert.Equal("Pickup request was not found.", exception.Errors["id"][0]);
+  }
+
+  [Fact]
+  public async Task UpdateAsync_ShouldThrowWhenRequestIsNoLongerEditable()
+  {
+    var repository = new InMemoryPickupRequestRepository();
+    var ownerId = Guid.NewGuid();
+    var pickupRequest = CreatePickupRequest(ownerId, "Wardrobe", DateTime.UtcNow.AddMinutes(-15));
+    pickupRequest.Status = PickupRequestStatuses.UnderReview;
+    repository.StoredPickupRequests.Add(pickupRequest);
+    var service = new PickupRequestService(repository);
+
+    var exception = await Assert.ThrowsAsync<PickupRequestValidationException>(() =>
+      service.UpdateAsync(
+        pickupRequest.Id,
+        ownerId,
+        new UpdatePickupRequestCommand(
+          "Updated wardrobe",
+          DateTime.UtcNow.AddDays(2),
+          DateTime.UtcNow.AddDays(2).AddHours(1),
+          new CreatePickupRequestAddressCommand("Street", "City", "12345", null, true, null),
+          [
+            new CreatePickupItemCommand("furniture", "Wardrobe", "large")
+          ]),
+        CancellationToken.None));
+
+    Assert.Equal("Editing is not allowed when request status is 'under_review'.", exception.Errors["status"][0]);
+  }
+
+  [Fact]
   public async Task CreateAsync_ShouldThrowWhenPickupWindowEndIsNotAfterStart()
   {
     var repository = new InMemoryPickupRequestRepository();
@@ -535,6 +623,9 @@ public sealed class PickupRequestServiceTests
 
     public Task<PickupRequest?> GetTrackedByIdAsync(Guid id, CancellationToken cancellationToken) =>
       Task.FromResult(StoredPickupRequests.SingleOrDefault(x => x.Id == id));
+
+    public Task<PickupRequest?> GetTrackedByIdForUserAsync(Guid id, Guid userId, CancellationToken cancellationToken) =>
+      Task.FromResult(StoredPickupRequests.SingleOrDefault(x => x.Id == id && x.UserId == userId));
 
     public Task SaveChangesAsync(CancellationToken cancellationToken) =>
       Task.CompletedTask;

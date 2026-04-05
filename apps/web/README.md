@@ -38,6 +38,7 @@ src/
 - Tailwind validado
 - layout e pagina base
 - superficie autenticada de criacao para owner em `/requests/new`
+- superficie autenticada de edicao owner em `/tracking/[requestId]/edit` enquanto a request estiver em `draft`
 - dashboard autenticado de owner em `/requests`
 - dashboard autenticado de admin em `/admin/requests`
 - superficie autenticada de detail/tracking para owner em `/tracking/[requestId]`
@@ -45,6 +46,8 @@ src/
 - componentes compartilhados para resumo, status atual, metadados, timeline e estados de tela
 - servicos de leitura dos endpoints de list, detail e history
 - submit autenticado de criacao via `POST /api/v1/pickup-requests`
+- submit autenticado de edicao via `PUT /api/v1/pickup-requests/{id}`
+- formulario compartilhado de create/edit com UX de multiplos itens
 - testes focados no mapeamento semantico da timeline
 - auth/session foundation com login, register, logout e cookie HTTP-only de sessao
 
@@ -66,3 +69,8 @@ Para habilitar a leitura real do backend no frontend:
 - definir `ECOPICKUP_API_BASE_URL`
 
 As rotas de tracking agora usam a sessao autenticada da web. Nao dependem mais de tokens manuais por env.
+
+Regra atual de edicao:
+
+- owner pode editar apenas requests em `draft`
+- quando a request entra em `under_review` ou em qualquer estado operacional posterior, a edicao e bloqueada

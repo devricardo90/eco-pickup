@@ -73,6 +73,8 @@ Current implementation note:
 
 - EPIC-008A and EPIC-008B create the request foundation in `draft`
 - the current creation payload already requires at least one item
+- owner editing is currently allowed only while the request remains in `draft`
+- once the request moves to `under_review` or any later operational status, owner editing is blocked
 - image, pricing, payment and full submission workflow remain deferred to subsequent slices
 - media foundation must be defined before real image upload
 

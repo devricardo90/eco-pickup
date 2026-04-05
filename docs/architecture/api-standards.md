@@ -243,6 +243,7 @@ Suggested initial direction:
 
 - `GET /api/v1/auth/me`
 - `POST /api/v1/pickup-requests`
+- `PUT /api/v1/pickup-requests/{id}`
 - `GET /api/v1/pickup-requests`
 - `GET /api/v1/pickup-requests/{id}`
 - `GET /api/v1/pickup-requests/{id}/history`
@@ -250,6 +251,7 @@ Suggested initial direction:
 Current implemented scope:
 
 - `POST /api/v1/pickup-requests` creates an authenticated request in `draft`
+- `PUT /api/v1/pickup-requests/{id}` updates an authenticated owner request while it remains editable
 - `GET /api/v1/pickup-requests` lists authenticated user requests
 - `GET /api/v1/pickup-requests/{id}` returns authenticated user request detail with ownership enforcement
 - `POST /api/v1/pickup-items/{id}/photos` uploads one authenticated item photo via multipart form-data
@@ -263,6 +265,7 @@ Current implemented scope:
 - `POST /api/v1/pickup-requests/{id}/payments` creates a payment session for the authenticated owner
 - `POST /api/v1/payments/webhook` confirms payment status through a secure backend webhook
 - current payload stores description, pickup window, a single pickup address and one or more pickup items
+- owner editing is currently limited to requests in `draft`
 - items require `category`, `description` and `estimatedSize`
 - item detail responses now include photo metadata for the owning user
 - admin detail responses now include `address`, `items`, `photos` and current `status`

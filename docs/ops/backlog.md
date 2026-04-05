@@ -1009,6 +1009,44 @@ Entregar a primeira superficie autenticada de criacao de pickup request na web, 
 - payment
 - mutacoes administrativas
 
+#### EPIC-008D - Owner Draft Editing + Multi-Item UX
+**Status:** DONE
+
+##### Objetivo
+Evoluir a superficie web de criacao para suportar multiplos itens e permitir edicao owner apenas dentro do escopo inicial da request, antes de estados operacionais posteriores.
+
+##### Escopo
+- adicionar UX de multiplos itens na request
+- criar superficie owner de edicao autenticada
+- reutilizar a base visual de create/edit
+- consumir mutacao owner de update apenas para requests editaveis
+- bloquear edicao depois da entrada em fluxo operacional
+- tratar feedback de erro e sucesso
+- adicionar testes da regra de edicao permitida/bloqueada e do payload multi-item
+- atualizar documentacao impactada
+
+##### Criterios de aceite
+- owner autenticado consegue editar requests em `draft`
+- owner nao consegue editar requests apos `under_review`
+- formulario suporta multiplos itens
+- create e edit compartilham a mesma base visual
+- feedback de erro e sucesso esta tratado
+- nenhuma mutacao admin nova foi criada
+- lint, typecheck, build e testes aplicaveis passam
+
+##### Dependencias
+- EPIC-008C
+- EPIC-013C
+- EPIC-013D
+
+##### Fora de escopo
+- upload de foto no frontend
+- pricing
+- scheduling
+- payment
+- mutacoes admin
+- reabertura de fluxo operacional
+
 ---
 
 # EPIC-014 - Infra, Deploy e Observabilidade

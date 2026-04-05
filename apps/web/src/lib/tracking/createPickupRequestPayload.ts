@@ -1,4 +1,4 @@
-type CreatePickupRequestFormInput = {
+type PickupRequestFormInput = {
   description: string;
   pickupWindowDate: string;
   pickupWindowStartTime: string;
@@ -9,16 +9,18 @@ type CreatePickupRequestFormInput = {
   floor: string;
   hasElevator: boolean;
   accessNotes: string;
-  itemCategory: string;
-  itemDescription: string;
-  itemEstimatedSize: string;
+  items: Array<{
+    category: string;
+    description: string;
+    estimatedSize: string;
+  }>;
 };
 
 function toUtcIso(date: string, time: string) {
   return new Date(`${date}T${time}:00Z`).toISOString();
 }
 
-export function buildCreatePickupRequestPayload(input: CreatePickupRequestFormInput) {
+export function buildPickupRequestPayload(input: PickupRequestFormInput) {
   return {
     description: input.description,
     pickupWindowStartUtc: toUtcIso(input.pickupWindowDate, input.pickupWindowStartTime),
@@ -31,12 +33,10 @@ export function buildCreatePickupRequestPayload(input: CreatePickupRequestFormIn
       hasElevator: input.hasElevator,
       accessNotes: input.accessNotes || null
     },
-    items: [
-      {
-        category: input.itemCategory,
-        description: input.itemDescription,
-        estimatedSize: input.itemEstimatedSize
-      }
-    ]
+    items: input.items.map((item) => ({
+      category: item.category,
+      description: item.description,
+      estimatedSize: item.estimatedSize
+    }))
   };
 }
