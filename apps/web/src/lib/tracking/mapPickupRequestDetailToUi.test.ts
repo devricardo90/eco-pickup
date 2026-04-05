@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   mapPickupRequestListCardToUi,
   mapPickupRequestMetadataToUi,
+  mapPickupRequestPaymentToUi,
   mapPickupRequestPricingToUi,
   mapPickupRequestSummaryToUi
 } from "@/lib/tracking/mapPickupRequestDetailToUi";
@@ -119,5 +120,29 @@ describe("mapPickupRequestDetailToUi", () => {
     expect(pricing?.title).toBe("Quote in review");
     expect(pricing?.totalLabel).toBeNull();
     expect(pricing?.breakdown).toHaveLength(0);
+  });
+
+  it("builds a payment card for awaiting payment", () => {
+    const payment = mapPickupRequestPaymentToUi({
+      ...detail,
+      status: "awaiting_payment"
+    });
+
+    expect(payment).not.toBeNull();
+    expect(payment?.title).toBe("Payment ready");
+    expect(payment?.actionLabel).toBe("Continue to checkout");
+    expect(payment?.amountLabel).toContain("SEK");
+  });
+
+  it("builds a paid state without payment action", () => {
+    const payment = mapPickupRequestPaymentToUi({
+      ...detail,
+      status: "paid"
+    });
+
+    expect(payment).not.toBeNull();
+    expect(payment?.title).toBe("Payment confirmed");
+    expect(payment?.actionLabel).toBeNull();
+    expect(payment?.amountLabel).toContain("SEK");
   });
 });

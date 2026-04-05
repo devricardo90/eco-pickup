@@ -72,9 +72,11 @@ Development
 - owner agora diferencia salvar rascunho de enviar request, e o review admin parte de `submitted`
 - EPIC-011C concluida com quote visibility para owner
 - owner agora visualiza pricing persistido com clareza durante `under_review`, `quoted` e `awaiting_payment`
+- EPIC-012B concluida com owner payment surface
+- owner agora consegue iniciar checkout em `awaiting_payment` e ver confirmacao clara quando a request estiver `paid`
 
 ## Objetivo atual
-Preparar o proximo slice apos a visibilidade de quote para owner sem misturar esse recorte com novas mutacoes operacionais.
+Preparar o proximo slice apos a owner payment surface sem misturar esse recorte com novas mutacoes operacionais.
 
 ## O que ja existe
 - ideia do produto
@@ -90,11 +92,11 @@ Preparar o proximo slice apos a visibilidade de quote para owner sem misturar es
 - decisao da foundation do monorepo registrada
 
 ## O que falta antes de desenvolver
-- manter a separacao entre visibilidade de quote e os proximos escopos operacionais do produto
+- manter a separacao entre payment surface owner e os proximos escopos operacionais do produto
 - abrir painel admin, pricing e pagamento em etapas separadas
 
 ## Proximo passo recomendado
-Abrir o proximo recorte operacional apos quote visibility + awaiting payment owner surface, como payment owner surface ou scheduling visibility mais clara.
+Abrir o proximo recorte operacional apos owner payment surface, como scheduling visibility mais clara ou paid-to-scheduled owner messaging.
 
 ## Riscos atuais
 - comecar implementacao cedo demais

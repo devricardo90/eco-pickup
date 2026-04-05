@@ -1,18 +1,20 @@
 import Link from "next/link";
 import { PickupRequestMetadata } from "@/components/pickup-request-metadata";
+import { PickupRequestPaymentCard } from "@/components/pickup-request-payment-card";
 import { PickupRequestPricingCard } from "@/components/pickup-request-pricing-card";
 import { PickupRequestStatusCard } from "@/components/pickup-request-status-card";
 import { PickupRequestSubmitForm } from "@/components/pickup-request-submit-form";
 import { PickupRequestSummary } from "@/components/pickup-request-summary";
 import { PickupRequestTimeline } from "@/components/pickup-request-timeline";
 import { PickupRequestTrackingState } from "@/components/pickup-request-tracking-state";
-import { submitPickupRequestAction } from "@/lib/auth/actions";
+import { createPaymentSessionAction, submitPickupRequestAction } from "@/lib/auth/actions";
 import { requireSession } from "@/lib/auth/session";
 import { getPickupRequestDetail } from "@/lib/tracking/getPickupRequestDetail";
 import { getPickupRequestHistory } from "@/lib/tracking/getPickupRequestHistory";
 import { isPickupRequestEditable } from "@/lib/tracking/isPickupRequestEditable";
 import {
   mapPickupRequestMetadataToUi,
+  mapPickupRequestPaymentToUi,
   mapPickupRequestPricingToUi,
   mapPickupRequestSummaryToUi
 } from "@/lib/tracking/mapPickupRequestDetailToUi";
@@ -71,8 +73,10 @@ export async function PickupRequestDetailPage({ requestId, scope, notice }: Pick
   const summary = mapPickupRequestSummaryToUi(detailResult.data, lastUpdatedLabel);
   const metadataEntries = mapPickupRequestMetadataToUi(detailResult.data);
   const pricing = scope === "owner" ? mapPickupRequestPricingToUi(detailResult.data) : null;
+  const payment = scope === "owner" ? mapPickupRequestPaymentToUi(detailResult.data) : null;
   const canEdit = scope === "owner" && isPickupRequestEditable(detailResult.data.status);
   const submitAction = scope === "owner" ? submitPickupRequestAction.bind(null, requestId) : null;
+  const paymentAction = scope === "owner" ? createPaymentSessionAction.bind(null, requestId) : null;
 
   return (
     <main className="min-h-screen bg-[radial-gradient(circle_at_top,_#f0f7ee,_#e2ecd6_45%,_#d3dfc8_100%)] px-6 py-16 text-slate-900">
@@ -124,6 +128,8 @@ export async function PickupRequestDetailPage({ requestId, scope, notice }: Pick
         </div>
 
         {pricing ? <PickupRequestPricingCard pricing={pricing} /> : null}
+
+        {payment ? <PickupRequestPaymentCard action={paymentAction} payment={payment} /> : null}
 
         {historyResult.ok ? (
           <PickupRequestTimeline events={timelineEvents} />

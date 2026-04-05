@@ -3,6 +3,7 @@ import {
   type PickupRequestDetail,
   type PickupRequestListCardUi,
   type PickupRequestMetadataEntry,
+  type PickupRequestPaymentUi,
   type PickupRequestPricingUi,
   type PickupRequestSummaryUi
 } from "@/lib/tracking/types";
@@ -193,9 +194,39 @@ export function mapPickupRequestPricingToUi(detail: PickupRequestDetail): Pickup
             value: formatPricingBreakdownLabel(detail.pricing.distanceAdjustment, detail.pricing.currency)
           }
         ],
-        tone: "quoted"
+        tone: detail.status === "paid" ? "paid" : "quoted"
       }
     : null;
+}
+
+export function mapPickupRequestPaymentToUi(detail: PickupRequestDetail): PickupRequestPaymentUi | null {
+  if (!detail.pricing) {
+    return null;
+  }
+
+  if (detail.status === "awaiting_payment") {
+    return {
+      title: "Payment ready",
+      description:
+        "Your quote is active and this request is waiting for payment. Continue to checkout using the current persisted total.",
+      amountLabel: formatCurrency(detail.pricing.total, detail.pricing.currency),
+      actionLabel: "Continue to checkout",
+      tone: "awaiting_payment"
+    };
+  }
+
+  if (detail.status === "paid") {
+    return {
+      title: "Payment confirmed",
+      description:
+        "Payment has already been confirmed for this request. No further owner payment action is required on this surface.",
+      amountLabel: formatCurrency(detail.pricing.total, detail.pricing.currency),
+      actionLabel: null,
+      tone: "paid"
+    };
+  }
+
+  return null;
 }
 
 export function mapPickupRequestListCardToUi(

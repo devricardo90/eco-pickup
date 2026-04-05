@@ -45,6 +45,7 @@ src/
 - superficie autenticada de detail/tracking para admin em `/admin/tracking/[requestId]`
 - componentes compartilhados para resumo, status atual, metadados, timeline e estados de tela
 - card owner de pricing/quote visibility para `under_review`, `quoted` e `awaiting_payment`
+- card owner de payment surface para `awaiting_payment` e `paid`
 - servicos de leitura dos endpoints de list, detail e history
 - submit autenticado de criacao via `POST /api/v1/pickup-requests`
 - submit autenticado de edicao via `PUT /api/v1/pickup-requests/{id}`

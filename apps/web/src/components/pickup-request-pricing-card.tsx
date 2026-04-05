@@ -7,7 +7,8 @@ type PickupRequestPricingCardProps = {
 const toneClassNames: Record<PickupRequestPricingUi["tone"], string> = {
   pending: "border-slate-200 bg-white",
   quoted: "border-sky-200 bg-sky-50/70",
-  awaiting_payment: "border-amber-200 bg-amber-50/80"
+  awaiting_payment: "border-amber-200 bg-amber-50/80",
+  paid: "border-emerald-200 bg-emerald-50/80"
 };
 
 export function PickupRequestPricingCard({ pricing }: PickupRequestPricingCardProps) {

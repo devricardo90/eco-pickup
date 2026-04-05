@@ -1121,6 +1121,39 @@ Expor para o owner a transicao `under_review -> quoted/awaiting_payment`, mostra
 - polling
 - notificacoes
 
+#### EPIC-012B - Owner Payment Surface
+**Status:** DONE
+
+##### Objetivo
+Expor para o owner a superficie de pagamento sobre os endpoints ja existentes de payment session, refletindo com clareza os estados `awaiting_payment` e `paid` sem abrir novos contratos backend.
+
+##### Escopo
+- criar CTA owner para iniciar checkout quando a request estiver em `awaiting_payment`
+- mostrar estado de pagamento confirmado quando a request estiver em `paid`
+- reutilizar detail/tracking e mapeamentos existentes
+- manter pricing, status e timeline coerentes com o contrato atual
+- adicionar testes frontend de mapeamento para payment visibility
+- atualizar documentacao impactada
+
+##### Criterios de aceite
+- owner consegue iniciar payment session a partir da surface de tracking
+- `awaiting_payment` aparece com CTA e amount legiveis
+- `paid` aparece como estado confirmado sem CTA extra
+- nenhuma mutacao backend nova e criada
+- lint, typecheck, build e testes aplicaveis passam
+
+##### Dependencias
+- EPIC-012A
+- EPIC-011C
+- EPIC-013D
+
+##### Fora de escopo
+- payment capture no frontend
+- novos contratos backend
+- scheduling
+- polling
+- notificacoes
+
 ---
 
 # EPIC-014 - Infra, Deploy e Observabilidade

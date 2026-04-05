@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { createPaymentSession } from "@/lib/tracking/createPaymentSession";
 import { clearSession, getSession, setSession } from "@/lib/auth/session";
 import { createPickupRequest } from "@/lib/tracking/createPickupRequest";
 import { submitPickupRequest } from "@/lib/tracking/submitPickupRequest";
@@ -245,4 +246,26 @@ export async function submitPickupRequestAction(
   }
 
   redirect(`/tracking/${result.data.id}?submitted=1`);
+}
+
+export async function createPaymentSessionAction(
+  requestId: string,
+  _previousState: PickupRequestFormActionState,
+  _formData: FormData
+): Promise<PickupRequestFormActionState> {
+  const session = await getSession();
+  if (!session) {
+    return {
+      error: "You need an active session before starting payment."
+    };
+  }
+
+  const result = await createPaymentSession(requestId, session.accessToken);
+  if (!result.ok) {
+    return {
+      error: result.error
+    };
+  }
+
+  redirect(result.data.checkoutUrl);
 }

@@ -144,7 +144,15 @@ export type PickupRequestPricingUi = {
   description: string;
   totalLabel: string | null;
   breakdown: PickupRequestPricingBreakdownEntry[];
-  tone: "pending" | "quoted" | "awaiting_payment";
+  tone: "pending" | "quoted" | "awaiting_payment" | "paid";
+};
+
+export type PickupRequestPaymentUi = {
+  title: string;
+  description: string;
+  amountLabel: string | null;
+  actionLabel: string | null;
+  tone: "awaiting_payment" | "paid";
 };
 
 export type PickupRequestListCardUi = {
