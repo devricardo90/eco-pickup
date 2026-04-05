@@ -68,6 +68,20 @@ export type PickupRequestDetailResult =
       statusCode?: number;
     };
 
+export type PickupRequestListItem = PickupRequestDetail;
+
+export type PickupRequestListResult =
+  | {
+      ok: true;
+      data: PickupRequestListItem[];
+    }
+  | {
+      ok: false;
+      kind: "configuration" | "request";
+      message: string;
+      statusCode?: number;
+    };
+
 export type PickupRequestHistoryEvent = {
   id: string;
   action: string;
@@ -118,4 +132,15 @@ export type PickupRequestSummaryUi = {
 export type PickupRequestMetadataEntry = {
   label: string;
   value: string;
+};
+
+export type PickupRequestListCardUi = {
+  id: string;
+  title: string;
+  href: string;
+  statusLabel: string;
+  createdLabel: string;
+  pickupWindowLabel: string;
+  itemSummary: string;
+  priceSummary: string | null;
 };

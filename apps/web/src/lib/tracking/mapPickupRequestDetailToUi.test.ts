@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  mapPickupRequestListCardToUi,
   mapPickupRequestMetadataToUi,
   mapPickupRequestSummaryToUi
 } from "@/lib/tracking/mapPickupRequestDetailToUi";
@@ -81,5 +82,16 @@ describe("mapPickupRequestDetailToUi", () => {
     expect(labels).toContain("Confirmed schedule");
     expect(labels).toContain("Quoted total");
     expect(metadata.find((entry) => entry.label === "Photos attached")?.value).toBe("1 photo");
+  });
+
+  it("builds a list card with the correct route and summaries", () => {
+    const ownerCard = mapPickupRequestListCardToUi(detail, "owner");
+    const adminCard = mapPickupRequestListCardToUi(detail, "admin");
+
+    expect(ownerCard.href).toBe("/tracking/req_1");
+    expect(adminCard.href).toBe("/admin/tracking/req_1");
+    expect(ownerCard.statusLabel).toBe("Scheduled");
+    expect(ownerCard.itemSummary).toContain("2 items");
+    expect(ownerCard.priceSummary).toContain("SEK");
   });
 });

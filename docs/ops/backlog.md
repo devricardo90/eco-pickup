@@ -934,6 +934,43 @@ Consolidar em uma unica superficie autenticada o resumo do pedido, status atual,
 - websocket
 - notificacoes
 
+#### EPIC-013E - Authenticated Pickup Request List / Dashboard
+**Status:** DONE
+
+##### Objetivo
+Entregar dashboards autenticados de owner e admin para listar pickup requests existentes e conectar a lista aos detalhes autenticados ja entregues.
+
+##### Escopo
+- consumir `GET /api/v1/pickup-requests`
+- consumir `GET /api/v1/admin/pickup-requests`
+- criar dashboard autenticado de owner
+- criar dashboard autenticado de admin
+- reutilizar componentes visuais entre owner e admin quando possivel
+- conectar cada item listado ao detail/tracking correspondente
+- tratar loading, empty state e error state
+- adicionar testes aplicaveis
+- atualizar documentacao impactada
+
+##### Criterios de aceite
+- owner acessa sua lista autenticada
+- admin acessa a lista administrativa protegida
+- cada item listado linka para a superficie detail/tracking correta
+- loading, erro e vazio estao tratados
+- nenhuma mutacao nova foi introduzida
+- lint, typecheck, build e testes aplicaveis passam
+
+##### Dependencias
+- EPIC-013C
+- EPIC-013D
+
+##### Fora de escopo
+- filtros avancados
+- paginacao
+- mutacoes operacionais
+- polling
+- websocket
+- notificacoes
+
 ---
 
 # EPIC-014 - Infra, Deploy e Observabilidade

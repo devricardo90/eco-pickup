@@ -1,5 +1,7 @@
 import {
+  type HistoryScope,
   type PickupRequestDetail,
+  type PickupRequestListCardUi,
   type PickupRequestMetadataEntry,
   type PickupRequestSummaryUi
 } from "@/lib/tracking/types";
@@ -31,7 +33,7 @@ export function mapPickupRequestSummaryToUi(
     headline: detail.description,
     currentStatus: mapStatusLabel(detail.status),
     lastUpdatedLabel,
-    itemSummary: `${humanizeCount(itemCount, "item", "items")} · ${detail.items.map((item) => item.category).join(", ")}`,
+    itemSummary: `${humanizeCount(itemCount, "item", "items")} | ${detail.items.map((item) => item.category).join(", ")}`,
     createdLabel: formatTimelineDate(detail.createdUtc)
   };
 }
@@ -49,10 +51,10 @@ export function mapPickupRequestMetadataToUi(detail: PickupRequestDetail): Picku
     {
       label: "Access",
       value: detail.address.floor
-        ? `Floor ${detail.address.floor} · ${detail.address.hasElevator ? "Elevator available" : "No elevator"}`
+        ? `Floor ${detail.address.floor} | ${detail.address.hasElevator ? "Elevator available" : "No elevator"}`
         : detail.address.hasElevator
-          ? "Ground access · Elevator available"
-          : "Ground access · No elevator"
+          ? "Ground access | Elevator available"
+          : "Ground access | No elevator"
     },
     {
       label: "Photos attached",
@@ -89,4 +91,20 @@ export function mapPickupRequestMetadataToUi(detail: PickupRequestDetail): Picku
   }
 
   return entries;
+}
+
+export function mapPickupRequestListCardToUi(
+  item: PickupRequestDetail,
+  scope: HistoryScope
+): PickupRequestListCardUi {
+  return {
+    id: item.id,
+    title: item.description,
+    href: scope === "admin" ? `/admin/tracking/${item.id}` : `/tracking/${item.id}`,
+    statusLabel: mapStatusLabel(item.status),
+    createdLabel: formatTimelineDate(item.createdUtc),
+    pickupWindowLabel: formatUtcRange(item.pickupWindowStartUtc, item.pickupWindowEndUtc),
+    itemSummary: `${humanizeCount(item.items.length, "item", "items")} | ${item.items.map((entry) => entry.category).join(", ")}`,
+    priceSummary: item.pricing ? formatCurrency(item.pricing.total, item.pricing.currency) : null
+  };
 }
