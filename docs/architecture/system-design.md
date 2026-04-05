@@ -171,6 +171,12 @@ The MVP domain is composed of the following main areas:
 - history visibility
 - request detail visibility
 
+Current implementation direction:
+
+- tracking/history is exposed as dedicated read endpoints for owner and admin
+- timeline reads reuse the persisted `pickup_request_status_history` records
+- timeline is chronological and read-only in this foundation slice
+
 ---
 
 ## 7. Initial Entity Direction

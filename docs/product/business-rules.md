@@ -353,6 +353,8 @@ Current implementation note:
 - EPIC-010B now persists review-generated request status history
 - current history entries capture `fromStatus`, `toStatus`, `action`, `actorUserId`, `note` and `createdUtc`
 - EPIC-012A now also records a request status-history entry when payment confirmation moves the request to `paid`
+- EPIC-013A now exposes authenticated timeline/history reads for both owner and admin without introducing new mutations
+- current timeline responses are ordered chronologically and normalize system-generated events to `actorUserId = null`
 
 ---
 
@@ -391,6 +393,7 @@ Current implementation note:
 
 - user read access currently covers own pickup request list and own pickup request detail
 - read responses now expose request, address, items and item photo metadata for the owner
+- user read access now also covers own pickup request timeline/history
 - admin-wide photo visibility remains out of scope until the admin slice is opened
 
 ## Admins
@@ -411,7 +414,8 @@ Current implementation note:
 
 - EPIC-010A delivers admin read-only access to request list and detail
 - current admin detail includes `address`, `items`, `photos` and `status`
-- admin actions such as pricing, approve/reject and status mutation remain deferred
+- admin read access now also covers timeline/history for any request
+- admin actions such as pricing, approve/reject and status mutation are already open in isolated slices
 
 ---
 

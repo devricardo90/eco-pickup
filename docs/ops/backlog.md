@@ -745,7 +745,7 @@ Entregar a fundacao de cobranca e confirmacao de pagamento com persistencia do e
 ---
 
 # EPIC-013 - Tracking e Historico
-**Status:** READY
+**Status:** DONE
 
 ## Objetivo
 Permitir acompanhamento completo do pedido.
@@ -765,6 +765,49 @@ Permitir acompanhamento completo do pedido.
 - EPIC-008
 - EPIC-010
 - EPIC-012
+
+### Fatias de execucao
+
+#### EPIC-013A - Tracking / History Foundation
+**Status:** DONE
+
+##### Objetivo
+Entregar a leitura inicial de timeline e historico da pickup request para user e admin sobre os eventos ja persistidos, sem abrir novas mutacoes operacionais.
+
+##### Escopo
+- expor endpoint de timeline/history para o usuario autenticado
+- expor endpoint de timeline/history para `ADMIN`
+- retornar eventos relevantes ja persistidos de review, pricing, scheduling e payment
+- garantir ownership para `USER`
+- manter acesso restrito para `ADMIN`
+- definir formato consistente da timeline
+- adicionar testes aplicaveis
+- atualizar documentacao impactada
+
+##### Criterios de aceite
+- endpoint de timeline/history funcional
+- ownership para `USER` funcionando
+- acesso administrativo funcionando
+- eventos retornados corretamente
+- formato consistente da timeline
+- build continua passando
+- testes aplicaveis passam
+- Swagger, Scalar e OpenAPI continuam funcionando
+- documentacao impactada atualizada
+
+##### Dependencias
+- EPIC-010B
+- EPIC-011A
+- EPIC-011B
+- EPIC-012A
+
+##### Fora de escopo
+- novas mutacoes operacionais
+- reabertura de review
+- reabertura de pricing
+- reabertura de scheduling
+- reabertura de payment
+- workflow administrativo completo
 
 ---
 

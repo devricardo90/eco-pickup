@@ -32,6 +32,13 @@ public static class PickupRequestEndpoints
       .Produces(StatusCodes.Status401Unauthorized)
       .Produces(StatusCodes.Status404NotFound);
 
+    pickupRequestsGroup.MapGet("/{id:guid}/history", GetHistoryByIdAsync)
+      .WithName("GetPickupRequestHistoryById")
+      .Produces<PickupRequestTimelineResult>(StatusCodes.Status200OK)
+      .ProducesValidationProblem()
+      .Produces(StatusCodes.Status401Unauthorized)
+      .Produces(StatusCodes.Status404NotFound);
+
     return app;
   }
 
@@ -114,6 +121,29 @@ public static class PickupRequestEndpoints
     {
       var pickupRequest = await pickupRequestService.GetByIdAsync(id, userId, cancellationToken);
       return pickupRequest is null ? Results.NotFound() : Results.Ok(pickupRequest);
+    }
+    catch (PickupRequestValidationException ex)
+    {
+      return Results.ValidationProblem(ex.Errors.ToDictionary(pair => pair.Key, pair => pair.Value));
+    }
+  }
+
+  private static async Task<IResult> GetHistoryByIdAsync(
+    ClaimsPrincipal principal,
+    Guid id,
+    IPickupRequestService pickupRequestService,
+    CancellationToken cancellationToken)
+  {
+    var subject = principal.FindFirstValue("sub");
+    if (!Guid.TryParse(subject, out var userId))
+    {
+      return Results.Unauthorized();
+    }
+
+    try
+    {
+      var timeline = await pickupRequestService.GetHistoryByIdAsync(id, userId, cancellationToken);
+      return timeline is null ? Results.NotFound() : Results.Ok(timeline);
     }
     catch (PickupRequestValidationException ex)
     {

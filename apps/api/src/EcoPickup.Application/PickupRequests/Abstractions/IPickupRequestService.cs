@@ -18,10 +18,19 @@ public interface IPickupRequestService
     Guid userId,
     CancellationToken cancellationToken);
 
+  Task<PickupRequestTimelineResult?> GetHistoryByIdAsync(
+    Guid id,
+    Guid userId,
+    CancellationToken cancellationToken);
+
   Task<IReadOnlyList<PickupRequestResult>> GetAllForAdminAsync(
     CancellationToken cancellationToken);
 
   Task<PickupRequestResult?> GetByIdForAdminAsync(
+    Guid id,
+    CancellationToken cancellationToken);
+
+  Task<PickupRequestTimelineResult?> GetHistoryByIdForAdminAsync(
     Guid id,
     CancellationToken cancellationToken);
 

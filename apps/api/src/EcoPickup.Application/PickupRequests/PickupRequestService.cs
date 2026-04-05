@@ -271,6 +271,22 @@ public sealed class PickupRequestService(IPickupRequestRepository pickupRequestR
     return pickupRequest is null ? null : ToResult(pickupRequest);
   }
 
+  public async Task<PickupRequestTimelineResult?> GetHistoryByIdForAdminAsync(
+    Guid id,
+    CancellationToken cancellationToken)
+  {
+    if (id == Guid.Empty)
+    {
+      throw new PickupRequestValidationException(new Dictionary<string, string[]>
+      {
+        ["id"] = ["Pickup request id is required."]
+      });
+    }
+
+    var pickupRequest = await pickupRequestRepository.GetHistoryByIdForAdminAsync(id, cancellationToken);
+    return pickupRequest is null ? null : ToTimelineResult(pickupRequest);
+  }
+
   public async Task<IReadOnlyList<PickupRequestResult>> GetByUserAsync(
     Guid userId,
     CancellationToken cancellationToken)
@@ -310,6 +326,31 @@ public sealed class PickupRequestService(IPickupRequestRepository pickupRequestR
 
     var pickupRequest = await pickupRequestRepository.GetByIdAsync(id, userId, cancellationToken);
     return pickupRequest is null ? null : ToResult(pickupRequest);
+  }
+
+  public async Task<PickupRequestTimelineResult?> GetHistoryByIdAsync(
+    Guid id,
+    Guid userId,
+    CancellationToken cancellationToken)
+  {
+    if (id == Guid.Empty)
+    {
+      throw new PickupRequestValidationException(new Dictionary<string, string[]>
+      {
+        ["id"] = ["Pickup request id is required."]
+      });
+    }
+
+    if (userId == Guid.Empty)
+    {
+      throw new PickupRequestValidationException(new Dictionary<string, string[]>
+      {
+        ["userId"] = ["Authenticated user is required."]
+      });
+    }
+
+    var pickupRequest = await pickupRequestRepository.GetHistoryByIdAsync(id, userId, cancellationToken);
+    return pickupRequest is null ? null : ToTimelineResult(pickupRequest);
   }
 
   public async Task<PickupRequestResult> CreateAsync(
@@ -532,5 +573,21 @@ public sealed class PickupRequestService(IPickupRequestRepository pickupRequestR
               photo.SizeBytes,
               photo.CreatedUtc))
             .ToArray()))
+        .ToArray());
+
+  private static PickupRequestTimelineResult ToTimelineResult(PickupRequest pickupRequest) =>
+    new(
+      pickupRequest.Id,
+      pickupRequest.Status,
+      pickupRequest.StatusHistory
+        .OrderBy(historyEntry => historyEntry.CreatedUtc)
+        .Select(historyEntry => new PickupRequestTimelineEventResult(
+          historyEntry.Id,
+          historyEntry.Action,
+          historyEntry.FromStatus,
+          historyEntry.ToStatus,
+          historyEntry.ActorUserId == Guid.Empty ? null : historyEntry.ActorUserId,
+          historyEntry.Note,
+          historyEntry.CreatedUtc))
         .ToArray());
 }

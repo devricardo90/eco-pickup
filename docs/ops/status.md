@@ -54,9 +54,11 @@ Development
 - scheduling agora persiste a janela operacional confirmada e permite transicao controlada para `scheduled`
 - EPIC-012A concluida com payment foundation
 - payment agora persiste `Payment`, cria payment session, recebe confirmacao segura por webhook e aplica a transicao controlada `awaiting_payment -> paid`
+- EPIC-013A concluida com tracking / history foundation
+- timeline e historico agora podem ser consultados pelo dono autenticado e por `ADMIN` sem abrir novas mutacoes operacionais
 
 ## Objetivo atual
-Preparar o proximo slice apos a foundation de payment sem misturar cobranca com workflow administrativo completo.
+Preparar o proximo slice apos tracking / history foundation sem misturar a timeline com novas mutacoes operacionais.
 
 ## O que ja existe
 - ideia do produto
@@ -76,7 +78,7 @@ Preparar o proximo slice apos a foundation de payment sem misturar cobranca com 
 - abrir painel admin, pricing e pagamento em etapas separadas
 
 ## Proximo passo recomendado
-Abrir o proximo recorte operacional apos payment foundation, como timeline/tracking ou consolidacao do fluxo pago para execucao.
+Abrir o proximo recorte operacional apos tracking / history foundation, como status execution tracking, disposal record ou consolidacao visual no frontend.
 
 ## Riscos atuais
 - comecar implementacao cedo demais

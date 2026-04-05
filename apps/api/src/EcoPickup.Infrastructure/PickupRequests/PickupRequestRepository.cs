@@ -32,6 +32,14 @@ public sealed class PickupRequestRepository(EcoPickupDbContext dbContext) : IPic
         pickupRequest => pickupRequest.Id == id && pickupRequest.UserId == userId,
         cancellationToken);
 
+  public Task<PickupRequest?> GetHistoryByIdAsync(Guid id, Guid userId, CancellationToken cancellationToken) =>
+    dbContext.PickupRequests
+      .AsNoTracking()
+      .Include(pickupRequest => pickupRequest.StatusHistory)
+      .SingleOrDefaultAsync(
+        pickupRequest => pickupRequest.Id == id && pickupRequest.UserId == userId,
+        cancellationToken);
+
   public async Task<IReadOnlyList<PickupRequest>> GetAllAsync(CancellationToken cancellationToken) =>
     await dbContext.PickupRequests
       .AsNoTracking()
@@ -49,6 +57,14 @@ public sealed class PickupRequestRepository(EcoPickupDbContext dbContext) : IPic
       .Include(pickupRequest => pickupRequest.Address)
       .Include(pickupRequest => pickupRequest.Items)
       .ThenInclude(item => item.Photos)
+      .SingleOrDefaultAsync(
+        pickupRequest => pickupRequest.Id == id,
+        cancellationToken);
+
+  public Task<PickupRequest?> GetHistoryByIdForAdminAsync(Guid id, CancellationToken cancellationToken) =>
+    dbContext.PickupRequests
+      .AsNoTracking()
+      .Include(pickupRequest => pickupRequest.StatusHistory)
       .SingleOrDefaultAsync(
         pickupRequest => pickupRequest.Id == id,
         cancellationToken);

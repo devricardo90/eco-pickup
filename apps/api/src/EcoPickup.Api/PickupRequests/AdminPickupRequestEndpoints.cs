@@ -30,6 +30,14 @@ public static class AdminPickupRequestEndpoints
       .Produces(StatusCodes.Status403Forbidden)
       .Produces(StatusCodes.Status404NotFound);
 
+    adminPickupRequestsGroup.MapGet("/{id:guid}/history", GetHistoryByIdAsync)
+      .WithName("AdminGetPickupRequestHistoryById")
+      .Produces<PickupRequestTimelineResult>(StatusCodes.Status200OK)
+      .ProducesValidationProblem()
+      .Produces(StatusCodes.Status401Unauthorized)
+      .Produces(StatusCodes.Status403Forbidden)
+      .Produces(StatusCodes.Status404NotFound);
+
     adminPickupRequestsGroup.MapPatch("/{id:guid}/review", ReviewAsync)
       .WithName("AdminReviewPickupRequest")
       .Produces<PickupRequestResult>(StatusCodes.Status200OK)
@@ -74,6 +82,22 @@ public static class AdminPickupRequestEndpoints
     {
       var pickupRequest = await pickupRequestService.GetByIdForAdminAsync(id, cancellationToken);
       return pickupRequest is null ? Results.NotFound() : Results.Ok(pickupRequest);
+    }
+    catch (PickupRequestValidationException ex)
+    {
+      return Results.ValidationProblem(ex.Errors.ToDictionary(pair => pair.Key, pair => pair.Value));
+    }
+  }
+
+  private static async Task<IResult> GetHistoryByIdAsync(
+    Guid id,
+    IPickupRequestService pickupRequestService,
+    CancellationToken cancellationToken)
+  {
+    try
+    {
+      var timeline = await pickupRequestService.GetHistoryByIdForAdminAsync(id, cancellationToken);
+      return timeline is null ? Results.NotFound() : Results.Ok(timeline);
     }
     catch (PickupRequestValidationException ex)
     {

@@ -230,6 +230,117 @@ public sealed class PickupRequestServiceTests
   }
 
   [Fact]
+  public async Task GetHistoryByIdAsync_ShouldReturnOrderedTimelineForOwnedRequest()
+  {
+    var repository = new InMemoryPickupRequestRepository();
+    var ownerId = Guid.NewGuid();
+    var adminUserId = Guid.NewGuid();
+    var pickupRequest = CreatePickupRequest(ownerId, "Dining table", DateTime.UtcNow.AddMinutes(-15));
+    pickupRequest.Status = PickupRequestStatuses.Paid;
+    pickupRequest.StatusHistory.AddRange(
+    [
+      new PickupRequestStatusHistory
+      {
+        Id = Guid.NewGuid(),
+        PickupRequestId = pickupRequest.Id,
+        FromStatus = PickupRequestStatuses.Draft,
+        ToStatus = PickupRequestStatuses.UnderReview,
+        Action = "approve",
+        ActorUserId = adminUserId,
+        CreatedUtc = pickupRequest.CreatedUtc.AddMinutes(2)
+      },
+      new PickupRequestStatusHistory
+      {
+        Id = Guid.NewGuid(),
+        PickupRequestId = pickupRequest.Id,
+        FromStatus = PickupRequestStatuses.AwaitingPayment,
+        ToStatus = PickupRequestStatuses.Paid,
+        Action = "payment",
+        ActorUserId = Guid.Empty,
+        Note = "Payment confirmed by secure webhook.",
+        CreatedUtc = pickupRequest.CreatedUtc.AddMinutes(4)
+      },
+      new PickupRequestStatusHistory
+      {
+        Id = Guid.NewGuid(),
+        PickupRequestId = pickupRequest.Id,
+        FromStatus = PickupRequestStatuses.UnderReview,
+        ToStatus = PickupRequestStatuses.AwaitingPayment,
+        Action = "pricing",
+        ActorUserId = adminUserId,
+        CreatedUtc = pickupRequest.CreatedUtc.AddMinutes(3)
+      }
+    ]);
+    repository.StoredPickupRequests.Add(pickupRequest);
+
+    var service = new PickupRequestService(repository);
+
+    var result = await service.GetHistoryByIdAsync(pickupRequest.Id, ownerId, CancellationToken.None);
+
+    Assert.NotNull(result);
+    Assert.Equal(pickupRequest.Id, result!.PickupRequestId);
+    Assert.Equal(PickupRequestStatuses.Paid, result.CurrentStatus);
+    Assert.Equal(3, result.Events.Count);
+    Assert.Equal(["approve", "pricing", "payment"], result.Events.Select(x => x.Action).ToArray());
+    Assert.Equal(adminUserId, result.Events[0].ActorUserId);
+    Assert.Null(result.Events[2].ActorUserId);
+  }
+
+  [Fact]
+  public async Task GetHistoryByIdAsync_ShouldReturnNullWhenRequestDoesNotBelongToAuthenticatedUser()
+  {
+    var repository = new InMemoryPickupRequestRepository();
+    var pickupRequest = CreatePickupRequest(Guid.NewGuid(), "Desk", DateTime.UtcNow.AddMinutes(-15));
+    pickupRequest.StatusHistory.Add(
+      new PickupRequestStatusHistory
+      {
+        Id = Guid.NewGuid(),
+        PickupRequestId = pickupRequest.Id,
+        FromStatus = PickupRequestStatuses.Draft,
+        ToStatus = PickupRequestStatuses.UnderReview,
+        Action = "approve",
+        ActorUserId = Guid.NewGuid(),
+        CreatedUtc = pickupRequest.CreatedUtc.AddMinutes(2)
+      });
+    repository.StoredPickupRequests.Add(pickupRequest);
+
+    var service = new PickupRequestService(repository);
+
+    var result = await service.GetHistoryByIdAsync(pickupRequest.Id, Guid.NewGuid(), CancellationToken.None);
+
+    Assert.Null(result);
+  }
+
+  [Fact]
+  public async Task GetHistoryByIdForAdminAsync_ShouldReturnTimelineRegardlessOfOwner()
+  {
+    var repository = new InMemoryPickupRequestRepository();
+    var pickupRequest = CreatePickupRequest(Guid.NewGuid(), "Wardrobe", DateTime.UtcNow.AddMinutes(-15));
+    pickupRequest.StatusHistory.Add(
+      new PickupRequestStatusHistory
+      {
+        Id = Guid.NewGuid(),
+        PickupRequestId = pickupRequest.Id,
+        FromStatus = PickupRequestStatuses.Draft,
+        ToStatus = PickupRequestStatuses.Rejected,
+        Action = "reject",
+        ActorUserId = Guid.NewGuid(),
+        Note = "Broken glass",
+        CreatedUtc = pickupRequest.CreatedUtc.AddMinutes(2)
+      });
+    repository.StoredPickupRequests.Add(pickupRequest);
+
+    var service = new PickupRequestService(repository);
+
+    var result = await service.GetHistoryByIdForAdminAsync(pickupRequest.Id, CancellationToken.None);
+
+    Assert.NotNull(result);
+    Assert.Single(result!.Events);
+    Assert.Equal("reject", result.Events[0].Action);
+    Assert.Equal("Broken glass", result.Events[0].Note);
+  }
+
+  [Fact]
   public async Task ReviewAsync_ShouldApproveDraftRequestAndRegisterHistory()
   {
     var repository = new InMemoryPickupRequestRepository();
@@ -408,12 +519,18 @@ public sealed class PickupRequestServiceTests
     public Task<PickupRequest?> GetByIdAsync(Guid id, Guid userId, CancellationToken cancellationToken) =>
       Task.FromResult(StoredPickupRequests.SingleOrDefault(x => x.Id == id && x.UserId == userId));
 
+    public Task<PickupRequest?> GetHistoryByIdAsync(Guid id, Guid userId, CancellationToken cancellationToken) =>
+      Task.FromResult(StoredPickupRequests.SingleOrDefault(x => x.Id == id && x.UserId == userId));
+
     public Task<IReadOnlyList<PickupRequest>> GetAllAsync(CancellationToken cancellationToken) =>
       Task.FromResult<IReadOnlyList<PickupRequest>>(StoredPickupRequests
         .OrderByDescending(x => x.CreatedUtc)
         .ToList());
 
     public Task<PickupRequest?> GetByIdForAdminAsync(Guid id, CancellationToken cancellationToken) =>
+      Task.FromResult(StoredPickupRequests.SingleOrDefault(x => x.Id == id));
+
+    public Task<PickupRequest?> GetHistoryByIdForAdminAsync(Guid id, CancellationToken cancellationToken) =>
       Task.FromResult(StoredPickupRequests.SingleOrDefault(x => x.Id == id));
 
     public Task<PickupRequest?> GetTrackedByIdAsync(Guid id, CancellationToken cancellationToken) =>

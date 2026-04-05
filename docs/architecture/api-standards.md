@@ -245,6 +245,7 @@ Suggested initial direction:
 - `POST /api/v1/pickup-requests`
 - `GET /api/v1/pickup-requests`
 - `GET /api/v1/pickup-requests/{id}`
+- `GET /api/v1/pickup-requests/{id}/history`
 
 Current implemented scope:
 
@@ -252,8 +253,10 @@ Current implemented scope:
 - `GET /api/v1/pickup-requests` lists authenticated user requests
 - `GET /api/v1/pickup-requests/{id}` returns authenticated user request detail with ownership enforcement
 - `POST /api/v1/pickup-items/{id}/photos` uploads one authenticated item photo via multipart form-data
+- `GET /api/v1/pickup-requests/{id}/history` returns the authenticated owner timeline/history
 - `GET /api/v1/admin/pickup-requests` lists pickup requests for `ADMIN`
 - `GET /api/v1/admin/pickup-requests/{id}` returns admin pickup request detail
+- `GET /api/v1/admin/pickup-requests/{id}/history` returns the admin timeline/history view
 - `PATCH /api/v1/admin/pickup-requests/{id}/review` applies the first admin review decision
 - `PATCH /api/v1/admin/pickup-requests/{id}/pricing` persists the admin pricing breakdown
 - `PATCH /api/v1/admin/pickup-requests/{id}/scheduling` persists the confirmed pickup window
@@ -269,7 +272,7 @@ Current implemented scope:
 - payment session creation and confirmation are now implemented through dedicated payment endpoints
 - item photo upload is fixed to API-mediated write with private S3-compatible storage
 - upload validation enforces ownership, content type whitelist, max `10 MB` and max `5` photos per `PickupItem`
-- public history/timeline exposure and advanced payment-provider features are intentionally deferred to later slices
+- advanced payment-provider features are intentionally deferred to later slices
 
 Planned near-term direction:
 
@@ -278,6 +281,16 @@ Planned near-term direction:
 ### Status / tracking
 
 - `GET /api/v1/pickup-requests/{id}/history`
+- `GET /api/v1/admin/pickup-requests/{id}/history`
+
+Current implemented tracking scope:
+
+- timeline/history is available for the authenticated owner and for `ADMIN`
+- timeline responses are read-only and isolated from operational mutation endpoints
+- timeline payload returns `pickupRequestId`, `currentStatus` and ordered `events`
+- each event returns `id`, `action`, `fromStatus`, `toStatus`, `actorUserId`, optional `note` and `createdUtc`
+- system-generated events such as secure payment confirmation expose `actorUserId = null`
+- event order is chronological from oldest to newest
 
 ### Images
 
