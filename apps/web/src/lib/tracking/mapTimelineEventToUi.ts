@@ -20,6 +20,7 @@ const statusLabels = new Map<string, string>([
 ]);
 
 const actionLabels = new Map<string, string>([
+  ["submit", "Request submitted"],
   ["approve", "Request approved"],
   ["reject", "Request rejected"],
   ["pricing", "Price defined"],
@@ -58,9 +59,13 @@ function mapActionTitle(action: string, toStatus: string) {
   return actionLabels.get(action) ?? humanizeToken(action);
 }
 
-function mapActorLabel(scope: HistoryScope, actorUserId: string | null) {
+function mapActorLabel(scope: HistoryScope, actorUserId: string | null, action: string) {
   if (!actorUserId) {
     return "System";
+  }
+
+  if (action === "submit") {
+    return scope === "admin" ? "User" : "You";
   }
 
   return scope === "admin" ? "Operator" : "Admin";
@@ -74,7 +79,7 @@ export function mapTimelineEventToUi(
     id: event.id,
     title: mapActionTitle(event.action, event.toStatus),
     transitionLabel: `${mapStatusLabel(event.fromStatus)} -> ${mapStatusLabel(event.toStatus)}`,
-    actorLabel: mapActorLabel(scope, event.actorUserId),
+    actorLabel: mapActorLabel(scope, event.actorUserId, event.action),
     note: event.note,
     createdLabel: formatTimelineDate(event.createdUtc),
     isSystemEvent: event.actorUserId === null

@@ -244,6 +244,7 @@ Suggested initial direction:
 - `GET /api/v1/auth/me`
 - `POST /api/v1/pickup-requests`
 - `PUT /api/v1/pickup-requests/{id}`
+- `PATCH /api/v1/pickup-requests/{id}/submit`
 - `GET /api/v1/pickup-requests`
 - `GET /api/v1/pickup-requests/{id}`
 - `GET /api/v1/pickup-requests/{id}/history`
@@ -252,6 +253,7 @@ Current implemented scope:
 
 - `POST /api/v1/pickup-requests` creates an authenticated request in `draft`
 - `PUT /api/v1/pickup-requests/{id}` updates an authenticated owner request while it remains editable
+- `PATCH /api/v1/pickup-requests/{id}/submit` moves an authenticated owner request from `draft` to `submitted`
 - `GET /api/v1/pickup-requests` lists authenticated user requests
 - `GET /api/v1/pickup-requests/{id}` returns authenticated user request detail with ownership enforcement
 - `POST /api/v1/pickup-items/{id}/photos` uploads one authenticated item photo via multipart form-data
@@ -266,6 +268,7 @@ Current implemented scope:
 - `POST /api/v1/payments/webhook` confirms payment status through a secure backend webhook
 - current payload stores description, pickup window, a single pickup address and one or more pickup items
 - owner editing is currently limited to requests in `draft`
+- owner submission is a separate explicit transition from `draft` to `submitted`
 - items require `category`, `description` and `estimatedSize`
 - item detail responses now include photo metadata for the owning user
 - admin detail responses now include `address`, `items`, `photos` and current `status`
@@ -336,7 +339,7 @@ Current implemented admin read scope:
 - list and detail are available for `ADMIN` only
 - detail includes `address`, `items`, `photos` and current `status`
 - review action is available through `PATCH /api/v1/admin/pickup-requests/{id}/review`
-- allowed transitions in the current slice are `draft -> under_review`, `draft -> rejected` and `under_review -> rejected`
+- allowed transitions in the current slice are `submitted -> under_review`, `submitted -> rejected` and `under_review -> rejected`
 - each review action stores a status-history entry with actor, previous status, next status and optional note
 - pricing action is available through `PATCH /api/v1/admin/pickup-requests/{id}/pricing`
 - pricing persists `basePrice`, `sizeAdjustment`, `floorAdjustment`, `distanceAdjustment`, computed `total` and `currency`

@@ -75,8 +75,8 @@ export function PickupRequestForm({
       </h1>
       <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-700">
         {isEdit
-          ? "Update the initial pickup request while it is still in draft. Once operational review starts, editing is locked."
-          : "Capture the initial pickup request with items, address and preferred pickup window. Pricing, scheduling, payment and admin actions remain separate slices."}
+          ? "Update the initial pickup request while it is still in draft. Save keeps it in draft; submit sends it to operational review and locks editing."
+          : "Capture the initial pickup request with items, address and preferred pickup window. You can save it as draft first or submit it when it is ready for review."}
       </p>
 
       <form action={formAction} className="mt-8 grid gap-8">
@@ -276,13 +276,26 @@ export function PickupRequestForm({
           </p>
         ) : null}
 
-        <button
-          className="inline-flex items-center justify-center rounded-2xl bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-70"
-          disabled={isPending}
-          type="submit"
-        >
-          {isPending ? (isEdit ? "Saving..." : "Creating...") : isEdit ? "Save pickup request" : "Create pickup request"}
-        </button>
+        <div className="flex flex-wrap gap-3">
+          <button
+            className="inline-flex items-center justify-center rounded-2xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:border-slate-400 disabled:cursor-not-allowed disabled:opacity-70"
+            disabled={isPending}
+            name="intent"
+            type="submit"
+            value="save"
+          >
+            {isPending ? "Saving..." : isEdit ? "Save draft changes" : "Save draft"}
+          </button>
+          <button
+            className="inline-flex items-center justify-center rounded-2xl bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-70"
+            disabled={isPending}
+            name="intent"
+            type="submit"
+            value="submit"
+          >
+            {isPending ? "Submitting..." : isEdit ? "Save and submit request" : "Create and submit request"}
+          </button>
+        </div>
       </form>
     </section>
   );

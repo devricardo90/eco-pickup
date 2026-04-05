@@ -68,9 +68,11 @@ Development
 - owner agora consegue criar uma request pela web usando a sessao real e o contrato existente de criacao, com redirecionamento para detail/tracking apos sucesso
 - EPIC-008D concluida com UX de multiplos itens e edicao owner limitada a `draft`
 - owner agora consegue editar requests em `draft` pela web, com bloqueio explicito apos entrada em fluxo operacional
+- EPIC-008E concluida com semantica explicita de submissao
+- owner agora diferencia salvar rascunho de enviar request, e o review admin parte de `submitted`
 
 ## Objetivo atual
-Preparar o proximo slice apos a edicao owner inicial sem misturar esse recorte com pricing, scheduling, payment ou mutacoes administrativas.
+Preparar o proximo slice apos a semantica explicita de submissao sem misturar esse recorte com pricing, scheduling, payment ou mutacoes administrativas.
 
 ## O que ja existe
 - ideia do produto
@@ -86,11 +88,11 @@ Preparar o proximo slice apos a edicao owner inicial sem misturar esse recorte c
 - decisao da foundation do monorepo registrada
 
 ## O que falta antes de desenvolver
-- manter a separacao entre a edicao owner inicial e os proximos escopos do produto
+- manter a separacao entre draft/submitted e os proximos escopos do produto
 - abrir painel admin, pricing e pagamento em etapas separadas
 
 ## Proximo passo recomendado
-Abrir o proximo recorte operacional apos owner draft editing + multi-item UX, como upload de foto no frontend, submission semantics ou execution tracking detalhado.
+Abrir o proximo recorte operacional apos request submission semantics, como upload de foto no frontend, quote visibility mais clara ou execution tracking detalhado.
 
 ## Riscos atuais
 - comecar implementacao cedo demais

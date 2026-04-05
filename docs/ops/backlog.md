@@ -1047,6 +1047,44 @@ Evoluir a superficie web de criacao para suportar multiplos itens e permitir edi
 - mutacoes admin
 - reabertura de fluxo operacional
 
+#### EPIC-008E - Request Submission Semantics
+**Status:** DONE
+
+##### Objetivo
+Separar explicitamente `draft` de `submitted`, criando a semantica de envio owner sem reabrir pricing, scheduling, payment ou mutacoes administrativas alem do review ja existente.
+
+##### Escopo
+- criar transicao owner de `draft -> submitted`
+- registrar historico da submissao
+- manter create/update trabalhando sobre `draft`
+- bloquear edicao owner apos submissao
+- ajustar o review admin para partir de `submitted`
+- explicitar na web a diferenca entre salvar rascunho e enviar request
+- adicionar testes aplicaveis
+- atualizar documentacao impactada
+
+##### Criterios de aceite
+- existe endpoint owner de submit funcional
+- submissao registra historico corretamente
+- edicao continua disponivel apenas em `draft`
+- requests submetidas nao podem mais ser editadas
+- review admin parte de `submitted`
+- a web diferencia salvar rascunho de enviar
+- lint, typecheck, build e testes aplicaveis passam
+
+##### Dependencias
+- EPIC-008D
+- EPIC-010B
+- EPIC-013D
+
+##### Fora de escopo
+- pricing
+- scheduling
+- payment
+- mutacoes admin novas
+- polling
+- notificacoes
+
 ---
 
 # EPIC-014 - Infra, Deploy e Observabilidade

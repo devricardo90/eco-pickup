@@ -58,6 +58,39 @@ describe("mapTimelineEventToUi", () => {
     expect(adminView.actorLabel).toBe("Operator");
   });
 
+  it("maps an owner submit event to the correct human label and actor", () => {
+    const ownerView = mapTimelineEventToUi(
+      {
+        id: "evt_3",
+        action: "submit",
+        fromStatus: "draft",
+        toStatus: "submitted",
+        actorUserId: "user-1",
+        note: null,
+        createdUtc: "2026-04-05T13:30:00Z"
+      },
+      "owner"
+    );
+
+    const adminView = mapTimelineEventToUi(
+      {
+        id: "evt_3",
+        action: "submit",
+        fromStatus: "draft",
+        toStatus: "submitted",
+        actorUserId: "user-1",
+        note: null,
+        createdUtc: "2026-04-05T13:30:00Z"
+      },
+      "admin"
+    );
+
+    expect(ownerView.title).toBe("Request submitted");
+    expect(ownerView.actorLabel).toBe("You");
+    expect(adminView.actorLabel).toBe("User");
+    expect(ownerView.transitionLabel).toBe("Draft -> Submitted");
+  });
+
   it("keeps status and date formatting consistent", () => {
     expect(mapStatusLabel("under_review")).toBe("Under review");
     expect(formatTimelineDate("2026-04-05T08:05:00Z")).toContain("UTC");

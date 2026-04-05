@@ -47,6 +47,7 @@ src/
 - servicos de leitura dos endpoints de list, detail e history
 - submit autenticado de criacao via `POST /api/v1/pickup-requests`
 - submit autenticado de edicao via `PUT /api/v1/pickup-requests/{id}`
+- submit autenticado de envio via `PATCH /api/v1/pickup-requests/{id}/submit`
 - formulario compartilhado de create/edit com UX de multiplos itens
 - testes focados no mapeamento semantico da timeline
 - auth/session foundation com login, register, logout e cookie HTTP-only de sessao
@@ -74,3 +75,9 @@ Regra atual de edicao:
 
 - owner pode editar apenas requests em `draft`
 - quando a request entra em `under_review` ou em qualquer estado operacional posterior, a edicao e bloqueada
+
+Semantica atual de envio:
+
+- create e edit podem salvar como `draft`
+- owner envia a request por uma transicao explicita para `submitted`
+- depois de `submitted`, a request deixa de ser editavel

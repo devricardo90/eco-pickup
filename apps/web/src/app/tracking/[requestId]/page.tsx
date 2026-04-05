@@ -7,13 +7,19 @@ export default async function TrackingPage({
   searchParams
 }: {
   params: Promise<{ requestId: string }>;
-  searchParams: Promise<{ updated?: string }>;
+  searchParams: Promise<{ saved?: string; submitted?: string }>;
 }) {
   const { requestId } = await params;
-  const { updated } = await searchParams;
+  const { saved, submitted } = await searchParams;
   return (
     <PickupRequestDetailPage
-      notice={updated === "1" ? "Pickup request updated successfully." : null}
+      notice={
+        submitted === "1"
+          ? "Pickup request submitted successfully."
+          : saved === "1"
+            ? "Pickup request saved as draft."
+            : null
+      }
       requestId={requestId}
       scope="owner"
     />

@@ -131,6 +131,51 @@ public sealed class PickupRequestServiceTests
   }
 
   [Fact]
+  public async Task SubmitAsync_ShouldMoveDraftToSubmittedAndRegisterHistory()
+  {
+    var repository = new InMemoryPickupRequestRepository();
+    var ownerId = Guid.NewGuid();
+    var pickupRequest = CreatePickupRequest(ownerId, "Dining table", DateTime.UtcNow.AddMinutes(-15));
+    repository.StoredPickupRequests.Add(pickupRequest);
+    var service = new PickupRequestService(repository);
+
+    var result = await service.SubmitAsync(
+      pickupRequest.Id,
+      ownerId,
+      new SubmitPickupRequestCommand("Ready for review"),
+      CancellationToken.None);
+
+    Assert.Equal(PickupRequestStatuses.Submitted, result.Status);
+    Assert.Equal(PickupRequestStatuses.Submitted, pickupRequest.Status);
+    Assert.Single(pickupRequest.StatusHistory);
+    Assert.Equal("submit", pickupRequest.StatusHistory[0].Action);
+    Assert.Equal(PickupRequestStatuses.Draft, pickupRequest.StatusHistory[0].FromStatus);
+    Assert.Equal(PickupRequestStatuses.Submitted, pickupRequest.StatusHistory[0].ToStatus);
+    Assert.Equal(ownerId, pickupRequest.StatusHistory[0].ActorUserId);
+    Assert.Equal("Ready for review", pickupRequest.StatusHistory[0].Note);
+  }
+
+  [Fact]
+  public async Task SubmitAsync_ShouldThrowWhenRequestIsNotDraft()
+  {
+    var repository = new InMemoryPickupRequestRepository();
+    var ownerId = Guid.NewGuid();
+    var pickupRequest = CreatePickupRequest(ownerId, "Desk", DateTime.UtcNow.AddMinutes(-15));
+    pickupRequest.Status = PickupRequestStatuses.Submitted;
+    repository.StoredPickupRequests.Add(pickupRequest);
+    var service = new PickupRequestService(repository);
+
+    var exception = await Assert.ThrowsAsync<PickupRequestValidationException>(() =>
+      service.SubmitAsync(
+        pickupRequest.Id,
+        ownerId,
+        new SubmitPickupRequestCommand(null),
+        CancellationToken.None));
+
+    Assert.Equal("Submitting is not allowed when request status is 'submitted'.", exception.Errors["status"][0]);
+  }
+
+  [Fact]
   public async Task CreateAsync_ShouldThrowWhenPickupWindowEndIsNotAfterStart()
   {
     var repository = new InMemoryPickupRequestRepository();
@@ -429,10 +474,11 @@ public sealed class PickupRequestServiceTests
   }
 
   [Fact]
-  public async Task ReviewAsync_ShouldApproveDraftRequestAndRegisterHistory()
+  public async Task ReviewAsync_ShouldApproveSubmittedRequestAndRegisterHistory()
   {
     var repository = new InMemoryPickupRequestRepository();
     var pickupRequest = CreatePickupRequest(Guid.NewGuid(), "Dining table", DateTime.UtcNow.AddMinutes(-15));
+    pickupRequest.Status = PickupRequestStatuses.Submitted;
     repository.StoredPickupRequests.Add(pickupRequest);
     var service = new PickupRequestService(repository);
     var adminUserId = Guid.NewGuid();
@@ -445,7 +491,7 @@ public sealed class PickupRequestServiceTests
 
     Assert.Equal(PickupRequestStatuses.UnderReview, result.Status);
     Assert.Single(pickupRequest.StatusHistory);
-    Assert.Equal(PickupRequestStatuses.Draft, pickupRequest.StatusHistory[0].FromStatus);
+    Assert.Equal(PickupRequestStatuses.Submitted, pickupRequest.StatusHistory[0].FromStatus);
     Assert.Equal(PickupRequestStatuses.UnderReview, pickupRequest.StatusHistory[0].ToStatus);
     Assert.Equal("approve", pickupRequest.StatusHistory[0].Action);
     Assert.Equal(adminUserId, pickupRequest.StatusHistory[0].ActorUserId);

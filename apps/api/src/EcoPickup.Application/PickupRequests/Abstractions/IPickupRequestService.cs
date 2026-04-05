@@ -15,6 +15,12 @@ public interface IPickupRequestService
     UpdatePickupRequestCommand command,
     CancellationToken cancellationToken);
 
+  Task<PickupRequestResult> SubmitAsync(
+    Guid id,
+    Guid userId,
+    SubmitPickupRequestCommand command,
+    CancellationToken cancellationToken);
+
   Task<IReadOnlyList<PickupRequestResult>> GetByUserAsync(
     Guid userId,
     CancellationToken cancellationToken);

@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { PickupRequestMetadata } from "@/components/pickup-request-metadata";
 import { PickupRequestStatusCard } from "@/components/pickup-request-status-card";
+import { PickupRequestSubmitForm } from "@/components/pickup-request-submit-form";
 import { PickupRequestSummary } from "@/components/pickup-request-summary";
 import { PickupRequestTimeline } from "@/components/pickup-request-timeline";
 import { PickupRequestTrackingState } from "@/components/pickup-request-tracking-state";
+import { submitPickupRequestAction } from "@/lib/auth/actions";
 import { requireSession } from "@/lib/auth/session";
 import { getPickupRequestDetail } from "@/lib/tracking/getPickupRequestDetail";
 import { getPickupRequestHistory } from "@/lib/tracking/getPickupRequestHistory";
@@ -67,6 +69,7 @@ export async function PickupRequestDetailPage({ requestId, scope, notice }: Pick
   const summary = mapPickupRequestSummaryToUi(detailResult.data, lastUpdatedLabel);
   const metadataEntries = mapPickupRequestMetadataToUi(detailResult.data);
   const canEdit = scope === "owner" && isPickupRequestEditable(detailResult.data.status);
+  const submitAction = scope === "owner" ? submitPickupRequestAction.bind(null, requestId) : null;
 
   return (
     <main className="min-h-screen bg-[radial-gradient(circle_at_top,_#f0f7ee,_#e2ecd6_45%,_#d3dfc8_100%)] px-6 py-16 text-slate-900">
@@ -82,15 +85,18 @@ export async function PickupRequestDetailPage({ requestId, scope, notice }: Pick
           {scope === "owner" ? (
             <div className="mt-6 flex flex-wrap items-center gap-3">
               {canEdit ? (
-                <Link
-                  className="inline-flex items-center justify-center rounded-2xl bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
-                  href={`/tracking/${requestId}/edit`}
-                >
-                  Edit request
-                </Link>
+                <>
+                  <Link
+                    className="inline-flex items-center justify-center rounded-2xl bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
+                    href={`/tracking/${requestId}/edit`}
+                  >
+                    Edit request
+                  </Link>
+                  {submitAction ? <PickupRequestSubmitForm action={submitAction} /> : null}
+                </>
               ) : (
                 <p className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">
-                  Editing is locked once operational review starts.
+                  This request has already been submitted or entered operational review. Editing is now locked.
                 </p>
               )}
             </div>

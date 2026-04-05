@@ -39,6 +39,13 @@ public static class PickupRequestEndpoints
       .Produces(StatusCodes.Status401Unauthorized)
       .Produces(StatusCodes.Status404NotFound);
 
+    pickupRequestsGroup.MapPatch("/{id:guid}/submit", SubmitAsync)
+      .WithName("SubmitPickupRequest")
+      .Produces<PickupRequestResult>(StatusCodes.Status200OK)
+      .ProducesValidationProblem()
+      .Produces(StatusCodes.Status401Unauthorized)
+      .Produces(StatusCodes.Status404NotFound);
+
     pickupRequestsGroup.MapGet("/{id:guid}/history", GetHistoryByIdAsync)
       .WithName("GetPickupRequestHistoryById")
       .Produces<PickupRequestTimelineResult>(StatusCodes.Status200OK)
@@ -206,6 +213,40 @@ public static class PickupRequestEndpoints
     }
   }
 
+  private static async Task<IResult> SubmitAsync(
+    ClaimsPrincipal principal,
+    Guid id,
+    SubmitPickupRequestRequest request,
+    IPickupRequestService pickupRequestService,
+    CancellationToken cancellationToken)
+  {
+    var subject = principal.FindFirstValue("sub");
+    if (!Guid.TryParse(subject, out var userId))
+    {
+      return Results.Unauthorized();
+    }
+
+    try
+    {
+      var pickupRequest = await pickupRequestService.SubmitAsync(
+        id,
+        userId,
+        new SubmitPickupRequestCommand(request.Note),
+        cancellationToken);
+
+      return Results.Ok(pickupRequest);
+    }
+    catch (PickupRequestValidationException ex)
+    {
+      if (ex.Errors.TryGetValue("id", out var idErrors) && idErrors.Contains("Pickup request was not found."))
+      {
+        return Results.NotFound();
+      }
+
+      return Results.ValidationProblem(ex.Errors.ToDictionary(pair => pair.Key, pair => pair.Value));
+    }
+  }
+
   public sealed record CreatePickupRequestRequest(
     string Description,
     DateTime PickupWindowStartUtc,
@@ -225,4 +266,6 @@ public static class PickupRequestEndpoints
     string Category,
     string Description,
     string EstimatedSize);
+
+  public sealed record SubmitPickupRequestRequest(string? Note);
 }

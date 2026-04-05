@@ -74,6 +74,8 @@ Current implementation note:
 - EPIC-008A and EPIC-008B create the request foundation in `draft`
 - the current creation payload already requires at least one item
 - owner editing is currently allowed only while the request remains in `draft`
+- owner must explicitly submit the request to move `draft -> submitted`
+- `submitted` is the first status that indicates the request is ready for operational review
 - once the request moves to `under_review` or any later operational status, owner editing is blocked
 - image, pricing, payment and full submission workflow remain deferred to subsequent slices
 - media foundation must be defined before real image upload
@@ -175,8 +177,8 @@ Admin may:
 Current implementation note:
 
 - EPIC-010B opens the first controlled admin review action
-- `approve` currently moves `draft -> under_review`
-- `reject` currently moves `draft -> rejected` or `under_review -> rejected`
+- `approve` currently moves `submitted -> under_review`
+- `reject` currently moves `submitted -> rejected` or `under_review -> rejected`
 - admin review may include an optional note
 - pricing and scheduling remain deferred
 
@@ -324,7 +326,7 @@ Example expected transitions:
 
 Current implementation note:
 
-- current implemented transitions include `draft -> under_review`, `draft -> rejected`, `under_review -> rejected`, `under_review -> quoted`, `under_review -> awaiting_payment`, `awaiting_payment -> paid` and `quoted -> scheduled`
+- current implemented transitions include `draft -> submitted`, `submitted -> under_review`, `submitted -> rejected`, `under_review -> rejected`, `under_review -> quoted`, `under_review -> awaiting_payment`, `awaiting_payment -> paid` and `quoted -> scheduled`
 - scheduling after `paid` remains a separate operational step
 
 Alternative transitions:
@@ -354,6 +356,7 @@ Current implementation note:
 
 - EPIC-010B now persists review-generated request status history
 - current history entries capture `fromStatus`, `toStatus`, `action`, `actorUserId`, `note` and `createdUtc`
+- owner submission now also records a request status-history entry for `draft -> submitted`
 - EPIC-012A now also records a request status-history entry when payment confirmation moves the request to `paid`
 - EPIC-013A now exposes authenticated timeline/history reads for both owner and admin without introducing new mutations
 - current timeline responses are ordered chronologically and normalize system-generated events to `actorUserId = null`

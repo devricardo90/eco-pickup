@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { clearSession, getSession, setSession } from "@/lib/auth/session";
 import { createPickupRequest } from "@/lib/tracking/createPickupRequest";
+import { submitPickupRequest } from "@/lib/tracking/submitPickupRequest";
 import { updatePickupRequest } from "@/lib/tracking/updatePickupRequest";
 import { buildPickupRequestPayload } from "@/lib/tracking/createPickupRequestPayload";
 import type { AuthActionState, PickupRequestFormActionState } from "@/lib/auth/types";
@@ -60,6 +61,11 @@ function validatePickupRequestForm(input: ReturnType<typeof readPickupRequestFor
   }
 
   return null;
+}
+
+function readIntent(formData: FormData) {
+  const intent = readString(formData, "intent");
+  return intent === "submit" ? "submit" : "save";
 }
 
 export async function loginAction(
@@ -141,6 +147,7 @@ export async function createPickupRequestAction(
   }
 
   const input = readPickupRequestForm(formData);
+  const intent = readIntent(formData);
   const validationError = validatePickupRequestForm(input);
   if (validationError) {
     return {
@@ -159,7 +166,19 @@ export async function createPickupRequestAction(
     };
   }
 
-  redirect(`/tracking/${result.data.id}`);
+  if (intent === "submit") {
+    const submitResult = await submitPickupRequest(result.data.id, session.accessToken);
+
+    if (!submitResult.ok) {
+      return {
+        error: submitResult.error
+      };
+    }
+
+    redirect(`/tracking/${submitResult.data.id}?submitted=1`);
+  }
+
+  redirect(`/tracking/${result.data.id}?saved=1`);
 }
 
 export async function updatePickupRequestAction(
@@ -175,6 +194,7 @@ export async function updatePickupRequestAction(
   }
 
   const input = readPickupRequestForm(formData);
+  const intent = readIntent(formData);
   const validationError = validatePickupRequestForm(input);
   if (validationError) {
     return {
@@ -190,5 +210,39 @@ export async function updatePickupRequestAction(
     };
   }
 
-  redirect(`/tracking/${result.data.id}?updated=1`);
+  if (intent === "submit") {
+    const submitResult = await submitPickupRequest(result.data.id, session.accessToken);
+
+    if (!submitResult.ok) {
+      return {
+        error: submitResult.error
+      };
+    }
+
+    redirect(`/tracking/${submitResult.data.id}?submitted=1`);
+  }
+
+  redirect(`/tracking/${result.data.id}?saved=1`);
+}
+
+export async function submitPickupRequestAction(
+  requestId: string,
+  _previousState: PickupRequestFormActionState,
+  _formData: FormData
+): Promise<PickupRequestFormActionState> {
+  const session = await getSession();
+  if (!session) {
+    return {
+      error: "You need an active session before submitting a pickup request."
+    };
+  }
+
+  const result = await submitPickupRequest(requestId, session.accessToken);
+  if (!result.ok) {
+    return {
+      error: result.error
+    };
+  }
+
+  redirect(`/tracking/${result.data.id}?submitted=1`);
 }

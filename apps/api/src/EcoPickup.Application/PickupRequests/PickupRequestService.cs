@@ -7,6 +7,73 @@ namespace EcoPickup.Application.PickupRequests;
 
 public sealed class PickupRequestService(IPickupRequestRepository pickupRequestRepository) : IPickupRequestService
 {
+  public async Task<PickupRequestResult> SubmitAsync(
+    Guid id,
+    Guid userId,
+    SubmitPickupRequestCommand command,
+    CancellationToken cancellationToken)
+  {
+    var errors = new Dictionary<string, string[]>();
+
+    if (id == Guid.Empty)
+    {
+      errors["id"] = ["Pickup request id is required."];
+    }
+
+    if (userId == Guid.Empty)
+    {
+      errors["userId"] = ["Authenticated user is required."];
+    }
+
+    var normalizedNote = NormalizeOptional(command.Note);
+    if (normalizedNote is not null && normalizedNote.Length > 1000)
+    {
+      errors["note"] = ["Note must be 1000 characters or fewer."];
+    }
+
+    if (errors.Count > 0)
+    {
+      throw new PickupRequestValidationException(errors);
+    }
+
+    var pickupRequest = await pickupRequestRepository.GetTrackedByIdForUserAsync(id, userId, cancellationToken);
+    if (pickupRequest is null)
+    {
+      throw new PickupRequestValidationException(new Dictionary<string, string[]>
+      {
+        ["id"] = ["Pickup request was not found."]
+      });
+    }
+
+    if (pickupRequest.Status != PickupRequestStatuses.Draft)
+    {
+      throw new PickupRequestValidationException(new Dictionary<string, string[]>
+      {
+        ["status"] = [$"Submitting is not allowed when request status is '{pickupRequest.Status}'."]
+      });
+    }
+
+    pickupRequest.StatusHistory.Add(new PickupRequestStatusHistory
+    {
+      Id = Guid.NewGuid(),
+      PickupRequestId = pickupRequest.Id,
+      FromStatus = pickupRequest.Status,
+      ToStatus = PickupRequestStatuses.Submitted,
+      Action = "submit",
+      ActorUserId = userId,
+      Note = normalizedNote,
+      CreatedUtc = DateTime.UtcNow
+    });
+    pickupRequest.Status = PickupRequestStatuses.Submitted;
+
+    await pickupRequestRepository.SaveChangesAsync(cancellationToken);
+
+    var refreshedPickupRequest = await pickupRequestRepository.GetByIdAsync(id, userId, cancellationToken)
+      ?? throw new InvalidOperationException("Pickup request should exist after submit.");
+
+    return ToResult(refreshedPickupRequest);
+  }
+
   public async Task<PickupRequestResult> UpdateAsync(
     Guid id,
     Guid userId,
@@ -586,8 +653,8 @@ public sealed class PickupRequestService(IPickupRequestRepository pickupRequestR
   private static string ResolveNextReviewStatus(string currentStatus, string decision) =>
     (currentStatus, decision) switch
     {
-      (PickupRequestStatuses.Draft, PickupRequestReviewDecisions.Approve) => PickupRequestStatuses.UnderReview,
-      (PickupRequestStatuses.Draft, PickupRequestReviewDecisions.Reject) => PickupRequestStatuses.Rejected,
+      (PickupRequestStatuses.Submitted, PickupRequestReviewDecisions.Approve) => PickupRequestStatuses.UnderReview,
+      (PickupRequestStatuses.Submitted, PickupRequestReviewDecisions.Reject) => PickupRequestStatuses.Rejected,
       (PickupRequestStatuses.UnderReview, PickupRequestReviewDecisions.Reject) => PickupRequestStatuses.Rejected,
       _ => throw new PickupRequestValidationException(new Dictionary<string, string[]>
       {
