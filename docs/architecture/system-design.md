@@ -363,11 +363,10 @@ Current planning direction for media foundation:
 - media must attach to `PickupItem`, not directly to `PickupRequest`
 - `ItemPhoto` should preserve at minimum: id, pickupItemId, storageKey, originalFileName, contentType, sizeBytes, createdUtc
 - ownership must follow the parent request owner or admin authorization
-- upload strategy must be explicitly chosen before implementation:
-  - direct upload with signed URL
-  - upload through API with backend-managed storage write
-- a read foundation for `GET /api/v1/pickup-requests` and `GET /api/v1/pickup-requests/{id}` is recommended before real upload so photos can later be exposed in a stable detail shape
-- media foundation should define constraints first, then upload mechanics in a separate slice
+- chosen MVP provider: Cloudflare R2 through an S3-compatible abstraction, with MinIO for local development
+- chosen first upload strategy: upload through API with backend-managed storage write
+- a read foundation for `GET /api/v1/pickup-requests` and `GET /api/v1/pickup-requests/{id}` now exists so photos can later be exposed in a stable detail shape
+- media foundation is now fixed in [media-foundation.md](/C:/Users/ricardodev/Desktop/eco-pickup/docs/architecture/media-foundation.md)
 
 ---
 

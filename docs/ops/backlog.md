@@ -345,7 +345,7 @@ Permitir upload e associacao de fotos aos itens da solicitacao.
 ### Fatias de execucao
 
 #### EPIC-009A - Media Foundation
-**Status:** READY
+**Status:** DONE
 
 ##### Objetivo
 Definir a fundacao de midia antes do upload real, preservando o dominio e evitando acoplamento prematuro com storage, admin ou pricing.

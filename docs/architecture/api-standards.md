@@ -270,7 +270,11 @@ Planned near-term direction:
 Recommended foundation before implementation:
 
 - final upload route may move to an item-oriented shape such as `POST /api/v1/pickup-items/{id}/photos`
-- the contract must define content type whitelist, size limit, ownership enforcement and storage semantics before upload is implemented
+- the contract is fixed to API-mediated upload for MVP
+- content type whitelist is `image/jpeg`, `image/png`, `image/webp`
+- max size is `10 MB`
+- max photo count is `5` per `PickupItem`
+- storage keys must follow server-generated item-scoped naming
 
 ### Payments
 

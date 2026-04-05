@@ -31,6 +31,8 @@ Estabelecer diretrizes minimas de seguranca para a foundation do projeto.
 - limites de tamanho devem ser definidos antes da exposicao de endpoint de upload
 - nomes ou chaves de arquivo nao devem confiar em input livre do usuario como identificador final
 - leitura e download de midia devem exigir verificacao de ownership ou papel administrativo
+- objetos devem permanecer privados no storage
+- o backend deve gerar a chave final do arquivo e controlar a escrita no provider
 
 ## Infra e operacao
 

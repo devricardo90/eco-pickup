@@ -99,6 +99,7 @@ Planned next-step note:
 - item photos will attach to `PickupItem`
 - photo upload must enforce ownership, file type and file size constraints
 - image support should be opened only after media foundation and read/detail support are defined
+- media foundation is now fixed for MVP with API-mediated upload and private object storage
 
 Estimated size options for MVP may be normalized to:
 
