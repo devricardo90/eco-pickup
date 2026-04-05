@@ -2,6 +2,7 @@ import {
   type PickupRequestExecutionUi,
   type HistoryScope,
   type PickupRequestDetail,
+  type PickupRequestLifecycleUi,
   type PickupRequestListCardUi,
   type PickupRequestMetadataEntry,
   type PickupRequestPaymentUi,
@@ -291,6 +292,37 @@ export function mapPickupRequestExecutionToUi(detail: PickupRequestDetail): Pick
         "This pickup request has completed its tracked lifecycle. The main operational steps have finished successfully on this surface.",
       highlightLabel: null,
       tone: "completed"
+    };
+  }
+
+  return null;
+}
+
+export function mapPickupRequestLifecycleToUi(detail: PickupRequestDetail): PickupRequestLifecycleUi | null {
+  if (detail.status === "completed") {
+    return {
+      title: "Lifecycle completed",
+      description:
+        "This pickup request is fully closed. The tracked collection lifecycle has reached its final completed state.",
+      tone: "completed"
+    };
+  }
+
+  if (detail.status === "cancelled") {
+    return {
+      title: "Request cancelled",
+      description:
+        "This pickup request was cancelled before the lifecycle finished. No further owner action is available on this surface right now.",
+      tone: "cancelled"
+    };
+  }
+
+  if (detail.status === "rejected") {
+    return {
+      title: "Request rejected",
+      description:
+        "This pickup request was rejected during review. The lifecycle ended before pricing, payment or execution could continue.",
+      tone: "rejected"
     };
   }
 

@@ -78,9 +78,11 @@ Development
 - owner agora ve claramente o estado pos-pagamento e a janela confirmada quando a request estiver `scheduled`
 - EPIC-013F concluida com owner execution tracking messaging
 - owner agora recebe leitura mais operacional para `in_transit`, `collected` e `completed`
+- EPIC-013G concluida com owner final completion messaging
+- owner agora ve encerramento mais claro para `completed`, `cancelled` e `rejected`
 
 ## Objetivo atual
-Preparar o proximo slice apos a owner execution tracking messaging sem misturar esse recorte com novas mutacoes operacionais.
+Preparar o proximo slice apos a owner final completion messaging sem misturar esse recorte com novas mutacoes operacionais.
 
 ## O que ja existe
 - ideia do produto
@@ -96,11 +98,11 @@ Preparar o proximo slice apos a owner execution tracking messaging sem misturar 
 - decisao da foundation do monorepo registrada
 
 ## O que falta antes de desenvolver
-- manter a separacao entre execution messaging owner e os proximos escopos operacionais do produto
+- manter a separacao entre completion messaging owner e os proximos escopos operacionais do produto
 - abrir painel admin, pricing e pagamento em etapas separadas
 
 ## Proximo passo recomendado
-Abrir o proximo recorte operacional apos owner execution tracking messaging, como owner completion messaging ampliada ou admin execution controls quando essa frente for aberta.
+Abrir o proximo recorte operacional apos owner final completion messaging, como admin execution controls ou superfícies finais de disposal/completion quando essa frente for aberta.
 
 ## Riscos atuais
 - comecar implementacao cedo demais

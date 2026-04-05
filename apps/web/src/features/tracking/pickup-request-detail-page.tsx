@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { PickupRequestExecutionCard } from "@/components/pickup-request-execution-card";
+import { PickupRequestLifecycleCard } from "@/components/pickup-request-lifecycle-card";
 import { PickupRequestMetadata } from "@/components/pickup-request-metadata";
 import { PickupRequestPaymentCard } from "@/components/pickup-request-payment-card";
 import { PickupRequestPricingCard } from "@/components/pickup-request-pricing-card";
@@ -16,6 +17,7 @@ import { getPickupRequestHistory } from "@/lib/tracking/getPickupRequestHistory"
 import { isPickupRequestEditable } from "@/lib/tracking/isPickupRequestEditable";
 import {
   mapPickupRequestExecutionToUi,
+  mapPickupRequestLifecycleToUi,
   mapPickupRequestMetadataToUi,
   mapPickupRequestPaymentToUi,
   mapPickupRequestPricingToUi,
@@ -80,6 +82,7 @@ export async function PickupRequestDetailPage({ requestId, scope, notice }: Pick
   const payment = scope === "owner" ? mapPickupRequestPaymentToUi(detailResult.data) : null;
   const scheduling = scope === "owner" ? mapPickupRequestSchedulingToUi(detailResult.data) : null;
   const execution = scope === "owner" ? mapPickupRequestExecutionToUi(detailResult.data) : null;
+  const lifecycle = scope === "owner" ? mapPickupRequestLifecycleToUi(detailResult.data) : null;
   const canEdit = scope === "owner" && isPickupRequestEditable(detailResult.data.status);
   const submitAction = scope === "owner" ? submitPickupRequestAction.bind(null, requestId) : null;
   const paymentAction = scope === "owner" ? createPaymentSessionAction.bind(null, requestId) : null;
@@ -140,6 +143,8 @@ export async function PickupRequestDetailPage({ requestId, scope, notice }: Pick
         {scheduling ? <PickupRequestSchedulingCard scheduling={scheduling} /> : null}
 
         {execution ? <PickupRequestExecutionCard execution={execution} /> : null}
+
+        {lifecycle ? <PickupRequestLifecycleCard lifecycle={lifecycle} /> : null}
 
         {historyResult.ok ? (
           <PickupRequestTimeline events={timelineEvents} />

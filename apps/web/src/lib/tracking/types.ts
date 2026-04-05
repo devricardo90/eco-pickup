@@ -169,6 +169,12 @@ export type PickupRequestExecutionUi = {
   tone: "in_transit" | "collected" | "completed";
 };
 
+export type PickupRequestLifecycleUi = {
+  title: string;
+  description: string;
+  tone: "completed" | "cancelled" | "rejected";
+};
+
 export type PickupRequestListCardUi = {
   id: string;
   title: string;

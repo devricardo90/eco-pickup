@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   mapPickupRequestExecutionToUi,
+  mapPickupRequestLifecycleToUi,
   mapPickupRequestListCardToUi,
   mapPickupRequestMetadataToUi,
   mapPickupRequestPaymentToUi,
@@ -196,5 +197,26 @@ describe("mapPickupRequestDetailToUi", () => {
     expect(collected?.highlightLabel).toBeNull();
     expect(completed?.title).toBe("Request completed");
     expect(completed?.highlightLabel).toBeNull();
+  });
+
+  it("builds lifecycle messaging for completed, cancelled and rejected", () => {
+    const completed = mapPickupRequestLifecycleToUi({
+      ...detail,
+      status: "completed"
+    });
+    const cancelled = mapPickupRequestLifecycleToUi({
+      ...detail,
+      status: "cancelled"
+    });
+    const rejected = mapPickupRequestLifecycleToUi({
+      ...detail,
+      status: "rejected",
+      pricing: null,
+      scheduling: null
+    });
+
+    expect(completed?.title).toBe("Lifecycle completed");
+    expect(cancelled?.title).toBe("Request cancelled");
+    expect(rejected?.title).toBe("Request rejected");
   });
 });

@@ -1215,6 +1215,36 @@ Cobrir de forma legivel para o owner os estados `in_transit`, `collected` e `com
 - polling
 - notificacoes
 
+#### EPIC-013G - Owner Final Completion Messaging
+**Status:** DONE
+
+##### Objetivo
+Reforcar a leitura final do lifecycle owner para `completed`, `cancelled` e `rejected`, deixando o encerramento do fluxo explicito sem criar novas mutacoes.
+
+##### Escopo
+- criar messaging owner para estados terminais
+- reforcar o encerramento claro do lifecycle em `completed`
+- tratar semanticamente `cancelled` e `rejected`
+- reutilizar detail/tracking e mapeamentos existentes
+- adicionar testes frontend relevantes
+- atualizar documentacao impactada
+
+##### Criterios de aceite
+- owner entende claramente quando a request terminou com sucesso, cancelamento ou rejeicao
+- a surface permanece coerente com o contrato backend atual
+- nenhuma mutacao nova e criada
+- lint, typecheck, build e testes aplicaveis passam
+
+##### Dependencias
+- EPIC-013D
+- EPIC-013F
+
+##### Fora de escopo
+- novas mutacoes operacionais
+- novos contratos backend
+- polling
+- notificacoes
+
 ---
 
 # EPIC-014 - Infra, Deploy e Observabilidade
