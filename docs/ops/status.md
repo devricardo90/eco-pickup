@@ -85,6 +85,9 @@ Development
 - EPIC-000S concluida com rodada curta de bug bash/manual QA no MVP
 - bug real corrigido no fluxo owner: quando `create and submit` ou `save and submit` falhavam na etapa de submissao, o draft ja persistido nao era comunicado com clareza ao usuario
 - owner tracking agora recebe notice explicito de `draft saved but submission did not complete`, evitando percepcao errada de perda de dados
+- EPIC-000T concluida com segunda rodada curta de QA manual
+- achados desta rodada ficaram concentrados em drift documental de baixo risco: `apps/api/README.md` ainda descrevia review saindo de `draft`, e `apps/web/README.md` ainda listava `completed` no execution card em vez do lifecycle card
+- documentacao alinhada com o comportamento atual sem abrir nova frente funcional
 
 ## Objetivo atual
 Projeto pausado para consolidacao transversal do MVP atual antes de abrir novas frentes funcionais.
@@ -107,7 +110,7 @@ Projeto pausado para consolidacao transversal do MVP atual antes de abrir novas 
 - abrir painel admin, pricing e pagamento em etapas separadas
 
 ## Proximo passo recomendado
-Proximo passo recomendado: manter a pausa de novas frentes funcionais e decidir se vale uma segunda rodada curta de QA manual com seed real de dados antes de retomar frentes operacionais.
+Proximo passo recomendado: manter a pausa de novas frentes funcionais e decidir entre encerrar a fase de consolidacao ou abrir apenas um pacote pequeno de cleanup documental/README antes de retomar frentes operacionais.
 
 ## Riscos atuais
 - comecar implementacao cedo demais

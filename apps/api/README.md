@@ -70,7 +70,7 @@ Admin review atual:
 - review minimo protegido por role `ADMIN`
 - decisao `approve` ou `reject`
 - nota administrativa opcional
-- transicoes permitidas: `draft -> under_review`, `draft -> rejected`, `under_review -> rejected`
+- transicoes permitidas: `submitted -> under_review`, `submitted -> rejected`, `under_review -> rejected`
 - historico de review persistido por request
 - sem pricing, scheduling ou pagamento neste recorte
 

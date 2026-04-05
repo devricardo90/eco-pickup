@@ -1307,6 +1307,35 @@ Executar uma rodada curta de QA manual sobre o MVP entregue para validar comport
 - redesign amplo
 - novas dependencias
 
+#### EPIC-000T - MVP Bug Bash / Manual QA Round 2
+**Status:** DONE
+
+##### Objetivo
+Executar uma segunda rodada curta de QA manual com foco em consistencia entre estados seedados do lifecycle, superfices owner/admin e documentacao operacional do MVP antes de retomar novas frentes.
+
+##### Escopo
+- validar coerencia entre `draft`, `submitted`, `awaiting_payment`, `scheduled` e `completed`
+- revisar consistencia entre summary, status badge, timeline, cards semanticos e CTAs
+- revisar guardas owner/admin sem abrir mutacoes novas
+- corrigir apenas bugs pequenos e seguros encontrados na rodada
+
+##### Criterios de aceite
+- rodada curta executada com registro objetivo dos achados
+- bugs pequenos corrigidos sem ampliar escopo
+- backlog e status atualizados
+- gates necessarios executados para os arquivos tocados
+
+##### Dependencias
+- EPIC-000S
+- MVP atual entregue ate EPIC-013G
+
+##### Fora de escopo
+- novas funcionalidades
+- novas mutacoes operacionais
+- novos contratos backend
+- redesign
+- refactors amplos
+
 ---
 
 # EPIC-014 - Infra, Deploy e Observabilidade
