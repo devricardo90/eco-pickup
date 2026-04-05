@@ -3,6 +3,7 @@ import {
   type PickupRequestDetail,
   type PickupRequestListCardUi,
   type PickupRequestMetadataEntry,
+  type PickupRequestPricingUi,
   type PickupRequestSummaryUi
 } from "@/lib/tracking/types";
 import { formatTimelineDate, mapStatusLabel } from "@/lib/tracking/mapTimelineEventToUi";
@@ -20,6 +21,10 @@ function formatCurrency(value: number, currency: string) {
 
 function humanizeCount(count: number, singular: string, plural: string) {
   return `${count} ${count === 1 ? singular : plural}`;
+}
+
+function formatPricingBreakdownLabel(value: number, currency: string) {
+  return formatCurrency(value, currency);
 }
 
 export function mapPickupRequestSummaryToUi(
@@ -91,6 +96,106 @@ export function mapPickupRequestMetadataToUi(detail: PickupRequestDetail): Picku
   }
 
   return entries;
+}
+
+export function mapPickupRequestPricingToUi(detail: PickupRequestDetail): PickupRequestPricingUi | null {
+  if (detail.status === "under_review" && !detail.pricing) {
+    return {
+      title: "Quote in review",
+      description:
+        "Your request is being reviewed. Pricing has not been published yet, so there is nothing to approve or pay at this stage.",
+      totalLabel: null,
+      breakdown: [],
+      tone: "pending"
+    };
+  }
+
+  if (!detail.pricing) {
+    return null;
+  }
+
+  if (detail.status === "quoted") {
+    return {
+      title: "Quote available",
+      description:
+        "Pricing has been prepared for this request. Payment is not yet active on this surface, but the current quote is now visible.",
+      totalLabel: formatCurrency(detail.pricing.total, detail.pricing.currency),
+      breakdown: [
+        {
+          label: "Base price",
+          value: formatPricingBreakdownLabel(detail.pricing.basePrice, detail.pricing.currency)
+        },
+        {
+          label: "Size adjustment",
+          value: formatPricingBreakdownLabel(detail.pricing.sizeAdjustment, detail.pricing.currency)
+        },
+        {
+          label: "Floor adjustment",
+          value: formatPricingBreakdownLabel(detail.pricing.floorAdjustment, detail.pricing.currency)
+        },
+        {
+          label: "Distance adjustment",
+          value: formatPricingBreakdownLabel(detail.pricing.distanceAdjustment, detail.pricing.currency)
+        }
+      ],
+      tone: "quoted"
+    };
+  }
+
+  if (detail.status === "awaiting_payment") {
+    return {
+      title: "Awaiting payment",
+      description:
+        "This request is priced and waiting for payment. The pricing below is the active amount currently attached to the request.",
+      totalLabel: formatCurrency(detail.pricing.total, detail.pricing.currency),
+      breakdown: [
+        {
+          label: "Base price",
+          value: formatPricingBreakdownLabel(detail.pricing.basePrice, detail.pricing.currency)
+        },
+        {
+          label: "Size adjustment",
+          value: formatPricingBreakdownLabel(detail.pricing.sizeAdjustment, detail.pricing.currency)
+        },
+        {
+          label: "Floor adjustment",
+          value: formatPricingBreakdownLabel(detail.pricing.floorAdjustment, detail.pricing.currency)
+        },
+        {
+          label: "Distance adjustment",
+          value: formatPricingBreakdownLabel(detail.pricing.distanceAdjustment, detail.pricing.currency)
+        }
+      ],
+      tone: "awaiting_payment"
+    };
+  }
+
+  return detail.pricing
+    ? {
+        title: "Pricing snapshot",
+        description: "The latest persisted pricing for this request is shown below.",
+        totalLabel: formatCurrency(detail.pricing.total, detail.pricing.currency),
+        breakdown: [
+          {
+            label: "Base price",
+            value: formatPricingBreakdownLabel(detail.pricing.basePrice, detail.pricing.currency)
+          },
+          {
+            label: "Size adjustment",
+            value: formatPricingBreakdownLabel(detail.pricing.sizeAdjustment, detail.pricing.currency)
+          },
+          {
+            label: "Floor adjustment",
+            value: formatPricingBreakdownLabel(detail.pricing.floorAdjustment, detail.pricing.currency)
+          },
+          {
+            label: "Distance adjustment",
+            value: formatPricingBreakdownLabel(detail.pricing.distanceAdjustment, detail.pricing.currency)
+          }
+        ],
+        tone: "quoted"
+      }
+    : null;
 }
 
 export function mapPickupRequestListCardToUi(

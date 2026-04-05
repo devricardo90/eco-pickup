@@ -70,9 +70,11 @@ Development
 - owner agora consegue editar requests em `draft` pela web, com bloqueio explicito apos entrada em fluxo operacional
 - EPIC-008E concluida com semantica explicita de submissao
 - owner agora diferencia salvar rascunho de enviar request, e o review admin parte de `submitted`
+- EPIC-011C concluida com quote visibility para owner
+- owner agora visualiza pricing persistido com clareza durante `under_review`, `quoted` e `awaiting_payment`
 
 ## Objetivo atual
-Preparar o proximo slice apos a semantica explicita de submissao sem misturar esse recorte com pricing, scheduling, payment ou mutacoes administrativas.
+Preparar o proximo slice apos a visibilidade de quote para owner sem misturar esse recorte com novas mutacoes operacionais.
 
 ## O que ja existe
 - ideia do produto
@@ -88,11 +90,11 @@ Preparar o proximo slice apos a semantica explicita de submissao sem misturar es
 - decisao da foundation do monorepo registrada
 
 ## O que falta antes de desenvolver
-- manter a separacao entre draft/submitted e os proximos escopos do produto
+- manter a separacao entre visibilidade de quote e os proximos escopos operacionais do produto
 - abrir painel admin, pricing e pagamento em etapas separadas
 
 ## Proximo passo recomendado
-Abrir o proximo recorte operacional apos request submission semantics, como upload de foto no frontend, quote visibility mais clara ou execution tracking detalhado.
+Abrir o proximo recorte operacional apos quote visibility + awaiting payment owner surface, como payment owner surface ou scheduling visibility mais clara.
 
 ## Riscos atuais
 - comecar implementacao cedo demais

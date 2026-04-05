@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   mapPickupRequestListCardToUi,
   mapPickupRequestMetadataToUi,
+  mapPickupRequestPricingToUi,
   mapPickupRequestSummaryToUi
 } from "@/lib/tracking/mapPickupRequestDetailToUi";
 import type { PickupRequestDetail } from "@/lib/tracking/types";
@@ -93,5 +94,30 @@ describe("mapPickupRequestDetailToUi", () => {
     expect(ownerCard.statusLabel).toBe("Scheduled");
     expect(ownerCard.itemSummary).toContain("2 items");
     expect(ownerCard.priceSummary).toContain("SEK");
+  });
+
+  it("builds a pricing card for awaiting payment visibility", () => {
+    const pricing = mapPickupRequestPricingToUi({
+      ...detail,
+      status: "awaiting_payment"
+    });
+
+    expect(pricing).not.toBeNull();
+    expect(pricing?.title).toBe("Awaiting payment");
+    expect(pricing?.totalLabel).toContain("SEK");
+    expect(pricing?.breakdown).toHaveLength(4);
+  });
+
+  it("builds a pending quote state while pricing is still under review", () => {
+    const pricing = mapPickupRequestPricingToUi({
+      ...detail,
+      status: "under_review",
+      pricing: null
+    });
+
+    expect(pricing).not.toBeNull();
+    expect(pricing?.title).toBe("Quote in review");
+    expect(pricing?.totalLabel).toBeNull();
+    expect(pricing?.breakdown).toHaveLength(0);
   });
 });

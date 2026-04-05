@@ -1085,6 +1085,42 @@ Separar explicitamente `draft` de `submitted`, criando a semantica de envio owne
 - polling
 - notificacoes
 
+#### EPIC-011C - Quote Visibility + Awaiting Payment Owner Surface
+**Status:** DONE
+
+##### Objetivo
+Expor para o owner a transicao `under_review -> quoted/awaiting_payment`, mostrando com clareza o pricing ja persistido e o estado atual da request sem abrir novas mutacoes operacionais.
+
+##### Escopo
+- ajustar a surface owner de detail/tracking para destacar `quoted` e `awaiting_payment`
+- mostrar pricing persistido com breakdown legivel
+- manter timeline e status coerentes com o contrato existente
+- reutilizar componentes e mapeamentos ja existentes quando possivel
+- tratar estados de visibilidade relevantes no frontend
+- adicionar testes de mapeamento para quote visibility
+- atualizar documentacao impactada
+
+##### Criterios de aceite
+- owner visualiza claramente quando a request esta `under_review`, `quoted` ou `awaiting_payment`
+- pricing persistido aparece de forma clara e legivel
+- nenhuma mutacao nova e criada
+- o contrato backend permanece intacto
+- lint, typecheck, build e testes aplicaveis passam
+
+##### Dependencias
+- EPIC-011A
+- EPIC-013D
+- EPIC-008E
+
+##### Fora de escopo
+- novas mutacoes operacionais
+- novos contratos backend
+- pricing novo ou edicao de pricing
+- scheduling
+- payment capture
+- polling
+- notificacoes
+
 ---
 
 # EPIC-014 - Infra, Deploy e Observabilidade

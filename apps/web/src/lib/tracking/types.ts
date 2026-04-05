@@ -134,6 +134,19 @@ export type PickupRequestMetadataEntry = {
   value: string;
 };
 
+export type PickupRequestPricingBreakdownEntry = {
+  label: string;
+  value: string;
+};
+
+export type PickupRequestPricingUi = {
+  title: string;
+  description: string;
+  totalLabel: string | null;
+  breakdown: PickupRequestPricingBreakdownEntry[];
+  tone: "pending" | "quoted" | "awaiting_payment";
+};
+
 export type PickupRequestListCardUi = {
   id: string;
   title: string;

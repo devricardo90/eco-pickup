@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { PickupRequestMetadata } from "@/components/pickup-request-metadata";
+import { PickupRequestPricingCard } from "@/components/pickup-request-pricing-card";
 import { PickupRequestStatusCard } from "@/components/pickup-request-status-card";
 import { PickupRequestSubmitForm } from "@/components/pickup-request-submit-form";
 import { PickupRequestSummary } from "@/components/pickup-request-summary";
@@ -12,6 +13,7 @@ import { getPickupRequestHistory } from "@/lib/tracking/getPickupRequestHistory"
 import { isPickupRequestEditable } from "@/lib/tracking/isPickupRequestEditable";
 import {
   mapPickupRequestMetadataToUi,
+  mapPickupRequestPricingToUi,
   mapPickupRequestSummaryToUi
 } from "@/lib/tracking/mapPickupRequestDetailToUi";
 import { mapStatusLabel, mapTimelineEventToUi } from "@/lib/tracking/mapTimelineEventToUi";
@@ -68,6 +70,7 @@ export async function PickupRequestDetailPage({ requestId, scope, notice }: Pick
     : "No updates yet";
   const summary = mapPickupRequestSummaryToUi(detailResult.data, lastUpdatedLabel);
   const metadataEntries = mapPickupRequestMetadataToUi(detailResult.data);
+  const pricing = scope === "owner" ? mapPickupRequestPricingToUi(detailResult.data) : null;
   const canEdit = scope === "owner" && isPickupRequestEditable(detailResult.data.status);
   const submitAction = scope === "owner" ? submitPickupRequestAction.bind(null, requestId) : null;
 
@@ -119,6 +122,8 @@ export async function PickupRequestDetailPage({ requestId, scope, notice }: Pick
             totalEvents={historyResult.ok ? historyResult.data.events.length : 0}
           />
         </div>
+
+        {pricing ? <PickupRequestPricingCard pricing={pricing} /> : null}
 
         {historyResult.ok ? (
           <PickupRequestTimeline events={timelineEvents} />
