@@ -37,7 +37,10 @@ Estabelecer a base documental, operacional e de governanca do projeto antes de q
 ---
 
 # EPIC-001 - Discovery do Produto
-**Status:** READY
+**Status:** DONE
+
+## Nota operacional
+Marcacao normalizada em 2026-04-12. Este item permanecia como `READY`, mas a documentacao viva do projeto ja sustenta que a discovery minima foi executada antes das foundations e do MVP atual. A marcacao anterior passa a ser tratada como obsoleta.
 
 ## Objetivo
 Formalizar o problema, objetivo, publico, escopo inicial e restricoes do EcoPickup.
@@ -62,7 +65,10 @@ Formalizar o problema, objetivo, publico, escopo inicial e restricoes do EcoPick
 ---
 
 # EPIC-002 - Planejamento Inicial
-**Status:** READY
+**Status:** DONE
+
+## Nota operacional
+Marcacao normalizada em 2026-04-12. Este item permanecia como `READY`, mas a documentacao viva do projeto ja sustenta que o planejamento inicial foi executado antes da EPIC-003 e das slices posteriores do MVP. A marcacao anterior passa a ser tratada como obsoleta.
 
 ## Objetivo
 Quebrar o projeto em epicos e definir a ordem de execucao segura.
@@ -1366,7 +1372,7 @@ Consolidar README, backlog e status para refletir o estado real do MVP atual sem
 ---
 
 # EPIC-014 - Infra, Deploy e Observabilidade
-**Status:** READY
+**Status:** IN_PROGRESS
 
 ## Objetivo
 Preparar execucao local, staging e deploy inicial.
@@ -1392,6 +1398,356 @@ Preparar execucao local, staging e deploy inicial.
 - EPIC-005
 - EPIC-006
 - EPIC-012
+
+### Fatias de execucao
+
+#### EPIC-014A - Infra / Deploy Readiness Assessment
+**Status:** DONE
+
+##### Objetivo
+Mapear a prontidao de infraestrutura, deploy e observabilidade do MVP atual antes de executar qualquer deploy real ou alterar configuracoes tecnicas.
+
+##### Escopo
+- revisar requisitos atuais de execucao local, staging e deploy
+- inventariar variaveis de ambiente necessarias para API, web, banco, storage e payment
+- revisar configuracoes existentes documentadas sem aplicar mudancas tecnicas
+- identificar lacunas para deploy inicial, smoke test, observabilidade minima e rollback
+- propor a ordem segura das proximas slices de EPIC-014
+- atualizar documentacao operacional impactada
+
+##### Criterios de aceite
+- readiness de infra/deploy registrado de forma objetiva
+- dependencias externas e variaveis de ambiente mapeadas
+- lacunas e riscos classificados
+- primeira ordem de execucao tecnica da EPIC-014 definida
+- nenhuma implementacao tecnica, deploy real ou mudanca de configuracao aplicada
+- status operacional atualizado
+
+##### Dependencias
+- EPIC-014
+- encerramento formal da pausa de consolidacao do MVP
+
+##### Fora de escopo
+- deploy real
+- criacao de ambiente staging
+- alteracoes em Docker, CI/CD ou configuracoes de runtime
+- mudancas de codigo
+- observabilidade implementada
+- smoke test real
+- rollback executado
+
+##### Resultado
+- readiness registrado em `docs/ops/infra-deploy-readiness.md`
+- ambiente local identificado como parcialmente pronto
+- staging e deploy real identificados como nao definidos
+- observabilidade identificada como minima local
+- smoke test e rollback identificados como pendentes
+- proxima slice segura definida como `EPIC-014B - Runtime Environment Contract`
+
+#### EPIC-014B - Runtime Environment Contract
+**Status:** DONE
+
+##### Objetivo
+Formalizar o contrato de ambiente para local, staging e producao antes de alterar configuracoes tecnicas ou executar deploy.
+
+##### Escopo
+- definir matriz de variaveis por ambiente para API, web, banco, storage e payment
+- separar secrets de valores nao sensiveis
+- registrar nomes esperados de variaveis para runtime hospedado
+- definir URLs/base URLs esperadas por ambiente
+- registrar defaults permitidos apenas para desenvolvimento local
+- identificar valores que devem ser provisionados fora do repositorio
+- atualizar documentacao operacional impactada
+
+##### Criterios de aceite
+- matriz local/staging/producao registrada
+- secrets claramente identificados
+- contrato de env da API registrado no formato esperado por runtime hospedado
+- contrato de env da web registrado
+- lacunas remanescentes explicitadas
+- nenhuma mudanca tecnica aplicada
+
+##### Dependencias
+- EPIC-014A
+
+##### Fora de escopo
+- alteracao de `.env.example`
+- alteracao de `appsettings`
+- alteracao de Docker, CI/CD ou runtime
+- provisionamento de secrets
+- deploy real
+- criacao de staging
+- implementacao de observabilidade
+
+##### Resultado
+- contrato registrado em `docs/ops/runtime-environment-contract.md`
+- matriz local/staging/producao definida
+- nomes canonicos de runtime hospedado definidos para API e web
+- secrets, valores obrigatorios, opcionais, derivados e local-only classificados
+- defaults permitidos apenas em local documentados
+- lacunas e decisoes pendentes registradas
+- proxima slice segura definida como `EPIC-014C - Local Full-Stack Runbook`
+
+#### EPIC-014C - Local Full-Stack Runbook
+**Status:** DONE
+
+##### Objetivo
+Documentar o procedimento reproduzivel para subir o ambiente local completo do MVP, cobrindo Postgres, MinIO, API e web, sem alterar configuracoes tecnicas.
+
+##### Escopo
+- documentar pre-requisitos locais
+- documentar ordem de subida de Postgres e MinIO via Docker Compose
+- documentar ordem de execucao local da API
+- documentar ordem de execucao local da web
+- documentar validacao minima de `/health`
+- documentar validacao minima de conectividade web -> API
+- registrar comandos de parada/limpeza nao destrutiva
+- registrar troubleshooting basico
+- atualizar status operacional
+
+##### Criterios de aceite
+- runbook local registrado em documentacao operacional
+- fluxo local completo documentado sem ambiguidade
+- `/health` incluido como validacao minima
+- dependencias e variaveis locais referenciadas a partir do contrato de runtime
+- nenhuma mudanca tecnica aplicada
+
+##### Dependencias
+- EPIC-014B
+
+##### Fora de escopo
+- alterar Docker Compose
+- criar Dockerfile para API ou web
+- alterar `.env.example`
+- alterar `appsettings`
+- executar deploy
+- criar staging
+- implementar observabilidade
+- criar smoke test real de staging/producao
+
+##### Resultado
+- runbook registrado em `docs/ops/local-full-stack-runbook.md`
+- PostgreSQL local validado via Docker Compose e `pg_isready`
+- MinIO local validado nas portas `9000` e `9001`
+- API validada com build, subida local e `/health` respondendo `200 Healthy`
+- web validada em `127.0.0.1:3001`
+- integracao basica web -> API validada com sessao autenticada e rota owner `/requests`
+- gaps operacionais registrados: Node local abaixo da baseline, necessidade de permissao elevada para Docker/dotnet neste ambiente, uso de `pnpm.cmd` no Windows e porta `3000` potencialmente ocupada
+- nenhuma mudanca tecnica aplicada
+
+#### EPIC-014D - Deploy Target Decision
+**Status:** DONE
+
+##### Objetivo
+Escolher a estrategia e os alvos de deploy para API, web, banco, storage, secrets e logs antes de qualquer provisionamento ou deploy real.
+
+##### Escopo
+- comparar opcoes de hosting para API
+- comparar opcoes de hosting para web
+- definir direcao para PostgreSQL gerenciado
+- confirmar direcao de storage S3-compatible para staging/producao
+- definir direcao de secret manager
+- definir direcao de logs/observabilidade inicial
+- registrar criterios de escolha e tradeoffs
+- atualizar documentacao operacional impactada
+
+##### Criterios de aceite
+- alvo recomendado para API registrado
+- alvo recomendado para web registrado
+- direcao de banco, storage, secrets e logs registrada
+- riscos e dependencias externas classificados
+- nenhuma infraestrutura provisionada
+- nenhum deploy executado
+
+##### Dependencias
+- EPIC-014C
+
+##### Fora de escopo
+- provisionar staging
+- criar contas ou recursos externos
+- alterar Docker, CI/CD, runtime ou codigo
+- configurar secrets reais
+- executar deploy
+- implementar observabilidade
+
+##### Resultado
+- decisao registrada em `docs/ops/deploy-target-decision.md`
+- API recomendada para Render Web Service com Docker
+- web recomendada para Vercel
+- banco recomendado para Render Postgres na mesma regiao da API
+- storage recomendado para Cloudflare R2
+- secrets recomendados via mecanismos nativos das plataformas no primeiro staging
+- logs recomendados via Render logs e Vercel runtime logs no primeiro staging
+- nenhuma infraestrutura provisionada e nenhum deploy executado
+
+#### EPIC-014E - Staging Deployment Plan / Smoke and Rollback
+**Status:** DONE
+
+##### Objetivo
+Transformar a decisao de targets da EPIC-014D em um plano operacional de staging, smoke test e rollback antes de qualquer provisionamento.
+
+##### Escopo
+- definir topologia de staging
+- definir URLs esperadas para web e API
+- definir matriz final de env vars para staging
+- definir plano de migrations para primeiro deploy
+- definir checklist de smoke test
+- definir rollback inicial
+- registrar gates antes de provisionar recursos
+- atualizar documentacao operacional impactada
+
+##### Criterios de aceite
+- plano de staging registrado
+- smoke test inicial definido
+- rollback inicial definido
+- estrategia de migrations registrada
+- gates de provisionamento explicitados
+- nenhuma infraestrutura provisionada
+- nenhum deploy executado
+
+##### Dependencias
+- EPIC-014D
+
+##### Fora de escopo
+- provisionar Render, Vercel, R2 ou banco
+- criar contas ou recursos externos
+- criar Dockerfile
+- alterar codigo
+- alterar Docker, CI/CD, runtime ou envs
+- configurar secrets reais
+- executar deploy
+- implementar observabilidade
+
+##### Resultado
+- plano registrado em `docs/ops/staging-deployment-plan.md`
+- topologia de staging definida com Vercel, Render Web Service, Render Postgres e Cloudflare R2
+- ordem segura de execucao futura registrada antes de provisionamento
+- checklist de smoke test definido para API, web, auth, requests, tracking, storage, payment e logs
+- rollback inicial definido para falha de deploy, runtime, migrations, storage e payment
+- riscos e pendencias registrados
+- nenhuma infraestrutura provisionada, nenhum deploy executado e nenhuma mudanca tecnica aplicada
+
+#### EPIC-014F - API Deploy Artifact Foundation
+**Status:** DONE
+
+##### Objetivo
+Criar e validar o artefato minimo de deploy da API para Render Web Service com Docker, sem provisionar staging e sem executar deploy real.
+
+##### Escopo
+- criar Dockerfile minimo da API
+- validar build da imagem localmente
+- validar execucao local do container contra Postgres/MinIO locais, se tecnicamente viavel
+- validar `/health` do container, se a execucao local fizer parte do recorte
+- documentar comandos, evidencias e gaps
+- atualizar documentacao operacional impactada
+
+##### Criterios de aceite
+- artefato Docker da API criado
+- imagem da API builda localmente
+- comportamento runtime documentado
+- `/health` validado no artefato quando aplicavel
+- gates backend aplicaveis executados
+- nenhuma infraestrutura provisionada
+- nenhum deploy executado
+
+##### Dependencias
+- EPIC-014E
+
+##### Fora de escopo
+- provisionar Render, Vercel, R2 ou banco
+- criar staging real
+- alterar CI/CD
+- criar Dockerfile da web
+- executar deploy
+- configurar secrets reais
+- implementar observabilidade
+- executar smoke test de staging real
+
+##### Resultado
+- Dockerfile da API criado em `apps/api/Dockerfile`
+- contexto Docker ajustado com `apps/api/.dockerignore` para excluir `bin/` e `obj/`
+- imagem `ecopickup-api:014f` buildada localmente com sucesso
+- container local subiu em `localhost:5082`
+- `/health` respondeu `200 Healthy` no container
+- build backend e testes unitarios executados com sucesso
+- assumptions de runtime e evidencias registradas em `docs/ops/api-deploy-artifact-foundation.md`
+- nenhum provisionamento, staging ou deploy real executado
+
+#### EPIC-014G - Staging Migration Strategy
+**Status:** DONE
+
+##### Objetivo
+Definir a estrategia operacional de migrations para o primeiro staging em Render Postgres antes de provisionar ou executar deploy real.
+
+##### Escopo
+- definir quando e como migrations serao aplicadas em staging
+- definir criterio para `Persistence__ApplyMigrationsOnStartup`
+- definir pre-checks antes de migration
+- definir backup/snapshot/export minimo antes de migration com risco
+- definir estrategia de rollback ou forward fix
+- documentar comandos esperados sem executar em staging real
+- atualizar documentacao operacional impactada
+
+##### Criterios de aceite
+- estrategia de migrations de staging registrada
+- decisao sobre migrations automaticas documentada
+- pre-checks e rollback/forward fix definidos
+- nenhum banco externo provisionado
+- nenhuma migration de staging executada
+- nenhum deploy real executado
+
+##### Dependencias
+- EPIC-014F
+
+##### Fora de escopo
+- provisionar Render Postgres
+- executar migrations em staging
+- alterar migrations existentes
+- alterar codigo
+- alterar CI/CD
+- criar staging real
+- executar deploy
+
+##### Resultado
+- estrategia de migrations registrada em `docs/ops/staging-migration-strategy.md`
+- decisao registrada: primeiro staging usa migration manual controlada e explicita
+- `Persistence__ApplyMigrationsOnStartup=false` definido como diretriz para staging
+- pre-condicoes, ordem segura, validacoes, abort e rollback/forward fix documentados
+- estrategia alinhada com o Docker artifact validado na EPIC-014F e com o plano de staging da EPIC-014E
+- nenhum banco provisionado, nenhuma migration real executada e nenhum deploy realizado
+
+#### EPIC-014H - Staging Provisioning Checklist
+**Status:** READY
+
+##### Objetivo
+Preparar o checklist final de provisionamento de Render, Vercel, Render Postgres e Cloudflare R2 com nomes, regioes, secrets esperados e ordem de criacao, ainda sem provisionar recursos.
+
+##### Escopo
+- definir nomes operacionais dos recursos de staging
+- definir regiao alvo para Render API e Render Postgres
+- listar secrets finais por plataforma
+- definir ordem de criacao dos recursos
+- definir evidencias esperadas de cada recurso provisionado futuramente
+- atualizar documentacao operacional impactada
+
+##### Criterios de aceite
+- checklist de provisionamento de staging registrado
+- recursos e nomes esperados definidos
+- secrets por plataforma listados sem valores reais
+- ordem de criacao registrada
+- nenhum recurso externo provisionado
+- nenhum deploy executado
+
+##### Dependencias
+- EPIC-014G
+
+##### Fora de escopo
+- provisionar Render, Vercel, R2 ou banco
+- criar secrets reais
+- alterar codigo
+- alterar runtime/envs
+- executar migrations
+- executar deploy
 
 ---
 

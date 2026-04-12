@@ -1,10 +1,10 @@
 # EcoPickup - Status Executivo
 
 ## Estado atual
-Projeto em testing, com MVP owner/admin consolidado e pausa ativa de novas frentes funcionais.
+Projeto com MVP owner/admin consolidado, pausa de novas frentes funcionais encerrada formalmente e EPIC-014 aberta como proxima frente operacional.
 
 ## Fase atual da esteira
-Testing
+Deploy
 
 ## Situacao resumida
 - repositorio criado
@@ -90,9 +90,39 @@ Testing
 - documentacao alinhada com o comportamento atual sem abrir nova frente funcional
 - EPIC-000U concluida com cleanup documental final do MVP
 - README raiz, README da API e README da web agora refletem o estado atual entregue, os fluxos owner/admin e os limites explicitos do escopo
+- pausa de consolidacao do MVP encerrada formalmente em 2026-04-12
+- conflito documental normalizado: EPIC-001 e EPIC-002 permaneciam como `READY`, mas foram tratadas como marcacoes obsoletas porque a documentacao viva ja sustenta discovery e planejamento minimos executados antes das foundations e do MVP atual
+- EPIC-014 confirmada como proxima frente operacional coerente do backlog oficial
+- EPIC-014A preparada como primeira slice segura de readiness, sem implementacao tecnica ou deploy real
+- EPIC-014A concluida com readiness registrado em `docs/ops/infra-deploy-readiness.md`
+- assessment confirmou que o ambiente local esta parcialmente pronto, mas staging, deploy real, smoke test, observabilidade operacional e rollback ainda nao estao definidos
+- EPIC-014B definida como proxima slice READY para formalizar o contrato de variaveis e ambientes antes de qualquer mudanca tecnica
+- EPIC-014B concluida com contrato de runtime registrado em `docs/ops/runtime-environment-contract.md`
+- matriz local/staging/producao, nomes canonicos de runtime, secrets, defaults locais, lacunas e decisoes pendentes foram documentados sem mudanca tecnica
+- EPIC-014C definida como proxima slice READY para documentar o runbook local full-stack
+- EPIC-014C concluida com runbook local e validacao pratica registrados em `docs/ops/local-full-stack-runbook.md`
+- stack local validado com Postgres, MinIO, API `/health`, web em porta alternativa e integracao basica web -> API
+- gaps operacionais registrados: Node local `v22.21.1` abaixo da baseline `24.14.1`, Docker/dotnet exigindo permissao elevada neste ambiente, `pnpm.cmd` necessario no Windows e porta `3000` sujeita a conflito
+- EPIC-014D definida como proxima slice READY para decidir targets de deploy sem provisionar infraestrutura
+- EPIC-014D concluida com decisao registrada em `docs/ops/deploy-target-decision.md`
+- stack recomendada para staging inicial: Vercel para web, Render Web Service com Docker para API, Render Postgres para banco, Cloudflare R2 para storage, secrets nativos das plataformas e logs nativos Render/Vercel
+- EPIC-014E definida como proxima slice READY para plano de staging, smoke test e rollback antes de qualquer provisionamento
+- EPIC-014E concluida com plano registrado em `docs/ops/staging-deployment-plan.md`
+- staging futuro definido por camada: Vercel para web, Render Web Service com Docker para API, Render Postgres para banco, Cloudflare R2 para storage, secrets nativos das plataformas e logs nativos Render/Vercel
+- ordem segura de provisionamento futuro, smoke test e rollback inicial foram documentados sem provisionar recursos, sem deploy e sem mudanca tecnica
+- EPIC-014F definida como proxima slice READY para criar e validar o artefato Docker minimo da API antes de qualquer staging real
+- EPIC-014F concluida com artefato Docker da API criado e validado localmente
+- imagem `ecopickup-api:014f` buildada com sucesso; container local subiu em `localhost:5082`; `/health` respondeu `200 Healthy`
+- build backend e testes unitarios passaram: `dotnet build apps/api/EcoPickup.Backend.sln` e `dotnet test apps/api/tests/EcoPickup.UnitTests/EcoPickup.UnitTests.csproj`
+- bloqueio real corrigido: contexto Docker copiava `bin/` e `obj/` locais, causando falha no `dotnet publish`; `apps/api/.dockerignore` foi adicionado como menor correcao
+- EPIC-014G definida como proxima slice READY para fechar estrategia de migrations de staging antes de qualquer provisionamento/deploy real
+- EPIC-014G concluida com estrategia de migrations registrada em `docs/ops/staging-migration-strategy.md`
+- decisao operacional: primeiro staging deve usar migration manual controlada e explicita, com `Persistence__ApplyMigrationsOnStartup=false`
+- pre-condicoes, ordem segura, criterios de validacao, abort e rollback/forward fix foram documentados sem executar migration real
+- EPIC-014H definida como proxima slice READY para preparar checklist final de provisionamento de staging sem provisionar recursos
 
 ## Objetivo atual
-Projeto pausado apos consolidacao transversal e cleanup documental do MVP atual, antes de retomar novas frentes funcionais.
+Executar a abertura controlada da EPIC-014 - Infra, Deploy e Observabilidade, avancando para o checklist final de provisionamento de staging antes de criar recursos externos.
 
 ## O que ja existe
 - ideia do produto
@@ -107,12 +137,12 @@ Projeto pausado apos consolidacao transversal e cleanup documental do MVP atual,
 - api standards iniciais registrados
 - decisao da foundation do monorepo registrada
 
-## O que falta antes de retomar novas frentes
-- decidir formalmente o encerramento da fase de consolidacao
-- priorizar a proxima frente operacional sem reabrir escopo de forma difusa
+## O que falta antes de executar staging real
+- executar EPIC-014H - Staging Provisioning Checklist
+- confirmar secrets reais, regiao, planos e URLs somente em slice propria de provisionamento
 
 ## Proximo passo recomendado
-Proximo passo recomendado: encerrar formalmente a fase de consolidacao do MVP atual e escolher a proxima frente operacional a partir do backlog oficial.
+Proximo passo recomendado: executar EPIC-014H para preparar o checklist final de provisionamento de staging, sem criar recursos externos, sem secrets reais e sem deploy.
 
 ## Riscos atuais
 - comecar implementacao cedo demais
