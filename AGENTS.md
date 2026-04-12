@@ -117,6 +117,10 @@ Use:
 
 Never use `status.md` as source of truth.
 
+Use `docs/ops/status.md` only as the current executive state.
+
+Follow the fixed execution rules in `docs/ops/agent-execution-rules.md`.
+
 ## 4.4. Documentation is mandatory
 
 If implementation changes architecture, rules, behavior, or operations:
@@ -154,6 +158,10 @@ If Prisma is used in the project later:
 
 Do not commit impulsively.
 
+`READY` does not generate a commit by itself.
+`IN_PROGRESS` is work in progress, not a final delivery.
+`DONE` means the slice is closed, validated, and eligible for commit.
+
 Before any commit:
 
 - validate the exact scope delivered
@@ -170,6 +178,12 @@ Agents must never:
 - commit broken work
 - mix unrelated changes in the same commit
 - mark incomplete work as finished
+
+After closing and committing a slice:
+
+- locate the next `READY` item in `docs/ops/backlog.md`
+- report whether it is executable or blocked
+- recommend the exact next step
 
 ---
 
@@ -326,12 +340,12 @@ Do:
 
 # 11. Current Repository Instruction
 
-EcoPickup is still in its initial governance and planning stage.
+EcoPickup is in the Deploy phase for EPIC-014 - Infra, Deploy e Observabilidade.
 
 At this moment, the correct priority is:
 
-- establish documentation
-- establish backlog
-- define architecture foundation
-- define monorepo foundation
-- only then begin technical implementation
+- use `docs/ops/backlog.md` as the canonical backlog
+- use `docs/ops/status.md` as the executive state
+- execute one controlled slice at a time
+- do not provision external resources, deploy, or create real secrets without explicit authorization
+- follow `docs/ops/agent-execution-rules.md`
