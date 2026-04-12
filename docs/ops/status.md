@@ -120,9 +120,13 @@ Deploy
 - decisao operacional: primeiro staging deve usar migration manual controlada e explicita, com `Persistence__ApplyMigrationsOnStartup=false`
 - pre-condicoes, ordem segura, criterios de validacao, abort e rollback/forward fix foram documentados sem executar migration real
 - EPIC-014H definida como proxima slice READY para preparar checklist final de provisionamento de staging sem provisionar recursos
+- EPIC-014H concluida com checklist registrado em `docs/ops/staging-provisioning-checklist.md`
+- checklist consolidou web, API, banco, storage, secrets, logs, naming convention, envs/secrets sem valores reais, ordem de provisionamento futuro, bloqueios e decisoes abertas
+- nenhum recurso externo foi provisionado, nenhum secret real foi criado, nenhuma migration foi executada e nenhum deploy foi feito
+- EPIC-014I definida como proxima slice READY para execucao de provisionamento real, condicionada a autorizacao explicita de custos e fechamento das decisoes abertas
 
 ## Objetivo atual
-Executar a abertura controlada da EPIC-014 - Infra, Deploy e Observabilidade, avancando para o checklist final de provisionamento de staging antes de criar recursos externos.
+Executar a abertura controlada da EPIC-014 - Infra, Deploy e Observabilidade, aguardando autorizacao explicita e decisoes finais antes de provisionar recursos externos de staging.
 
 ## O que ja existe
 - ideia do produto
@@ -138,11 +142,12 @@ Executar a abertura controlada da EPIC-014 - Infra, Deploy e Observabilidade, av
 - decisao da foundation do monorepo registrada
 
 ## O que falta antes de executar staging real
-- executar EPIC-014H - Staging Provisioning Checklist
-- confirmar secrets reais, regiao, planos e URLs somente em slice propria de provisionamento
+- fechar decisoes abertas da EPIC-014H: billing owner, contas, region, planos, dominio, payment staging, seed/admin e forma de deploy Docker
+- obter autorizacao explicita para provisionar recursos externos e aceitar custos
+- executar EPIC-014I - Staging Provisioning Execution somente depois das decisoes acima
 
 ## Proximo passo recomendado
-Proximo passo recomendado: executar EPIC-014H para preparar o checklist final de provisionamento de staging, sem criar recursos externos, sem secrets reais e sem deploy.
+Proximo passo recomendado: fechar as decisoes abertas da EPIC-014H e, somente com autorizacao explicita para custos/provisionamento, executar EPIC-014I.
 
 ## Riscos atuais
 - comecar implementacao cedo demais

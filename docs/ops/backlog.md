@@ -1717,7 +1717,7 @@ Definir a estrategia operacional de migrations para o primeiro staging em Render
 - nenhum banco provisionado, nenhuma migration real executada e nenhum deploy realizado
 
 #### EPIC-014H - Staging Provisioning Checklist
-**Status:** READY
+**Status:** DONE
 
 ##### Objetivo
 Preparar o checklist final de provisionamento de Render, Vercel, Render Postgres e Cloudflare R2 com nomes, regioes, secrets esperados e ordem de criacao, ainda sem provisionar recursos.
@@ -1748,6 +1748,48 @@ Preparar o checklist final de provisionamento de Render, Vercel, Render Postgres
 - alterar runtime/envs
 - executar migrations
 - executar deploy
+
+##### Resultado
+- checklist registrado em `docs/ops/staging-provisioning-checklist.md`
+- checklist consolidado por camada: web, API, banco, storage, secrets e logs
+- naming convention proposta para recursos de staging
+- envs/secrets esperados listados sem valores reais
+- ordem segura de provisionamento futuro registrada
+- bloqueios, pendencias e decisoes abertas registrados
+- nenhum recurso externo provisionado, nenhum secret real criado e nenhum deploy executado
+
+#### EPIC-014I - Staging Provisioning Execution
+**Status:** READY
+
+##### Objetivo
+Criar os recursos reais de staging na ordem aprovada, registrando evidencias e parando antes de deploy funcional se qualquer pre-condicao falhar.
+
+##### Escopo
+- confirmar autorizacao para provisionamento e custos
+- criar recursos de staging conforme checklist aprovado
+- registrar evidencias de recursos criados
+- preencher secrets reais nas plataformas sem versionar valores
+- manter migrations e deploy funcional sob controle operacional explicito
+- atualizar documentacao operacional impactada
+
+##### Criterios de aceite
+- recursos externos de staging criados conforme checklist
+- secrets configurados nas plataformas sem vazamento em repositorio
+- evidencias registradas
+- nenhum valor real de secret versionado
+- bloqueios registrados se algum recurso nao puder ser criado
+
+##### Dependencias
+- EPIC-014H
+- autorizacao explicita para provisionar recursos externos e aceitar custos
+- decisoes abertas da EPIC-014H fechadas pelo responsavel do projeto
+
+##### Fora de escopo
+- executar deploy funcional completo sem pre-condicoes fechadas
+- executar migration sem seguir EPIC-014G
+- implementar CI/CD
+- implementar observabilidade externa
+- alterar codigo de produto
 
 ---
 
