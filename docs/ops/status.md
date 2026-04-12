@@ -123,10 +123,12 @@ Deploy
 - EPIC-014H concluida com checklist registrado em `docs/ops/staging-provisioning-checklist.md`
 - checklist consolidou web, API, banco, storage, secrets, logs, naming convention, envs/secrets sem valores reais, ordem de provisionamento futuro, bloqueios e decisoes abertas
 - nenhum recurso externo foi provisionado, nenhum secret real foi criado, nenhuma migration foi executada e nenhum deploy foi feito
-- EPIC-014I definida como proxima slice READY para execucao de provisionamento real, condicionada a autorizacao explicita de custos e fechamento das decisoes abertas
+- EPIC-014I havia sido definida como proxima slice READY para execucao de provisionamento real, condicionada a autorizacao explicita de custos e fechamento das decisoes abertas
+- EPIC-014I teve autorizacao de provisionamento/custos recebida em 2026-04-12, mas foi bloqueada antes de criar recursos reais porque nao havia meio autenticado/aprovado para operar Render, Vercel e Cloudflare nesta sessao
+- tentativa da EPIC-014I registrada em `docs/ops/staging-provisioning-execution.md`, que agora concentra o checklist minimo de retomada; nenhum recurso externo foi provisionado, nenhum secret real foi criado, nenhuma migration foi executada e nenhum deploy foi feito
 
 ## Objetivo atual
-Executar a abertura controlada da EPIC-014 - Infra, Deploy e Observabilidade, aguardando autorizacao explicita e decisoes finais antes de provisionar recursos externos de staging.
+Desbloquear a EPIC-014I - Staging Provisioning Execution com acesso autenticado/aprovado as plataformas de staging e decisoes finais de contas, billing, region, planos e ambientes.
 
 ## O que ja existe
 - ideia do produto
@@ -142,12 +144,12 @@ Executar a abertura controlada da EPIC-014 - Infra, Deploy e Observabilidade, ag
 - decisao da foundation do monorepo registrada
 
 ## O que falta antes de executar staging real
-- fechar decisoes abertas da EPIC-014H: billing owner, contas, region, planos, dominio, payment staging, seed/admin e forma de deploy Docker
-- obter autorizacao explicita para provisionar recursos externos e aceitar custos
-- executar EPIC-014I - Staging Provisioning Execution somente depois das decisoes acima
+- fechar o checklist minimo consolidado em `docs/ops/staging-provisioning-execution.md`
+- disponibilizar meio autenticado/aprovado para operar Render, Vercel e Cloudflare nesta execucao
+- reexecutar EPIC-014I - Staging Provisioning Execution somente depois dos acessos e decisoes acima
 
 ## Proximo passo recomendado
-Proximo passo recomendado: fechar as decisoes abertas da EPIC-014H e, somente com autorizacao explicita para custos/provisionamento, executar EPIC-014I.
+Proximo passo recomendado: fechar o checklist minimo de retomada em `docs/ops/staging-provisioning-execution.md` e reexecutar EPIC-014I seguindo `docs/ops/staging-provisioning-checklist.md`.
 
 ## Riscos atuais
 - comecar implementacao cedo demais
