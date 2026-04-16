@@ -11,10 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Npgsql;
 
 namespace EcoPickup.Infrastructure.DependencyInjection;
 
@@ -42,11 +39,6 @@ public static class InfrastructureServiceCollectionExtensions
       ?? throw new InvalidOperationException(
         "Connection string 'Database' was not found. Configure ConnectionStrings__Database in the runtime environment.");
 
-    services.AddHostedService(sp =>
-      new DatabaseConnectionDiagnosticsHostedService(
-        connectionString,
-        sp.GetRequiredService<ILogger<DatabaseConnectionDiagnosticsHostedService>>()));
-
     services.AddDbContext<EcoPickupDbContext>(options =>
     {
       options.UseNpgsql(connectionString);
@@ -60,37 +52,4 @@ public static class InfrastructureServiceCollectionExtensions
 
     return services;
   }
-}
-
-internal sealed class DatabaseConnectionDiagnosticsHostedService(
-  string connectionString,
-  ILogger<DatabaseConnectionDiagnosticsHostedService> logger) : IHostedService
-{
-  public async Task StartAsync(CancellationToken cancellationToken)
-  {
-    var connectionStringBuilder = new NpgsqlConnectionStringBuilder(connectionString);
-
-    logger.LogInformation(
-      "[DB-CONFIG] Host={Host}; Port={Port}; Database={Database}; SslMode={SslMode}; TrustServerCertificate={TrustServerCertificate}",
-      connectionStringBuilder.Host,
-      connectionStringBuilder.Port,
-      connectionStringBuilder.Database,
-      connectionStringBuilder.SslMode,
-      connectionStringBuilder.TryGetValue("Trust Server Certificate", out var trustServerCertificate)
-        ? trustServerCertificate
-        : null);
-
-    try
-    {
-      await using var connection = new NpgsqlConnection(connectionString);
-      await connection.OpenAsync(cancellationToken);
-      logger.LogInformation("[DB-CONNECT] Database startup connection validation succeeded.");
-    }
-    catch (Exception ex)
-    {
-      logger.LogError(ex, "[DB-CONNECT] Database startup connection validation failed.");
-    }
-  }
-
-  public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 }
