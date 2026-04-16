@@ -11,6 +11,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Npgsql;
 
@@ -40,15 +42,10 @@ public static class InfrastructureServiceCollectionExtensions
       ?? throw new InvalidOperationException(
         "Connection string 'Database' was not found. Configure ConnectionStrings__Database in the runtime environment.");
 
-    var connectionStringBuilder = new NpgsqlConnectionStringBuilder(connectionString);
-    var trustServerCertificate = connectionStringBuilder.TryGetValue(
-      "Trust Server Certificate",
-      out var trustServerCertificateValue)
-        ? trustServerCertificateValue
-        : null;
-
-    Console.WriteLine(
-      $"[DB-CONFIG] Host={connectionStringBuilder.Host}; Port={connectionStringBuilder.Port}; Database={connectionStringBuilder.Database}; SslMode={connectionStringBuilder.SslMode}; TrustServerCertificate={trustServerCertificate}");
+    services.AddHostedService(sp =>
+      new DatabaseConnectionDiagnosticsHostedService(
+        connectionString,
+        sp.GetRequiredService<ILogger<DatabaseConnectionDiagnosticsHostedService>>()));
 
     services.AddDbContext<EcoPickupDbContext>(options =>
     {
@@ -62,4 +59,28 @@ public static class InfrastructureServiceCollectionExtensions
 
     return services;
   }
+}
+
+internal sealed class DatabaseConnectionDiagnosticsHostedService(
+  string connectionString,
+  ILogger<DatabaseConnectionDiagnosticsHostedService> logger) : IHostedService
+{
+  public Task StartAsync(CancellationToken cancellationToken)
+  {
+    var connectionStringBuilder = new NpgsqlConnectionStringBuilder(connectionString);
+
+    logger.LogInformation(
+      "[DB-CONFIG] Host={Host}; Port={Port}; Database={Database}; SslMode={SslMode}; TrustServerCertificate={TrustServerCertificate}",
+      connectionStringBuilder.Host,
+      connectionStringBuilder.Port,
+      connectionStringBuilder.Database,
+      connectionStringBuilder.SslMode,
+      connectionStringBuilder.TryGetValue("Trust Server Certificate", out var trustServerCertificate)
+        ? trustServerCertificate
+        : null);
+
+    return Task.CompletedTask;
+  }
+
+  public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 }
