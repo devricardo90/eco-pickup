@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
+using Npgsql;
 
 namespace EcoPickup.Infrastructure.DependencyInjection;
 
@@ -35,23 +36,29 @@ public static class InfrastructureServiceCollectionExtensions
     services.Configure<ObjectStorageOptions>(configuration.GetSection(ObjectStorageOptions.SectionName));
     services.AddSingleton<IItemPhotoStorage, S3ItemPhotoStorage>();
 
-    var connectionString = configuration.GetConnectionString("Database");
+    var connectionString = configuration.GetConnectionString("Database")
+      ?? throw new InvalidOperationException(
+        "Connection string 'Database' was not found. Configure ConnectionStrings__Database in the runtime environment.");
+
+    var connectionStringBuilder = new NpgsqlConnectionStringBuilder(connectionString);
+    var trustServerCertificate = connectionStringBuilder.TryGetValue(
+      "Trust Server Certificate",
+      out var trustServerCertificateValue)
+        ? trustServerCertificateValue
+        : null;
+
+    Console.WriteLine(
+      $"[DB-CONFIG] Host={connectionStringBuilder.Host}; Port={connectionStringBuilder.Port}; Database={connectionStringBuilder.Database}; SslMode={connectionStringBuilder.SslMode}; TrustServerCertificate={trustServerCertificate}");
 
     services.AddDbContext<EcoPickupDbContext>(options =>
     {
-      if (!string.IsNullOrWhiteSpace(connectionString))
-      {
-        options.UseNpgsql(connectionString);
-      }
+      options.UseNpgsql(connectionString);
     });
 
-    if (!string.IsNullOrWhiteSpace(connectionString))
-    {
-      services.AddHealthChecks()
-        .AddDbContextCheck<EcoPickupDbContext>(
-          name: "postgresql",
-          failureStatus: HealthStatus.Unhealthy);
-    }
+    services.AddHealthChecks()
+      .AddDbContextCheck<EcoPickupDbContext>(
+        name: "postgresql",
+        failureStatus: HealthStatus.Unhealthy);
 
     return services;
   }
