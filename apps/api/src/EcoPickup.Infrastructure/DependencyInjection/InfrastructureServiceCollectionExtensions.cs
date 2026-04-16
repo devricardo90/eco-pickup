@@ -53,7 +53,8 @@ public static class InfrastructureServiceCollectionExtensions
     });
 
     services.AddHealthChecks()
-      .AddDbContextCheck<EcoPickupDbContext>(
+      .AddNpgSql(
+        connectionString,
         name: "postgresql",
         failureStatus: HealthStatus.Unhealthy);
 
@@ -65,7 +66,7 @@ internal sealed class DatabaseConnectionDiagnosticsHostedService(
   string connectionString,
   ILogger<DatabaseConnectionDiagnosticsHostedService> logger) : IHostedService
 {
-  public Task StartAsync(CancellationToken cancellationToken)
+  public async Task StartAsync(CancellationToken cancellationToken)
   {
     var connectionStringBuilder = new NpgsqlConnectionStringBuilder(connectionString);
 
@@ -79,7 +80,16 @@ internal sealed class DatabaseConnectionDiagnosticsHostedService(
         ? trustServerCertificate
         : null);
 
-    return Task.CompletedTask;
+    try
+    {
+      await using var connection = new NpgsqlConnection(connectionString);
+      await connection.OpenAsync(cancellationToken);
+      logger.LogInformation("[DB-CONNECT] Database startup connection validation succeeded.");
+    }
+    catch (Exception ex)
+    {
+      logger.LogError(ex, "[DB-CONNECT] Database startup connection validation failed.");
+    }
   }
 
   public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
