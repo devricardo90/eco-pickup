@@ -57,16 +57,26 @@ public static class PickupRequestEndpoints
   }
 
   private static async Task<IResult> CreateAsync(
-    ClaimsPrincipal principal,
-    CreatePickupRequestRequest request,
+    ClaimsPrincipal? principal,
+    CreatePickupRequestRequest? request,
     IPickupRequestService pickupRequestService,
     CancellationToken cancellationToken)
   {
-    var subject = principal.FindFirstValue("sub");
-    if (!Guid.TryParse(subject, out var userId))
+    var subject = principal?.FindFirst(ClaimTypes.NameIdentifier)?.Value
+      ?? principal?.FindFirstValue("sub");
+    if (principal?.Identity?.IsAuthenticated != true || !Guid.TryParse(subject, out var userId))
     {
       return Results.Unauthorized();
     }
+
+    var requestErrors = ValidateCreateRequest(request);
+    if (requestErrors.Count > 0)
+    {
+      return Results.ValidationProblem(requestErrors);
+    }
+
+    var address = request!.Address!;
+    var items = request.Items!;
 
     try
     {
@@ -77,13 +87,13 @@ public static class PickupRequestEndpoints
           request.PickupWindowStartUtc,
           request.PickupWindowEndUtc,
           new CreatePickupRequestAddressCommand(
-            request.Address.Street,
-            request.Address.City,
-            request.Address.PostalCode,
-            request.Address.Floor,
-            request.Address.HasElevator,
-            request.Address.AccessNotes),
-          request.Items.Select(item => new CreatePickupItemCommand(
+            address.Street,
+            address.City,
+            address.PostalCode,
+            address.Floor,
+            address.HasElevator,
+            address.AccessNotes),
+          items.Select(item => new CreatePickupItemCommand(
             item.Category,
             item.Description,
             item.EstimatedSize)).ToArray()),
@@ -95,6 +105,82 @@ public static class PickupRequestEndpoints
     {
       return Results.ValidationProblem(ex.Errors.ToDictionary(pair => pair.Key, pair => pair.Value));
     }
+  }
+
+  private static Dictionary<string, string[]> ValidateCreateRequest(CreatePickupRequestRequest? request)
+  {
+    var errors = new Dictionary<string, string[]>();
+
+    if (request is null)
+    {
+      errors["request"] = ["Request body is required."];
+      return errors;
+    }
+
+    if (string.IsNullOrWhiteSpace(request.Description))
+    {
+      errors["description"] = ["Description is required."];
+    }
+
+    if (request.Address is null)
+    {
+      errors["address"] = ["Address is required."];
+    }
+    else
+    {
+      if (string.IsNullOrWhiteSpace(request.Address.Street))
+      {
+        errors["address.street"] = ["Street is required."];
+      }
+
+      if (string.IsNullOrWhiteSpace(request.Address.City))
+      {
+        errors["address.city"] = ["City is required."];
+      }
+
+      if (string.IsNullOrWhiteSpace(request.Address.PostalCode))
+      {
+        errors["address.postalCode"] = ["Postal code is required."];
+      }
+    }
+
+    if (request.Items is null)
+    {
+      errors["items"] = ["Items are required."];
+    }
+    else if (request.Items.Count == 0)
+    {
+      errors["items"] = ["At least one item is required."];
+    }
+    else
+    {
+      for (var index = 0; index < request.Items.Count; index++)
+      {
+        var item = request.Items[index];
+        if (item is null)
+        {
+          errors[$"items[{index}]"] = ["Item is required."];
+          continue;
+        }
+
+        if (string.IsNullOrWhiteSpace(item.Category))
+        {
+          errors[$"items[{index}].category"] = ["Item category is required."];
+        }
+
+        if (string.IsNullOrWhiteSpace(item.Description))
+        {
+          errors[$"items[{index}].description"] = ["Item description is required."];
+        }
+
+        if (string.IsNullOrWhiteSpace(item.EstimatedSize))
+        {
+          errors[$"items[{index}].estimatedSize"] = ["Item estimated size is required."];
+        }
+      }
+    }
+
+    return errors;
   }
 
   private static async Task<IResult> GetByUserAsync(

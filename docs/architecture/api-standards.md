@@ -267,6 +267,7 @@ Current implemented scope:
 - `POST /api/v1/pickup-requests/{id}/payments` creates a payment session for the authenticated owner
 - `POST /api/v1/payments/webhook` confirms payment status through a secure backend webhook
 - current payload stores description, pickup window, a single pickup address and one or more pickup items
+- invalid or incomplete pickup request creation payloads return controlled `400` validation responses instead of runtime failures
 - owner editing is currently limited to requests in `draft`
 - owner submission is a separate explicit transition from `draft` to `submitted`
 - items require `category`, `description` and `estimatedSize`
