@@ -3,6 +3,8 @@ using Amazon.S3;
 using Amazon.S3.Model;
 using Amazon.S3.Util;
 using EcoPickup.Application.PickupRequests.Abstractions;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace EcoPickup.Infrastructure.Storage;
@@ -10,14 +12,31 @@ namespace EcoPickup.Infrastructure.Storage;
 public sealed class S3ItemPhotoStorage : IItemPhotoStorage
 {
   private readonly IAmazonS3 s3Client;
+  private readonly ILogger<S3ItemPhotoStorage> logger;
   private readonly ObjectStorageOptions options;
+  private readonly bool shouldEnsureBucket;
   private readonly SemaphoreSlim bucketLock = new(1, 1);
   private volatile bool bucketEnsured;
 
-  public S3ItemPhotoStorage(IOptions<ObjectStorageOptions> optionsAccessor)
+  public S3ItemPhotoStorage(
+    IOptions<ObjectStorageOptions> optionsAccessor,
+    IHostEnvironment hostEnvironment,
+    ILogger<S3ItemPhotoStorage> logger)
   {
+    this.logger = logger;
     options = optionsAccessor.Value;
     Validate(options);
+    shouldEnsureBucket = hostEnvironment.IsDevelopment() && options.AutoCreateBucket;
+
+    logger.LogInformation(
+      "[OBJECT-STORAGE] Configured. Environment={EnvironmentName} Bucket={BucketName} Endpoint={ServiceUrl} Region={Region} ForcePathStyle={ForcePathStyle} AutoCreateBucket={AutoCreateBucket} RuntimeBucketEnsureEnabled={RuntimeBucketEnsureEnabled}",
+      hostEnvironment.EnvironmentName,
+      options.BucketName,
+      options.ServiceUrl,
+      options.Region,
+      options.ForcePathStyle,
+      options.AutoCreateBucket,
+      shouldEnsureBucket);
 
     var config = new AmazonS3Config
     {
@@ -34,7 +53,10 @@ public sealed class S3ItemPhotoStorage : IItemPhotoStorage
 
   public async Task SaveAsync(string key, string contentType, byte[] content, CancellationToken cancellationToken)
   {
-    await EnsureBucketExistsAsync(cancellationToken);
+    if (shouldEnsureBucket)
+    {
+      await EnsureBucketExistsAsync(cancellationToken);
+    }
 
     await using var stream = new MemoryStream(content);
     var request = new PutObjectRequest
@@ -45,7 +67,35 @@ public sealed class S3ItemPhotoStorage : IItemPhotoStorage
       ContentType = contentType
     };
 
-    await s3Client.PutObjectAsync(request, cancellationToken);
+    try
+    {
+      await s3Client.PutObjectAsync(request, cancellationToken);
+    }
+    catch (AmazonS3Exception ex)
+    {
+      LogS3Failure("upload item photo", ex);
+      throw;
+    }
+    catch (AmazonServiceException ex)
+    {
+      logger.LogError(
+        ex,
+        "[OBJECT-STORAGE] Failed to upload item photo. Category=connection_or_service_error Bucket={BucketName} Endpoint={ServiceUrl} Message={Message}",
+        options.BucketName,
+        options.ServiceUrl,
+        ex.Message);
+      throw;
+    }
+    catch (HttpRequestException ex)
+    {
+      logger.LogError(
+        ex,
+        "[OBJECT-STORAGE] Failed to upload item photo. Category=connection_error Bucket={BucketName} Endpoint={ServiceUrl} Message={Message}",
+        options.BucketName,
+        options.ServiceUrl,
+        ex.Message);
+      throw;
+    }
   }
 
   public async Task DeleteAsync(string key, CancellationToken cancellationToken)
@@ -59,8 +109,14 @@ public sealed class S3ItemPhotoStorage : IItemPhotoStorage
     {
       await s3Client.DeleteObjectAsync(options.BucketName, key, cancellationToken);
     }
-    catch
+    catch (Exception ex)
     {
+      logger.LogWarning(
+        ex,
+        "[OBJECT-STORAGE] Best effort cleanup failed. Bucket={BucketName} Key={StorageKey} Message={Message}",
+        options.BucketName,
+        key,
+        ex.Message);
       // Best effort cleanup when metadata persistence fails after object upload.
     }
   }
@@ -83,11 +139,10 @@ public sealed class S3ItemPhotoStorage : IItemPhotoStorage
       var exists = await AmazonS3Util.DoesS3BucketExistV2Async(s3Client, options.BucketName);
       if (!exists)
       {
-        if (!options.AutoCreateBucket)
-        {
-          throw new InvalidOperationException($"Object storage bucket '{options.BucketName}' does not exist.");
-        }
-
+        logger.LogWarning(
+          "[OBJECT-STORAGE] Bucket does not exist and AutoCreateBucket=true. Creating bucket. Bucket={BucketName} Endpoint={ServiceUrl}",
+          options.BucketName,
+          options.ServiceUrl);
         await s3Client.PutBucketAsync(
           new PutBucketRequest
           {
@@ -98,6 +153,31 @@ public sealed class S3ItemPhotoStorage : IItemPhotoStorage
       }
 
       bucketEnsured = true;
+    }
+    catch (AmazonS3Exception ex)
+    {
+      LogS3Failure("ensure bucket exists", ex);
+      throw;
+    }
+    catch (AmazonServiceException ex)
+    {
+      logger.LogError(
+        ex,
+        "[OBJECT-STORAGE] Failed to ensure bucket exists. Category=connection_or_service_error Bucket={BucketName} Endpoint={ServiceUrl} Message={Message}",
+        options.BucketName,
+        options.ServiceUrl,
+        ex.Message);
+      throw;
+    }
+    catch (HttpRequestException ex)
+    {
+      logger.LogError(
+        ex,
+        "[OBJECT-STORAGE] Failed to ensure bucket exists. Category=connection_error Bucket={BucketName} Endpoint={ServiceUrl} Message={Message}",
+        options.BucketName,
+        options.ServiceUrl,
+        ex.Message);
+      throw;
     }
     finally
     {
@@ -126,5 +206,49 @@ public sealed class S3ItemPhotoStorage : IItemPhotoStorage
     {
       throw new InvalidOperationException("Object storage secret key is required.");
     }
+  }
+
+  private void LogS3Failure(string operation, AmazonS3Exception ex)
+  {
+    var category = ClassifyS3Failure(ex);
+
+    logger.LogError(
+      ex,
+      "[OBJECT-STORAGE] Failed to {Operation}. Category={Category} Bucket={BucketName} Endpoint={ServiceUrl} StatusCode={StatusCode} ErrorCode={ErrorCode} Message={Message}",
+      operation,
+      category,
+      options.BucketName,
+      options.ServiceUrl,
+      ex.StatusCode,
+      ex.ErrorCode,
+      ex.Message);
+  }
+
+  private static string ClassifyS3Failure(AmazonS3Exception ex)
+  {
+    if (string.Equals(ex.ErrorCode, "NoSuchBucket", StringComparison.OrdinalIgnoreCase) ||
+      string.Equals(ex.ErrorCode, "NotFound", StringComparison.OrdinalIgnoreCase))
+    {
+      return "bucket_missing";
+    }
+
+    if (string.Equals(ex.ErrorCode, "InvalidAccessKeyId", StringComparison.OrdinalIgnoreCase) ||
+      string.Equals(ex.ErrorCode, "SignatureDoesNotMatch", StringComparison.OrdinalIgnoreCase) ||
+      string.Equals(ex.ErrorCode, "AccessDenied", StringComparison.OrdinalIgnoreCase))
+    {
+      return "credential_or_permission_error";
+    }
+
+    if ((int)ex.StatusCode is 401 or 403)
+    {
+      return "credential_or_permission_error";
+    }
+
+    if ((int)ex.StatusCode is 404)
+    {
+      return "bucket_missing";
+    }
+
+    return "s3_service_error";
   }
 }

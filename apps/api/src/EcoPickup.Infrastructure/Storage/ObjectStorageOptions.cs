@@ -16,5 +16,5 @@ public sealed class ObjectStorageOptions
 
   public bool ForcePathStyle { get; set; } = true;
 
-  public bool AutoCreateBucket { get; set; } = true;
+  public bool AutoCreateBucket { get; set; } = false;
 }
