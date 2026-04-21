@@ -126,6 +126,9 @@ Deploy
 - EPIC-014I havia sido definida como proxima slice READY para execucao de provisionamento real, condicionada a autorizacao explicita de custos e fechamento das decisoes abertas
 - EPIC-014I teve autorizacao de provisionamento/custos recebida em 2026-04-12, mas foi bloqueada antes de criar recursos reais porque nao havia meio autenticado/aprovado para operar Render, Vercel e Cloudflare nesta sessao
 - tentativa da EPIC-014I registrada em `docs/ops/staging-provisioning-execution.md`, que agora concentra o checklist minimo de retomada; nenhum recurso externo foi provisionado, nenhum secret real foi criado, nenhuma migration foi executada e nenhum deploy foi feito
+- apos deploy da primeira correcao R2, upload autenticado continuou falhando com `STREAMING-AWS4-HMAC-SHA256-PAYLOAD not implemented`
+- segunda correcao aplicada no `PutObjectRequest`: `UseChunkEncoding=false` e `DisablePayloadSigning=true`; `DisableDefaultChecksumValidation` nao foi alterado; `ContentLength` foi considerado, mas nao existe diretamente em `PutObjectRequest` na versao congelada do AWSSDK.S3
+- build backend e testes unitarios passaram localmente apos a segunda correcao R2: `dotnet build apps/api/EcoPickup.Backend.sln --no-restore -p:UseSharedCompilation=false -m:1` e `dotnet test apps/api/tests/EcoPickup.UnitTests/EcoPickup.UnitTests.csproj --no-restore -p:UseSharedCompilation=false -m:1`
 
 ## Objetivo atual
 Desbloquear a EPIC-014I - Staging Provisioning Execution com acesso autenticado/aprovado as plataformas de staging e decisoes finais de contas, billing, region, planos e ambientes.
@@ -149,7 +152,7 @@ Desbloquear a EPIC-014I - Staging Provisioning Execution com acesso autenticado/
 - reexecutar EPIC-014I - Staging Provisioning Execution somente depois dos acessos e decisoes acima
 
 ## Proximo passo recomendado
-Proximo passo recomendado: redeployar a API staging com a correcao R2 e repetir o smoke autenticado de upload de imagem, registrando evidencia nao sensivel antes de considerar a fatia de storage concluida.
+Proximo passo recomendado: redeployar a API staging com a correcao de `PutObjectRequest` e repetir o smoke autenticado de upload de imagem, registrando evidencia nao sensivel antes de considerar a fatia de storage concluida.
 
 ## Riscos atuais
 - comecar implementacao cedo demais
@@ -161,4 +164,5 @@ Proximo passo recomendado: redeployar a API staging com a correcao R2 e repetir 
 
 ## Regra operacional
 Cada nova feature deve entrar por fatias controladas, com docs, backlog e validacoes atualizados no mesmo slice.
+
 

@@ -65,7 +65,9 @@ public sealed class S3ItemPhotoStorage : IItemPhotoStorage
       BucketName = options.BucketName,
       Key = key,
       InputStream = stream,
-      ContentType = contentType
+      ContentType = contentType,
+      UseChunkEncoding = false,
+      DisablePayloadSigning = true
     };
 
     try

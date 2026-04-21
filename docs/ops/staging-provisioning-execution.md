@@ -143,6 +143,56 @@ Validacao pendente:
 - redeploy da API staging com a correcao.
 - novo smoke autenticado de upload de imagem.
 - registro de evidencia nao sensivel do resultado.
+## Atualizacao operacional - desabilitar payload streaming assinado no PutObject
+
+Data: 2026-04-21
+
+Contexto:
+
+- commit com a primeira correcao R2 foi deployado.
+- `/health` continuou `Healthy`.
+- login continuou funcional.
+- upload autenticado continuou chegando ate a camada de storage.
+
+Erro atual observado nos logs:
+
+```txt
+Amazon.S3.AmazonS3Exception: STREAMING-AWS4-HMAC-SHA256-PAYLOAD not implemented
+```
+
+Causa tecnica:
+
+- `RequestChecksumCalculation=WHEN_REQUIRED` removeu o trailer de checksum, mas o SDK ainda podia enviar `PutObject` como payload streaming assinado/chunked.
+- Cloudflare R2 tambem rejeitou esse modo de payload com `STREAMING-AWS4-HMAC-SHA256-PAYLOAD not implemented`.
+
+Correcao aplicada:
+
+- `PutObjectRequest.UseChunkEncoding=false`.
+- `PutObjectRequest.DisablePayloadSigning=true`, usando `UNSIGNED-PAYLOAD` sobre HTTPS para evitar o modo streaming SigV4 incompativel com R2.
+- `DisableDefaultChecksumValidation` nao foi alterado.
+- endpoint, dominio, auth, banco, schema e migrations permaneceram fora do escopo.
+
+Observacao:
+
+- `ContentLength` foi considerado, mas a versao congelada do AWSSDK.S3 usada no projeto nao expoe essa propriedade diretamente em `PutObjectRequest`.
+
+Validacao local executada:
+
+```txt
+dotnet build apps/api/EcoPickup.Backend.sln --no-restore -p:UseSharedCompilation=false -m:1
+dotnet test apps/api/tests/EcoPickup.UnitTests/EcoPickup.UnitTests.csproj --no-restore -p:UseSharedCompilation=false -m:1
+```
+
+Resultado:
+
+- build backend passou.
+- testes unitarios passaram: `40` passed, `0` failed.
+
+Validacao pendente:
+
+- redeploy da API staging com a correcao.
+- novo smoke autenticado de upload de imagem.
+- registro de evidencia nao sensivel do resultado.
 ## Checklist minimo para destravar a EPIC-014I
 
 Este e o ponto unico de retomada operacional da `EPIC-014I`.
@@ -226,4 +276,5 @@ Fechar o checklist minimo acima e reexecutar `EPIC-014I` seguindo a ordem segura
 ## Boundary
 
 Esta tentativa nao provisionou recursos externos, nao criou secrets reais, nao executou migrations, nao executou deploy, nao alterou codigo de produto, nao alterou Docker, nao alterou CI/CD e nao implementou observabilidade externa.
+
 
