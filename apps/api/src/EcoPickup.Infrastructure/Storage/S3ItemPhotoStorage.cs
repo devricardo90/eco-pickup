@@ -38,11 +38,14 @@ public sealed class S3ItemPhotoStorage : IItemPhotoStorage
       options.AutoCreateBucket,
       shouldEnsureBucket);
 
+    Amazon.AWSConfigsS3.UseSignatureVersion4 = true;
+
     var config = new AmazonS3Config
     {
       ServiceURL = options.ServiceUrl,
       ForcePathStyle = options.ForcePathStyle,
       AuthenticationRegion = options.Region,
+      SignatureVersion = "4",
       RequestChecksumCalculation = Amazon.Runtime.RequestChecksumCalculation.WHEN_REQUIRED,
       UseHttp = options.ServiceUrl.StartsWith("http://", StringComparison.OrdinalIgnoreCase)
     };
@@ -67,7 +70,8 @@ public sealed class S3ItemPhotoStorage : IItemPhotoStorage
       InputStream = stream,
       ContentType = contentType,
       UseChunkEncoding = false,
-      DisablePayloadSigning = true
+      DisablePayloadSigning = true,
+      DisableDefaultChecksumValidation = true
     };
 
     try
