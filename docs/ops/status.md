@@ -149,7 +149,7 @@ Desbloquear a EPIC-014I - Staging Provisioning Execution com acesso autenticado/
 - reexecutar EPIC-014I - Staging Provisioning Execution somente depois dos acessos e decisoes acima
 
 ## Proximo passo recomendado
-Proximo passo recomendado: fechar o checklist minimo de retomada em `docs/ops/staging-provisioning-execution.md` e reexecutar EPIC-014I seguindo `docs/ops/staging-provisioning-checklist.md`.
+Proximo passo recomendado: redeployar a API staging com a correcao R2 e repetir o smoke autenticado de upload de imagem, registrando evidencia nao sensivel antes de considerar a fatia de storage concluida.
 
 ## Riscos atuais
 - comecar implementacao cedo demais
@@ -161,3 +161,4 @@ Proximo passo recomendado: fechar o checklist minimo de retomada em `docs/ops/st
 
 ## Regra operacional
 Cada nova feature deve entrar por fatias controladas, com docs, backlog e validacoes atualizados no mesmo slice.
+

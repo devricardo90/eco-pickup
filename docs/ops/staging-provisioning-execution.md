@@ -88,6 +88,61 @@ Persistence__ApplyMigrationsOnStartup=false
 
 O staging nao ficou pronto para migration/deploy.
 
+## Atualizacao operacional - compatibilidade PutObject com Cloudflare R2
+
+Data: 2026-04-21
+
+Contexto:
+
+- bucket R2 confirmado existente.
+- env vars `ObjectStorage__*` configuradas no Render.
+- API staging sobe normalmente e `/health` responde `Healthy`.
+- login funciona.
+- endpoint de upload responde.
+- upload autenticado chega ate a camada de storage.
+
+Erro raiz observado nos logs:
+
+```txt
+[OBJECT-STORAGE] Failed to upload item photo
+Category=s3_service_error
+Bucket=ecopickup-stg-media
+Endpoint=https://7b72172fe39b6097765593c22e29f3c0.r2.cloudflarestorage.com
+StatusCode=NotImplemented
+ErrorCode=NotImplemented
+Message=STREAMING-AWS4-HMAC-SHA256-PAYLOAD-TRAILER not implemented
+```
+
+Causa tecnica:
+
+- o AWS SDK for .NET estava usando o comportamento default de checksum de request `WHEN_SUPPORTED`.
+- para `PutObject` com stream, esse modo pode emitir assinatura/payload streaming com trailer de checksum.
+- Cloudflare R2 rejeitou esse modo com `STREAMING-AWS4-HMAC-SHA256-PAYLOAD-TRAILER not implemented`.
+- o erro nao foi tratado como problema de credencial, bucket inexistente ou autorizacao, porque o upload chegou ao storage e o provider retornou incompatibilidade de modo de payload.
+
+Correcao aplicada:
+
+- `AmazonS3Config.RequestChecksumCalculation` foi definido como `WHEN_REQUIRED`.
+- o endpoint e o contrato de negocio do upload nao foram alterados.
+- auth, banco, dominio e migrations permaneceram fora do escopo.
+
+Validacao local executada:
+
+```txt
+dotnet build apps/api/EcoPickup.Backend.sln --no-restore -p:UseSharedCompilation=false -m:1
+dotnet test apps/api/tests/EcoPickup.UnitTests/EcoPickup.UnitTests.csproj --no-restore -p:UseSharedCompilation=false -m:1
+```
+
+Resultado:
+
+- build backend passou.
+- testes unitarios passaram: `40` passed, `0` failed.
+
+Validacao pendente:
+
+- redeploy da API staging com a correcao.
+- novo smoke autenticado de upload de imagem.
+- registro de evidencia nao sensivel do resultado.
 ## Checklist minimo para destravar a EPIC-014I
 
 Este e o ponto unico de retomada operacional da `EPIC-014I`.
@@ -171,3 +226,4 @@ Fechar o checklist minimo acima e reexecutar `EPIC-014I` seguindo a ordem segura
 ## Boundary
 
 Esta tentativa nao provisionou recursos externos, nao criou secrets reais, nao executou migrations, nao executou deploy, nao alterou codigo de produto, nao alterou Docker, nao alterou CI/CD e nao implementou observabilidade externa.
+

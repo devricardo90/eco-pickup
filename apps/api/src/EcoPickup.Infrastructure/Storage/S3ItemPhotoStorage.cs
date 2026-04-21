@@ -43,6 +43,7 @@ public sealed class S3ItemPhotoStorage : IItemPhotoStorage
       ServiceURL = options.ServiceUrl,
       ForcePathStyle = options.ForcePathStyle,
       AuthenticationRegion = options.Region,
+      RequestChecksumCalculation = Amazon.Runtime.RequestChecksumCalculation.WHEN_REQUIRED,
       UseHttp = options.ServiceUrl.StartsWith("http://", StringComparison.OrdinalIgnoreCase)
     };
 
