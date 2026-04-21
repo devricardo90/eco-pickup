@@ -1,48 +1,101 @@
 # EcoPickup
 
-Digital platform for scheduling bulky household item pickups in Sweden.
+EcoPickup is a digital platform for scheduling bulky household item pickups in Sweden.
 
-## MVP Current State
+It structures a process that is often handled through fragmented channels into a clearer digital workflow for owners and operators.
 
-The repository is no longer only in foundation mode. The current MVP already delivers:
+---
 
-- authenticated owner and admin web surfaces
-- owner create, edit-in-draft and explicit submit flow
-- pickup item photo upload
-- admin review, pricing and scheduling foundations
-- owner quote visibility and payment session start
-- owner tracking/detail with timeline, status and lifecycle messaging
-- status-history tracking across the main request lifecycle
+## Live MVP
+
+### Web
+[EcoPickup Web](https://eco-pickup-web.vercel.app)
+
+### API Health
+[API /health](https://ecopickup-api-stg.onrender.com/health)
+
+---
+
+## Current MVP State
+
+The current public MVP already delivers:
+
+- authenticated web flow
+- user registration and login
+- pickup request creation
+- draft editing before submission
+- explicit request submission flow
+- pickup request list and detail views
+- request history and timeline visibility
+- deployed frontend on Vercel
+- deployed API on Render
+- staging validation of the main flow
+
+### Validated flow
+The following flow has been manually validated in staging:
+
+- `/health`
+- register
+- login
+- create pickup request
+- list pickup requests
+- view pickup request detail
+- view pickup request history
+- front-end login and dashboard flow
+
+---
 
 ## Product Goal
 
-Turn a real disposal and logistics problem in Sweden into a structured digital workflow with:
+EcoPickup turns a real logistics and disposal problem into a structured workflow with:
 
 - request intake
-- item and photo capture
-- admin review and pricing
-- payment confirmation
-- scheduling and execution tracking
-- final lifecycle visibility for owner and admin
+- item registration
+- owner visibility over request progress
+- operator/admin review foundations
+- tracking and lifecycle visibility
 
-## Delivery Discipline
+---
 
-The project started with governance, planning and foundation work before feature implementation, and it still follows that same discipline.
+## Scope of the Current Public MVP
 
-The project follows the **Protocolo Rick**, which means:
+The current public MVP is focused on the core request lifecycle.
 
-- no implementation starts without minimum discovery and planning artifacts
-- backlog is the source of truth
-- documentation must evolve together with the code
-- no task is marked done without validation
+### Included
+- authenticated access
+- pickup request creation and submission
+- request listing and detail
+- request history/timeline
+- deployed web + API flow
 
-## Planned Stack
+### Not part of the current published MVP
+- image upload in the live deployed flow
+- Cloudflare R2 integration in production/staging flow
+- advanced admin execution controls
+- real-time notifications
+- broader observability and production hardening
+
+---
+
+## Roadmap / Next Iterations
+
+Planned future improvements include:
+
+- image upload for pickup items
+- object storage integration refinement
+- richer admin execution controls
+- stronger observability and operational tooling
+- payment and logistics workflow expansion
+
+---
+
+## Tech Stack
 
 ### Backend
 - ASP.NET Core (.NET 8)
 - Entity Framework Core
 - PostgreSQL
-- JWT Auth
+- JWT authentication
 - FluentValidation
 - Swagger / OpenAPI
 
@@ -52,13 +105,16 @@ The project follows the **Protocolo Rick**, which means:
 - Tailwind CSS
 
 ### Infrastructure
-- Docker
-- PostgreSQL 16.13 for local development
-- image storage
-- deployment environment
-- payment integration
+- Render
+- Vercel
+- PostgreSQL
+- Docker for local development
 
-## Planned Repository Structure
+---
+
+## Architecture
+
+This repository follows a monorepo structure:
 
 ```txt
 apps/
@@ -74,50 +130,41 @@ docs/
   architecture/
   rules/
   ops/
-```
 
-## Delivery Model
+Delivery Discipline
 
-This project follows a staged execution model:
+This project follows Protocolo Rick, a structured execution model focused on controlled delivery.
+
+Core principles:
+
+no implementation starts without minimum discovery and planning artifacts
+backlog is the source of truth
+documentation evolves with the code
+no task is done without validation evidence
+
+Execution phases:
 
 Discovery
 Planning
 Development
 Testing
 Deploy
+Operational Source of Truth
 
-Each phase must produce its minimum artifacts before the next one can begin.
+Primary operational documents:
 
-## Source of Truth
+docs/ops/backlog.md — canonical backlog
+docs/ops/status.md — executive status summary
+Current Project Position
 
-`docs/ops/backlog.md`  official backlog
-`docs/ops/status.md`  executive summary only
+The project is no longer only in foundation mode.
 
-## Current State
+It now has:
 
-Current delivered MVP slices include:
+a validated staging API
+a published frontend
+a working end-to-end MVP flow for the current scope
+documented scope control for what is intentionally deferred
+Notes
 
-- request creation and draft editing
-- explicit `draft -> submitted` owner submission
-- owner and admin authenticated dashboards/detail surfaces
-- tracking/history timeline endpoints and UI
-- admin review, pricing and scheduling foundations
-- payment foundation with owner checkout start and webhook confirmation
-- owner messaging for `under_review`, `quoted`, `awaiting_payment`, `paid`, `scheduled`, `in_transit`, `collected`, `completed`, `cancelled` and `rejected`
-
-## Current Technical Baseline
-
-- monorepo foundation completed
-- backend foundation completed
-- frontend foundation completed
-- PostgreSQL local persistence foundation completed through Docker + EF Core
-- authentication and access control foundation completed with JWT
-
-## Current Out Of Scope
-
-The current MVP still keeps these areas outside the active scope:
-
-- new operational mutations beyond the existing foundations
-- polling, websockets and notifications
-- full admin execution controls
-- broader deploy/observability work beyond current local foundations
+Image upload and Cloudflare R2 integration were intentionally removed from the current MVP gate to keep the deployment focused and publishable. They remain planned as a future refinement phase, not as discarded functionality.
