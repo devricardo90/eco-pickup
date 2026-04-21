@@ -330,6 +330,9 @@ Expandir a solicitacao para suportar itens associados sem ainda abrir upload de 
 # EPIC-009 - Upload de Imagens
 **Status:** IN_PROGRESS
 
+## Nota operacional - escopo do deploy MVP
+Em 2026-04-21, por decisao de escopo/prioridade, o upload de imagem foi retirado do MVP publicavel atual para destravar o deploy e a apresentacao de portfolio. A feature nao foi descartada: a fundacao, o historico tecnico e o endpoint existente permanecem registrados, mas a validacao de upload/R2 deixa de ser gate do deploy atual e sera retomada em fase futura pos-deploy/refinamento.
+
 ## Objetivo
 Permitir upload e associacao de fotos aos itens da solicitacao.
 
@@ -422,6 +425,9 @@ Garantir leitura minima de pickup request para ownership, verificacao de detalhe
 
 #### EPIC-009B - Item Photo Upload
 **Status:** DONE
+
+##### Nota de escopo para deploy
+Implementacao entregue no repositorio, mas excluida do fluxo critico do MVP publicavel em 2026-04-21. Para deploy/apresentacao atual, o fluxo principal deve seguir sem depender de upload de imagem ou de smoke R2. A retomada da feature fica para fase futura pos-deploy/refinamento.
 
 ##### Objetivo
 Implementar upload real de fotos de item sobre a fundacao de midia previamente definida.
@@ -1759,7 +1765,10 @@ Preparar o checklist final de provisionamento de Render, Vercel, Render Postgres
 - nenhum recurso externo provisionado, nenhum secret real criado e nenhum deploy executado
 
 #### EPIC-014I - Staging Provisioning Execution
-**Status:** BLOCKED
+**Status:** IN_PROGRESS
+
+##### Nota operacional - decisao de escopo em 2026-04-21
+O upload de imagem/R2 deixou de ser bloqueio do MVP publicavel atual. A EPIC-014I segue em andamento para concluir deploy e apresentacao sem depender de smoke autenticado de upload. A funcionalidade de imagem nao foi descartada e deve ser retomada em fase futura pos-deploy/refinamento.
 
 ##### Objetivo
 Criar os recursos reais de staging na ordem aprovada, registrando evidencias e parando antes de deploy funcional se qualquer pre-condicao falhar.
@@ -1801,6 +1810,79 @@ Criar os recursos reais de staging na ordem aprovada, registrando evidencias e p
 - nenhum recurso externo foi provisionado
 - nenhum secret real foi criado, lido, registrado ou versionado
 - staging nao ficou pronto para migration/deploy
+
+#### EPIC-014J - Staging Object Storage Runtime Hardening
+**Status:** DONE
+
+##### Objetivo
+Corrigir a falha operacional de upload de fotos em staging causada por configuracao ausente/incompleta de storage R2/S3-compatible no Render e por dependencia de verificacao/criacao de bucket em runtime.
+
+##### Escopo
+- confirmar provider de storage alvo para staging
+- listar env vars obrigatorias para Render
+- ajustar a API para nao depender de `EnsureBucketExistsAsync` quando `ObjectStorage__AutoCreateBucket=false`
+- adicionar logs claros para falhas de conexao, credencial/permissao, bucket inexistente e erro S3-compatible
+- atualizar documentacao operacional impactada
+- executar gates tecnicos aplicaveis
+
+##### Criterios de aceite
+- causa raiz operacional registrada
+- variaveis obrigatorias de storage para Render documentadas
+- staging/producao nao dependem de criacao/check de bucket em runtime quando `AutoCreateBucket=false`
+- logs de upload classificam os principais modos de falha sem expor secrets
+- build e testes backend aplicaveis passam
+
+##### Dependencias
+- EPIC-014D
+- EPIC-014H
+- configuracao real de Cloudflare R2 e Render continua dependente de acesso/autorizacao operacional
+
+##### Fora de escopo
+- provisionar bucket R2 real
+- criar token/secret real
+- alterar permissao diretamente na Cloudflare
+- configurar Render externamente nesta sessao
+- executar deploy real
+
+##### Resultado
+- provider confirmado: Cloudflare R2 via API S3-compatible, com MinIO apenas para desenvolvimento local
+- `ObjectStorage__AutoCreateBucket=false` passou a evitar `DoesS3BucketExistV2Async` antes do upload
+- logs `[OBJECT-STORAGE]` adicionados para diagnostico de upload e cleanup
+- contrato de ambiente atualizado em `docs/ops/runtime-environment-contract.md`
+- incidente e instrucoes Render/R2 registrados em `docs/ops/staging-provisioning-execution.md`
+
+#### EPIC-014K - MVP Deploy Scope Adjustment
+**Status:** DONE
+
+##### Objetivo
+Registrar a decisao operacional de retirar upload de imagem do MVP publicavel atual para concluir deploy e apresentacao do projeto sem depender de Cloudflare R2.
+
+##### Escopo
+- registrar que upload de imagem nao foi descartado
+- registrar que upload/R2 sai do gate critico do deploy atual
+- preservar o historico tecnico e a retomada futura da feature
+- atualizar backlog, status e handoff operacional
+
+##### Criterios de aceite
+- backlog canonico registra a decisao
+- status operacional aponta o novo objetivo de deploy
+- handoff da EPIC-014I remove upload/R2 como proximo bloqueio critico
+- nenhuma mudanca de schema, auth, banco, dominio ou deploy pipeline
+
+##### Dependencias
+- decisao explicita do responsavel do projeto em 2026-04-21
+- EPIC-014I em andamento
+
+##### Fora de escopo
+- remover tabelas, migrations ou endpoint ja implementado
+- refatorar storage
+- alterar autenticacao, banco, dominio ou fluxo principal de requests
+- validar upload R2 em staging
+
+##### Resultado
+- upload de imagem classificado como fase futura pos-deploy/refinamento
+- deploy MVP atual passa a depender de health, auth, requests, tracking/admin basico e apresentacao, nao de smoke R2
+- historico da tentativa R2 mantido em `docs/ops/staging-provisioning-execution.md`
 
 ---
 

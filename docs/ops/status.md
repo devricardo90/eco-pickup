@@ -126,12 +126,28 @@ Deploy
 - EPIC-014I havia sido definida como proxima slice READY para execucao de provisionamento real, condicionada a autorizacao explicita de custos e fechamento das decisoes abertas
 - EPIC-014I teve autorizacao de provisionamento/custos recebida em 2026-04-12, mas foi bloqueada antes de criar recursos reais porque nao havia meio autenticado/aprovado para operar Render, Vercel e Cloudflare nesta sessao
 - tentativa da EPIC-014I registrada em `docs/ops/staging-provisioning-execution.md`, que agora concentra o checklist minimo de retomada; nenhum recurso externo foi provisionado, nenhum secret real foi criado, nenhuma migration foi executada e nenhum deploy foi feito
-- apos deploy da primeira correcao R2, upload autenticado continuou falhando com `STREAMING-AWS4-HMAC-SHA256-PAYLOAD not implemented`
-- segunda correcao aplicada no `PutObjectRequest`: `UseChunkEncoding=false` e `DisablePayloadSigning=true`; `DisableDefaultChecksumValidation` nao foi alterado; `ContentLength` foi considerado, mas nao existe diretamente em `PutObjectRequest` na versao congelada do AWSSDK.S3
-- build backend e testes unitarios passaram localmente apos a segunda correcao R2: `dotnet build apps/api/EcoPickup.Backend.sln --no-restore -p:UseSharedCompilation=false -m:1` e `dotnet test apps/api/tests/EcoPickup.UnitTests/EcoPickup.UnitTests.csproj --no-restore -p:UseSharedCompilation=false -m:1`
+- EPIC-014J concluida com hardening do runtime de object storage para staging
+- causa raiz do upload de fotos em staging registrada: Cloudflare R2/S3-compatible nao estava completamente configurado no Render e a API dependia de `DoesS3BucketExistV2Async` antes do upload
+- provider alvo confirmado: Cloudflare R2 via API S3-compatible; AWS S3 nativo nao e o alvo documentado de staging
+- API agora nao executa `EnsureBucketExistsAsync` quando `ObjectStorage__AutoCreateBucket=false`, evitando dependencia de check/criacao de bucket em runtime para staging/producao
+- logs `[OBJECT-STORAGE]` passam a classificar falhas de upload como conexao, credencial/permissao, bucket inexistente ou erro S3-compatible, sem expor secrets
+- contrato Render/R2 atualizado com env vars obrigatorias em `docs/ops/runtime-environment-contract.md` e incidente registrado em `docs/ops/staging-provisioning-execution.md`
+- retomada da EPIC-014I em 2026-04-21 tentou preparar a menor fatia reversivel de storage R2, mas parou antes de alterar staging porque nao havia `render`, `vercel` ou `wrangler` CLI, nem tokens/env vars operacionais locais para Render/Cloudflare/Vercel
+- nenhum redeploy, smoke de upload, migration, alteracao de schema ou secret real foi executado/registrado na retomada de 2026-04-21
+- Etapa 3 da retomada de storage R2 foi registrada como OK pelo operador: API staging redeployada com novas env vars de object storage, ambiente `Staging` confirmado, servico live no Render e sem falha fatal de startup relacionada ao storage
+- validacao anterior da EPIC-014I apontava `/health` e smoke autenticado de upload de imagem em staging
+- upload autenticado de imagem em staging chegou ate a camada de storage, mas falhou no R2 com `STREAMING-AWS4-HMAC-SHA256-PAYLOAD-TRAILER not implemented`
+- causa tecnica registrada: o AWS SDK for .NET estava usando checksum de request em modo default `WHEN_SUPPORTED`, que pode emitir payload streaming com trailer para `PutObject`; Cloudflare R2 rejeitou esse modo
+- correcao aplicada no cliente S3: `RequestChecksumCalculation=WHEN_REQUIRED`, preservando endpoint, dominio, auth, banco e schema
+- build backend e testes unitarios passaram localmente apos a correcao R2: `dotnet build apps/api/EcoPickup.Backend.sln --no-restore -p:UseSharedCompilation=false -m:1` e `dotnet test apps/api/tests/EcoPickup.UnitTests/EcoPickup.UnitTests.csproj --no-restore -p:UseSharedCompilation=false -m:1`
+- apos deploy da primeira correcao, upload autenticado continuou falhando no R2 com `STREAMING-AWS4-HMAC-SHA256-PAYLOAD not implemented`
+- proxima correcao aplicada no `PutObjectRequest`: `UseChunkEncoding=false` e `DisablePayloadSigning=true`; `DisableDefaultChecksumValidation` nao foi alterado; `ContentLength` foi considerado, mas nao existe diretamente em `PutObjectRequest` na versao congelada do AWSSDK.S3
+- decisao de escopo aprovada em 2026-04-21: upload de imagem sai do MVP publicavel atual para destravar deploy e apresentacao de portfolio
+- upload de imagem nao foi descartado; a feature fica adiada para fase futura pos-deploy/refinamento
+- EPIC-014K registrada como ajuste documental de escopo; upload/R2 deixa de ser gate critico da EPIC-014I
 
 ## Objetivo atual
-Desbloquear a EPIC-014I - Staging Provisioning Execution com acesso autenticado/aprovado as plataformas de staging e decisoes finais de contas, billing, region, planos e ambientes.
+Concluir o deploy MVP e preparar a apresentacao publicavel do projeto sem depender do upload de imagem/R2, mantendo a feature registrada para retomada futura pos-deploy/refinamento.
 
 ## O que ja existe
 - ideia do produto
@@ -149,10 +165,14 @@ Desbloquear a EPIC-014I - Staging Provisioning Execution com acesso autenticado/
 ## O que falta antes de executar staging real
 - fechar o checklist minimo consolidado em `docs/ops/staging-provisioning-execution.md`
 - disponibilizar meio autenticado/aprovado para operar Render, Vercel e Cloudflare nesta execucao
+- confirmar que API staging segue live e `/health` responde `Healthy`
+- confirmar login e fluxo principal sem upload de imagem
+- confirmar o estado de migrations antes de qualquer validacao funcional que dependa de dados persistidos
+- confirmar front/Vercel apontando para a API de staging ou registrar bloqueio especifico
 - reexecutar EPIC-014I - Staging Provisioning Execution somente depois dos acessos e decisoes acima
 
 ## Proximo passo recomendado
-Proximo passo recomendado: redeployar a API staging com a correcao de `PutObjectRequest` e repetir o smoke autenticado de upload de imagem, registrando evidencia nao sensivel antes de considerar a fatia de storage concluida.
+Proximo passo recomendado: redeployar/confirmar a API staging no commit atual, validar `/health`, login e fluxo principal sem upload de imagem, depois avancar para front/Vercel e README de portfolio.
 
 ## Riscos atuais
 - comecar implementacao cedo demais
@@ -164,5 +184,3 @@ Proximo passo recomendado: redeployar a API staging com a correcao de `PutObject
 
 ## Regra operacional
 Cada nova feature deve entrar por fatias controladas, com docs, backlog e validacoes atualizados no mesmo slice.
-
-
