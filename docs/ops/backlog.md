@@ -1765,10 +1765,10 @@ Preparar o checklist final de provisionamento de Render, Vercel, Render Postgres
 - nenhum recurso externo provisionado, nenhum secret real criado e nenhum deploy executado
 
 #### EPIC-014I - Staging Provisioning Execution
-**Status:** IN_PROGRESS
+**Status:** DONE
 
 ##### Nota operacional - decisao de escopo em 2026-04-21
-O upload de imagem/R2 deixou de ser bloqueio do MVP publicavel atual. A EPIC-014I segue em andamento para concluir deploy e apresentacao sem depender de smoke autenticado de upload. A funcionalidade de imagem nao foi descartada e deve ser retomada em fase futura pos-deploy/refinamento.
+O upload de imagem/R2 deixou de ser bloqueio do MVP publicavel atual. A EPIC-014I foi fechada com deploy e smoke do MVP sem upload de imagem. A funcionalidade de imagem nao foi descartada e deve ser retomada em fase futura pos-deploy/refinamento.
 
 ##### Objetivo
 Criar os recursos reais de staging na ordem aprovada, registrando evidencias e parando antes de deploy funcional se qualquer pre-condicao falhar.
@@ -1810,6 +1810,10 @@ Criar os recursos reais de staging na ordem aprovada, registrando evidencias e p
 - nenhum recurso externo foi provisionado
 - nenhum secret real foi criado, lido, registrado ou versionado
 - staging nao ficou pronto para migration/deploy
+- retomada posterior registrou API staging no Render, front publicado na Vercel e smoke do MVP sem upload de imagem
+- smoke confirmado: `/health`, register, login, create pickup request, list, detail e history
+- upload de imagem/R2 retirado do gate atual por decisao documentada em `EPIC-014K`
+- proxima etapa operacional passa a ser README/GitHub/portfolio, sem reabrir upload como bloqueio
 
 #### EPIC-014J - Staging Object Storage Runtime Hardening
 **Status:** DONE

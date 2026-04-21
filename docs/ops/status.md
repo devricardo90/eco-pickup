@@ -145,9 +145,12 @@ Deploy
 - decisao de escopo aprovada em 2026-04-21: upload de imagem sai do MVP publicavel atual para destravar deploy e apresentacao de portfolio
 - upload de imagem nao foi descartado; a feature fica adiada para fase futura pos-deploy/refinamento
 - EPIC-014K registrada como ajuste documental de escopo; upload/R2 deixa de ser gate critico da EPIC-014I
+- API staging passou no smoke do MVP sem upload de imagem: `/health`, register, login, create pickup request, list, detail e history
+- front publicado na Vercel e validado com login, dashboard e listagem funcionando
+- EPIC-014I fechada como `DONE` no recorte do MVP publicavel atual, sem upload/R2 como gate
 
 ## Objetivo atual
-Concluir o deploy MVP e preparar a apresentacao publicavel do projeto sem depender do upload de imagem/R2, mantendo a feature registrada para retomada futura pos-deploy/refinamento.
+Preparar README/GitHub e apresentacao de portfolio sobre o MVP publicavel validado, sem depender do upload de imagem/R2.
 
 ## O que ja existe
 - ideia do produto
@@ -162,17 +165,14 @@ Concluir o deploy MVP e preparar a apresentacao publicavel do projeto sem depend
 - api standards iniciais registrados
 - decisao da foundation do monorepo registrada
 
-## O que falta antes de executar staging real
-- fechar o checklist minimo consolidado em `docs/ops/staging-provisioning-execution.md`
-- disponibilizar meio autenticado/aprovado para operar Render, Vercel e Cloudflare nesta execucao
-- confirmar que API staging segue live e `/health` responde `Healthy`
-- confirmar login e fluxo principal sem upload de imagem
-- confirmar o estado de migrations antes de qualquer validacao funcional que dependa de dados persistidos
-- confirmar front/Vercel apontando para a API de staging ou registrar bloqueio especifico
-- reexecutar EPIC-014I - Staging Provisioning Execution somente depois dos acessos e decisoes acima
+## O que falta antes da apresentacao publica
+- atualizar README raiz com escopo real do MVP, stack, links publicos e limites conhecidos
+- revisar descricao curta do repositorio no GitHub
+- registrar upload de imagem/R2 como melhoria futura, nao como feature do MVP publicado
+- incluir links publicos confirmados da Vercel e da API/health
 
 ## Proximo passo recomendado
-Proximo passo recomendado: redeployar/confirmar a API staging no commit atual, validar `/health`, login e fluxo principal sem upload de imagem, depois avancar para front/Vercel e README de portfolio.
+Proximo passo recomendado: atualizar o README principal para GitHub/portfolio usando apenas evidencias confirmadas do deploy e do smoke do MVP sem upload de imagem.
 
 ## Riscos atuais
 - comecar implementacao cedo demais

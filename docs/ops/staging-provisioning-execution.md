@@ -437,15 +437,44 @@ Gates tecnicos nao foram executados porque nao houve mudanca de codigo, Docker, 
 
 ## Resultado
 
-EPIC-014I nao pode ser marcada como `DONE`.
+EPIC-014I pode ser marcada como `DONE` no recorte do MVP publicavel atual.
 
-Status operacional recomendado: `IN_PROGRESS`.
+Status operacional recomendado: `DONE`.
 
-Motivo: a decisao de escopo remove upload/R2 do gate critico do MVP publicavel, mas ainda faltam evidencias finais de deploy sem upload, incluindo API staging, `/health`, login, migrations quando aplicavel, front/Vercel e fluxo principal.
+Motivo: a decisao de escopo removeu upload/R2 do gate critico do MVP publicavel, e o smoke sem upload foi validado com API staging e front publicado.
+
+## Atualizacao operacional - smoke MVP sem upload validado
+
+Data: 2026-04-21
+
+Evidencias confirmadas pelo operador:
+
+- API staging validada sem upload de imagem.
+- `/health` validado.
+- register validado.
+- login validado.
+- create pickup request validado.
+- list validado.
+- detail validado.
+- history validado.
+- front publicado na Vercel.
+- login no front validado.
+- dashboard/listagem no front validado.
+
+Escopo preservado:
+
+- upload de imagem/R2 permanece fora do MVP publicavel atual.
+- a feature nao foi descartada e continua registrada para fase futura pos-deploy/refinamento.
+- nenhuma nova migration, schema change, auth change ou alteracao de dominio foi aberta por esta decisao.
+
+Conclusao operacional:
+
+- EPIC-014I fechada como `DONE` para o recorte atual de deploy MVP.
+- o projeto esta pronto para a fatia de README/GitHub/portfolio.
 
 ## Proximo passo recomendado
 
-Seguir com deploy MVP sem upload de imagem: confirmar API staging no commit atual, validar `/health` e login, confirmar migrations antes de fluxos persistidos, conectar front/Vercel a API staging e preparar README/portfolio.
+Atualizar o README principal com descricao de portfolio, stack, fluxos validados, links publicos e limites do MVP atual.
 
 ## Boundary
 
