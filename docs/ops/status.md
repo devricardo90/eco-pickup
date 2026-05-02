@@ -1,10 +1,10 @@
 # EcoPickup - Status Executivo
 
 ## Estado atual
-Projeto com MVP owner/admin consolidado, pausa de novas frentes funcionais encerrada formalmente e EPIC-014 aberta como proxima frente operacional.
+EPIC-017A em execucao para transformar a landing page em uma vitrine funcional de produto.
 
 ## Fase atual da esteira
-Deploy
+Product Showcase / UI Refinement
 
 ## Situacao resumida
 - repositorio criado
@@ -154,7 +154,7 @@ Deploy
 - API e frontend responderam HTTP 200 em 2026-05-02: API com cold start de ~15.6s e warm de ~0.18s, frontend com titulo e links de navegacao corretos
 
 ## Objetivo atual
-Manter o staging operacional documentado e validado apos o MVP publicavel. Proxima frente e retomada do upload de imagem/R2 (EPIC-009 continuacao) ou abertura de nova frente operacional.
+Transformar a pagina publica em uma vitrine funcional minima para melhor percepcao de valor do produto.
 
 ## O que ja existe
 - ideia do produto
@@ -170,12 +170,13 @@ Manter o staging operacional documentado e validado apos o MVP publicavel. Proxi
 - decisao da foundation do monorepo registrada
 
 ## O que falta antes da proxima frente
+- concluir EPIC-017A (UI Refinement)
 - validar smoke de upload de imagem/R2 (EPIC-009 continuacao, requer sessao dedicada com acesso Render/R2)
 - redeploy do staging com os ajustes de hardening da EPIC-014J (commit `55ce82a`)
 - revisao de descricao curta do repositorio no GitHub
 
 ## Proximo passo recomendado
-Proximo passo recomendado: validar upload de imagem/R2 em staging ou abrir nova frente operacional conforme backlog.
+Concluir a transformacao da landing page para linguagem de produto (EPIC-017A).
 
 ## Riscos atuais
 - comecar implementacao cedo demais

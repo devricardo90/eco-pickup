@@ -1980,6 +1980,51 @@ Registrar um snapshot do estado operacional do staging (API Render e frontend Ve
 
 ---
 
+# EPIC-017 - Public Functional Demo Surface
+**Status:** IN_PROGRESS
+
+## Objetivo
+Transformar a pagina publica do EcoPickup em uma vitrine funcional minima, com linguagem de produto e CTAs reais.
+
+## Escopo
+- atualizar texto da landing page para linguagem de produto
+- remover linguagem de "bootstrap tecnico / mock"
+- criar/ajustar secao "Como funciona"
+- adicionar CTAs reais para login, cadastro e criacao de solicitacao
+- ajustar cards para mostrar valor do produto (coleta, avaliacao, acompanhamento)
+
+## Criterios de aceite
+- home publica comunica EcoPickup como produto funcional simples
+- usuario externo entende o fluxo principal em ate 2 minutos
+- CTAs principais apontam para rotas reais
+- linguagem de "mock/bootstrap" removida da interface publica
+
+## Dependencias
+- EPIC-013G
+- EPIC-014I
+
+### Fatias de execucao
+
+#### EPIC-017A - Public Functional Demo Surface
+**Status:** IN_PROGRESS
+
+##### Objetivo
+Executar a transformacao da landing page de bootstrap tecnico para vitrine de produto.
+
+##### Escopo
+- Identificar rotas reais e componentes
+- Atualizar copy da home
+- Implementar secao "Como funciona"
+- Conectar CTAs
+
+##### Criterios de aceite
+- Rotas validadas
+- Texto atualizado
+- CTAs funcionais
+- Build e lint passando
+
+---
+
 # Ordem de execucao recomendada
 
 1. EPIC-000 - Governanca e Foundation Documental
