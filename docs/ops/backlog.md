@@ -2054,22 +2054,27 @@ Validar se a jornada pública publicada sustenta uma demo guiada de portfolio em
 ### Fatias de execucao
 
 #### EPIC-017A - Public Functional Demo Surface
-**Status:** IN_PROGRESS
+**Status:** DONE
 
 ##### Objetivo
 Executar a transformacao da landing page de bootstrap tecnico para vitrine de produto.
 
+#### EPIC-018B - Prepare Portfolio Demo Script and Screenshots
+**Status:** DONE (Script & Checklist)
+
+##### Objetivo
+Criar o roteiro oficial de demo de portfolio e registrar o checklist de screenshots da jornada pública validada.
+
 ##### Escopo
-- Identificar rotas reais e componentes
-- Atualizar copy da home
-- Implementar secao "Como funciona"
-- Conectar CTAs
+- Criar `docs/ops/demo-script.md`.
+- Registrar checklist de 5-7 screenshots principais.
+- Documentar limitações (Photo upload como roadmap).
+- Validar jornada ponta a ponta (~2 min).
 
 ##### Criterios de aceite
-- Rotas validadas
-- Texto atualizado
-- CTAs funcionais
-- Build e lint passando
+- Roteiro de demo completo e profissional.
+- Checklist de evidências visuais registrado.
+- Nenhuma alteração de código/app.
 
 ---
 

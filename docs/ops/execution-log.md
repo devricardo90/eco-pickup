@@ -91,3 +91,19 @@
 
 ### Proximos Passos
 - Preparar script de demo e screenshots (EPIC-018B).
+
+## Sessao: 2026-05-02 (Parte 5)
+**Status:** DONE (EPIC-018B - Demo Script & Checklist)
+
+### Atividades
+- Criacao do documento `docs/ops/demo-script.md`.
+- Definicao de roteiro profissional (~2 min) e dados de demo verossimeis.
+- Registro de checklist de 6 screenshots principais da jornada MVP.
+- Documentacao honesta de limitacoes (R2/Photos como Roadmap).
+
+### Evidencias de Validacao
+- Arquivo `docs/ops/demo-script.md` criado e auditado.
+- Checklist de 6 screenshots principais registrado; arquivos `.png` físicos ainda não foram capturados nesta EPIC.
+- Roteiro alinhado à jornada validada na EPIC-018A.
+- Nenhuma nova execução de smoke/browser foi realizada nesta task.
+- Nenhuma alteração de código, produto, backend, infraestrutura, env, DB, migration, seed, deploy ou storage foi realizada.
