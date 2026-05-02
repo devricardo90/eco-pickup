@@ -98,7 +98,30 @@ Tipos usados na matriz:
 | `ObjectStorage:SecretKey` | `ObjectStorage__SecretKey` | required, secret, local-only | required, secret | required, secret | Storage | Credencial do storage provider. |
 | `ObjectStorage:Region` | `ObjectStorage__Region` | required | required, derived | required, derived | Storage | Local usa `us-east-1`. Para R2, confirmar valor esperado na slice de deploy target. |
 | `ObjectStorage:ForcePathStyle` | `ObjectStorage__ForcePathStyle` | required, local-only | required | required | Storage | Local MinIO normalmente usa `true`. Provider real precisa confirmacao. |
-| `ObjectStorage:AutoCreateBucket` | `ObjectStorage__AutoCreateBucket` | optional, local-only | required | required | Storage | Deve ser `false` em staging/producao salvo decisao formal contraria. |
+| `ObjectStorage:AutoCreateBucket` | `ObjectStorage__AutoCreateBucket` | optional, local-only | required | required | Storage | Deve ser `false` em staging/producao salvo decisao formal contraria. Quando `false`, a API nao executa pre-check/criacao de bucket em runtime e tenta o upload direto. |
+
+### Cloudflare R2 on Render
+
+Provider alvo para staging: Cloudflare R2 via API S3-compatible.
+
+Configuracao esperada no Render Web Service ou Environment Group da API:
+
+```txt
+ObjectStorage__ServiceUrl=https://<CLOUDFLARE_ACCOUNT_ID>.r2.cloudflarestorage.com
+ObjectStorage__BucketName=ecopickup-media-stg
+ObjectStorage__AccessKey=<R2_ACCESS_KEY_ID>
+ObjectStorage__SecretKey=<R2_SECRET_ACCESS_KEY>
+ObjectStorage__Region=auto
+ObjectStorage__ForcePathStyle=true
+ObjectStorage__AutoCreateBucket=false
+```
+
+Regras operacionais:
+
+- `ObjectStorage__AccessKey` e `ObjectStorage__SecretKey` sao secrets reais e devem existir apenas no Render/Cloudflare.
+- o bucket precisa existir antes do deploy/smoke; staging nao deve depender de criacao automatica em runtime.
+- o token R2 deve ter escopo minimo para escrita/leitura/delecao no bucket de staging usado pela API.
+- falhas de upload devem ser diagnosticadas pelos logs `[OBJECT-STORAGE]`, que classificam `bucket_missing`, `credential_or_permission_error`, `connection_error` ou `s3_service_error`.
 
 ## API - Payment
 
