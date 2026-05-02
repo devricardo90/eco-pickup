@@ -1,170 +1,216 @@
 # EcoPickup
 
-EcoPickup is a digital platform for scheduling bulky household item pickups in Sweden.
+Digital platform for scheduling bulky household item pickups in Sweden.
 
-It structures a process that is often handled through fragmented channels into a clearer digital workflow for owners and operators.
-
----
-
-## Live MVP
-
-### Web
-[EcoPickup Web](https://eco-pickup-web.vercel.app)
-
-### API Health
-[API /health](https://ecopickup-api-stg.onrender.com/health)
+Owners submit pickup requests, attach item details, and track the full lifecycle — from review and pricing through payment, scheduling, and execution. Admins manage the operational side: reviewing requests, setting prices, scheduling pickups, and driving requests through every status transition.
 
 ---
 
-## Current MVP State
+## Live / Staging
 
-The current public MVP already delivers:
+| Surface | URL |
+|---|---|
+| API (`/health`) | `https://ecopickup-api-stg.onrender.com/health` |
+| Frontend | `https://eco-pickup-web.vercel.app` |
 
-- authenticated web flow
-- user registration and login
-- pickup request creation
-- draft editing before submission
-- explicit request submission flow
-- pickup request list and detail views
-- request history and timeline visibility
-- deployed frontend on Vercel
-- deployed API on Render
-- staging validation of the main flow
+> Both endpoints were live and validated on 2026-04-21. Current availability depends on platform uptime.
 
-### Validated flow
-The following flow has been manually validated in staging:
+---
 
-- `/health`
-- register
-- login
-- create pickup request
-- list pickup requests
-- view pickup request detail
-- view pickup request history
-- front-end login and dashboard flow
+## Validated MVP — Smoke Test (2026-04-21)
+
+The following flows were validated end-to-end on staging:
+
+- `GET /health` → `200 Healthy`
+- Owner registration and login
+- Authenticated pickup request creation
+- Request list and detail
+- Status history / tracking timeline
+- Frontend login, dashboard, and request listing via Vercel deploy
+
+> Image upload (Cloudflare R2) was excluded from the current MVP gate. See [Deferred: Image Upload](#deferred-image-upload) below.
 
 ---
 
 ## Product Goal
 
-EcoPickup turns a real logistics and disposal problem into a structured workflow with:
+Turn the real disposal and logistics problem in Sweden into a structured digital workflow:
 
-- request intake
-- item registration
-- owner visibility over request progress
-- operator/admin review foundations
-- tracking and lifecycle visibility
+1. Owner submits a request with item details and a preferred pickup window
+2. Admin reviews, prices, and schedules the pickup
+3. Owner pays and tracks progress through execution and completion
 
 ---
 
-## Scope of the Current Public MVP
-
-The current public MVP is focused on the core request lifecycle.
-
-### Included
-- authenticated access
-- pickup request creation and submission
-- request listing and detail
-- request history/timeline
-- deployed web + API flow
-
-### Not part of the current published MVP
-- image upload in the live deployed flow
-- Cloudflare R2 integration in production/staging flow
-- advanced admin execution controls
-- real-time notifications
-- broader observability and production hardening
-
----
-
-## Roadmap / Next Iterations
-
-Planned future improvements include:
-
-- image upload for pickup items
-- object storage integration refinement
-- richer admin execution controls
-- stronger observability and operational tooling
-- payment and logistics workflow expansion
-
----
-
-## Tech Stack
+## Stack
 
 ### Backend
-- ASP.NET Core (.NET 8)
-- Entity Framework Core
-- PostgreSQL
-- JWT authentication
+- ASP.NET Core (.NET 8) — layered architecture (Api / Application / Domain / Infrastructure)
+- Entity Framework Core + PostgreSQL 16
+- JWT authentication with role-based access (`USER` / `ADMIN`)
 - FluentValidation
-- Swagger / OpenAPI
+- Swagger / Scalar / OpenAPI
+- Dockerized for Render Web Service
 
 ### Frontend
-- Next.js
+- Next.js (App Router)
 - TypeScript
 - Tailwind CSS
+- HTTP-only cookie session
 
-### Infrastructure
-- Render
-- Vercel
-- PostgreSQL
-- Docker for local development
+### Infrastructure (Staging)
+- **API**: Render Web Service (Docker-based)
+- **Database**: Render Postgres (same region)
+- **Frontend**: Vercel
+- **Storage**: Cloudflare R2 (S3-compatible) — configured, smoke deferred (see below)
+- **Secrets**: Render Environment Groups + Vercel Environment Variables
 
 ---
 
 ## Architecture
 
-This repository follows a monorepo structure:
-
-```txt
+```
 apps/
-  api/
-  web/
+  api/           # ASP.NET Core backend (layered: Api, Application, Domain, Infrastructure)
+  web/           # Next.js frontend
 
 packages/
-  contracts/
-  ui/
+  contracts/     # Shared type contracts
+  ui/            # Shared UI components
 
 docs/
-  product/
-  architecture/
-  rules/
-  ops/
+  ops/           # Operational docs: backlog, status, runbooks, deploy decisions
+  product/       # Product docs and item photo reference
+  assets/        # Visual reference assets
+```
 
-Delivery Discipline
+**Request lifecycle state machine:**
 
-This project follows Protocolo Rick, a structured execution model focused on controlled delivery.
+```
+draft → submitted → under_review → quoted → awaiting_payment
+      → paid → scheduled → in_transit → collected → completed
+      → cancelled / rejected
+```
 
-Core principles:
+Status history is persisted for every transition, with actor and optional note.
 
-no implementation starts without minimum discovery and planning artifacts
-backlog is the source of truth
-documentation evolves with the code
-no task is done without validation evidence
+---
 
-Execution phases:
+## Key Features
 
-Discovery
-Planning
-Development
-Testing
-Deploy
-Operational Source of Truth
+### Owner
+- Authenticated registration and login (HTTP-only cookie session)
+- Create and edit pickup requests in `draft` with multi-item support
+- Explicit submission (`draft → submitted`) — separate from save
+- Read-only access after submission enters operational flow
+- Quote visibility when request is `quoted` or `awaiting_payment`
+- Payment session initiation when `awaiting_payment`
+- Full tracking timeline across all lifecycle statuses
+- Clear messaging for execution states: `in_transit`, `collected`, `completed`
+- Clear terminal messaging for `cancelled` and `rejected`
 
-Primary operational documents:
+### Admin
+- Authenticated dashboard with role guard (`ADMIN`)
+- Request listing and detail view (address, items, photos metadata, status)
+- Review: approve or reject with optional note (`submitted → under_review`)
+- Pricing: persist breakdown and transition to `quoted` or `awaiting_payment`
+- Scheduling: confirm pickup window, transition to `scheduled`
+- Full tracking timeline access
 
-docs/ops/backlog.md — canonical backlog
-docs/ops/status.md — executive status summary
-Current Project Position
+### Backend
+- Secure password hashing
+- JWT issuance with role claims
+- Ownership enforcement on all owner endpoints
+- Payment session creation and webhook-based confirmation (`awaiting_payment → paid`)
+- Status history with actor and timestamp on every transition
+- Structured startup validation — rejects missing `ConnectionStrings__Database` outside Development
+- Structured upload error classification (`[OBJECT-STORAGE]` logs by failure category)
 
-The project is no longer only in foundation mode.
+---
 
-It now has:
+## Deferred: Image Upload
 
-a validated staging API
-a published frontend
-a working end-to-end MVP flow for the current scope
-documented scope control for what is intentionally deferred
-Notes
+The item photo upload feature (Cloudflare R2 / S3-compatible) was built and is present in the codebase but was **excluded from the current publishable MVP** to unblock the staging deploy and portfolio presentation.
 
-Image upload and Cloudflare R2 integration were intentionally removed from the current MVP gate to keep the deployment focused and publishable. They remain planned as a future refinement phase, not as discarded functionality.
+**What exists:**
+- `ItemPhoto` model, upload endpoint, ownership validation, type/size limits (max 5 photos per item)
+- S3-compatible storage client configured for Cloudflare R2
+- Two R2 compatibility fixes already applied (`RequestChecksumCalculation=WHEN_REQUIRED`, `UseChunkEncoding=false`, `DisablePayloadSigning=true`)
+
+**Why deferred:**
+- Cloudflare R2 rejected streaming SigV4 payload modes (`STREAMING-AWS4-HMAC-SHA256-PAYLOAD-TRAILER` and `STREAMING-AWS4-HMAC-SHA256-PAYLOAD`). Fixes were applied but the final smoke was superseded by the scope decision.
+- Decision documented in `EPIC-014K`.
+
+**Next step:** Validate upload smoke with a dedicated R2 session after MVP presentation.
+
+---
+
+## Running Locally
+
+A full local runbook is available at [`docs/ops/local-full-stack-runbook.md`](docs/ops/local-full-stack-runbook.md).
+
+**Requirements:** Docker, .NET 8 SDK, Node.js, pnpm
+
+**Quick start:**
+
+```bash
+# Start Postgres and MinIO (local storage)
+docker compose up -d
+
+# Run API
+cd apps/api
+dotnet run --project src/EcoPickup.Api
+
+# Run web (separate terminal)
+cd apps/web
+pnpm install
+pnpm dev
+```
+
+**Validate:**
+- API health: `GET http://localhost:5082/health` → `200 Healthy`
+- Web: `http://127.0.0.1:3001`
+
+> Known local gaps: Docker/dotnet may require elevated permissions on Windows; use `pnpm.cmd` on Windows; port `3000` may conflict — use `3001` as fallback.
+
+---
+
+## Project Status
+
+| Milestone | Status |
+|---|---|
+| Monorepo foundation | Done |
+| Backend foundation (layered API, auth, persistence) | Done |
+| Frontend foundation (Next.js, TypeScript, Tailwind) | Done |
+| Owner full lifecycle (create → submit → track → pay → complete) | Done |
+| Admin review, pricing, scheduling | Done |
+| Payment foundation (session + webhook confirmation) | Done |
+| Tracking timeline (owner + admin) | Done |
+| Staging deploy (Render + Vercel) | Done |
+| Smoke test (health, auth, requests, tracking) | Done |
+| Image upload (Cloudflare R2) | Deferred — post-MVP |
+
+---
+
+## Next Steps (Post-MVP)
+
+- Validate image upload smoke with Cloudflare R2 (fixes already in place)
+- Full admin execution controls (`in_transit`, `collected`, `completed` mutations)
+- Notifications / real-time status updates
+- Custom domains for staging and production
+- CI/CD pipeline
+- Observability: structured logging drain, error tracking (Sentry or equivalent)
+
+---
+
+## Delivery Discipline — Protocolo Rick
+
+This project follows the **Protocolo Rick** execution model:
+
+- No implementation starts without minimum discovery and planning artifacts
+- Backlog (`docs/ops/backlog.md`) is the single source of truth
+- Documentation evolves together with the code — no task is closed without validation artifacts
+- Each feature is delivered in controlled slices with explicit acceptance criteria
+- Deploy decisions, scope changes, and deferred items are documented before execution
+
+> Source of truth: [`docs/ops/backlog.md`](docs/ops/backlog.md) — [`docs/ops/status.md`](docs/ops/status.md)
