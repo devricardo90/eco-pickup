@@ -148,9 +148,13 @@ Deploy
 - API staging passou no smoke do MVP sem upload de imagem: `/health`, register, login, create pickup request, list, detail e history
 - front publicado na Vercel e validado com login, dashboard e listagem funcionando
 - EPIC-014I fechada como `DONE` no recorte do MVP publicavel atual, sem upload/R2 como gate
+- EPIC-015 concluida com README raiz atualizado como peca de portfolio/showcase
+- README reflete stack real, smoke validado em 2026-04-21, lifecycle state machine, features owner/admin/backend, upload/R2 como deferred e links publicos confirmados
+- EPIC-016A concluida com snapshot de runtime do staging registrado
+- API e frontend responderam HTTP 200 em 2026-05-02: API com cold start de ~15.6s e warm de ~0.18s, frontend com titulo e links de navegacao corretos
 
 ## Objetivo atual
-Preparar README/GitHub e apresentacao de portfolio sobre o MVP publicavel validado, sem depender do upload de imagem/R2.
+Manter o staging operacional documentado e validado apos o MVP publicavel. Proxima frente e retomada do upload de imagem/R2 (EPIC-009 continuacao) ou abertura de nova frente operacional.
 
 ## O que ja existe
 - ideia do produto
@@ -165,14 +169,13 @@ Preparar README/GitHub e apresentacao de portfolio sobre o MVP publicavel valida
 - api standards iniciais registrados
 - decisao da foundation do monorepo registrada
 
-## O que falta antes da apresentacao publica
-- atualizar README raiz com escopo real do MVP, stack, links publicos e limites conhecidos
-- revisar descricao curta do repositorio no GitHub
-- registrar upload de imagem/R2 como melhoria futura, nao como feature do MVP publicado
-- incluir links publicos confirmados da Vercel e da API/health
+## O que falta antes da proxima frente
+- validar smoke de upload de imagem/R2 (EPIC-009 continuacao, requer sessao dedicada com acesso Render/R2)
+- redeploy do staging com os ajustes de hardening da EPIC-014J (commit `55ce82a`)
+- revisao de descricao curta do repositorio no GitHub
 
 ## Proximo passo recomendado
-Proximo passo recomendado: atualizar o README principal para GitHub/portfolio usando apenas evidencias confirmadas do deploy e do smoke do MVP sem upload de imagem.
+Proximo passo recomendado: validar upload de imagem/R2 em staging ou abrir nova frente operacional conforme backlog.
 
 ## Riscos atuais
 - comecar implementacao cedo demais

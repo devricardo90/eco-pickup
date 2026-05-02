@@ -1890,6 +1890,96 @@ Registrar a decisao operacional de retirar upload de imagem do MVP publicavel at
 
 ---
 
+# EPIC-015 - README e Portfolio
+**Status:** DONE
+
+## Objetivo
+Atualizar o README raiz como peca de portfolio/showcase honesta e profissional sobre o MVP publicavel validado.
+
+## Escopo
+- substituir README de planejamento por README de portfolio
+- refletir stack real, lifecycle state machine, features owner/admin/backend
+- incluir links publicos confirmados
+- registrar upload/R2 como deferred com transparencia
+
+## Criterios de aceite
+- README atualizado e publicado
+- links de staging confirmados
+- escopo real do MVP documentado sem exagero
+- upload/R2 explicitamente deferred
+
+## Dependencias
+- EPIC-014I
+- EPIC-014K
+
+### Fatias de execucao
+
+#### EPIC-015A - README Portfolio Update
+**Status:** DONE
+
+##### Objetivo
+Substituir o README de planejamento por um README de portfolio que reflita o MVP publicavel validado em 2026-04-21.
+
+##### Resultado
+- README raiz atualizado com stack, lifecycle, features owner/admin/backend, smoke test evidence
+- links publicos: `https://ecopickup-api-stg.onrender.com/health` e `https://eco-pickup-web.vercel.app`
+- upload/R2 registrado como deferred com historico tecnico preservado
+- commit publicado em `main` via worktree merge apos resolucao de divergencia com remote
+
+---
+
+# EPIC-016 - Staging Validation e Observabilidade
+**Status:** IN_PROGRESS
+
+## Objetivo
+Validar e documentar o estado operacional do staging apos o MVP publicavel, sem abrir novas frentes funcionais.
+
+## Escopo
+- snapshot de runtime do staging
+- validacao periodica de disponibilidade
+- observabilidade minima
+
+## Criterios de aceite
+- staging documentado como operacional
+- snapshot registrado com evidencias HTTP
+- proxima etapa de observabilidade definida
+
+## Dependencias
+- EPIC-014I
+- EPIC-015
+
+### Fatias de execucao
+
+#### EPIC-016A - Staging Runtime Snapshot
+**Status:** DONE
+
+##### Objetivo
+Registrar um snapshot do estado operacional do staging (API Render e frontend Vercel) para fechar a lacuna de 11 dias sem validacao documentada apos o smoke do MVP em 2026-04-21.
+
+##### Escopo
+- validar `GET /health` da API staging
+- validar landing page do frontend Vercel
+- registrar evidencias HTTP com timestamp, status, tempo de resposta e interpretacao
+- atualizar backlog e status operacional
+
+##### Criterios de aceite
+- snapshot registrado com evidencias HTTP objetivas
+- cold start documentado e interpretado corretamente
+- backlog e status atualizados
+- nenhum deploy, redeploy, migration ou alteracao de codigo executada
+
+##### Dependencias
+- EPIC-015
+
+##### Resultado
+- snapshot registrado em `docs/ops/staging-runtime-snapshot.md`
+- API: HTTP 200 em `2026-05-02T15:34:43Z`, cold start 15.65s, warm 0.18s, body `Healthy`
+- Frontend: HTTP 200 em `2026-05-02T15:35:20Z`, 1.52s, titulo `EcoPickup`, links corretos
+- repository base no momento do snapshot: commit `55f401f`
+- nenhum deploy, redeploy, migration ou alteracao de codigo executada
+
+---
+
 # Ordem de execucao recomendada
 
 1. EPIC-000 - Governanca e Foundation Documental
