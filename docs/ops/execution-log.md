@@ -57,3 +57,21 @@
 ### Proximos Passos
 - Corrigir copy de auth.
 - Seguir para demo de portfolio.
+
+## Sessao: 2026-05-02 (Parte 3)
+**Status:** DONE (EPIC-017C - English-First Showcase)
+
+### Atividades
+- Transicao da Landing Page para English-first.
+- Remocao de jargoes tecnicos de `/auth/login` e `/auth/register`.
+- Refinamento de copy no componente `SessionSummary`.
+- Validacao de CTAs e links apos alteracao de labels.
+
+### Evidencias de Validacao
+- Commit: 0c98fce
+- Mensagem: `feat(web): transition public showcase and auth to english-first`
+- Staging manual validation: PASS.
+- Sem alteracoes em backend, DB, env ou logic.
+
+### Proximos Passos
+- Manter o repositório sem nova READY task e decidir o próximo passo por Discussion Gate.

@@ -2021,6 +2021,18 @@ Validar a landing page em staging, garantindo disponibilidade, conectividade e c
 - Decisão: Public showcase deve ser English-first.
 - Recomendação: Tratar em tarefa futura EPIC-017C — Make Public Showcase English-First.
 
+#### EPIC-017C - Make Public Showcase English-First
+**Status:** DONE (Remote DONE + Staging PASS)
+
+##### Objetivo
+Transicionar a superfície pública (Landing, Auth, Nav) para Inglês e remover jargões técnicos.
+
+##### Evidência
+- Commit 0c98fce em origin/main.
+- Validação manual em staging: PASS.
+- Escopo: landing, public auth/login/register, e session-summary.
+- Nenhuma alteração de backend, database, env, migration, seed, auth logic, Zod schema ou React Hook Form binding. Alterações de frontend foram limitadas à copy/superfície pública autorizada.
+
 
 ## Dependencias
 - EPIC-013G

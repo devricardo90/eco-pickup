@@ -47,6 +47,16 @@
 A landing page está operacional e cumpre o papel de vitrine funcional. O problema crítico de API (503) não foi reproduzido, estando saudável no momento.
 
 ### Decisão Estratégica: English-First
-- **Impacto:** O estado atual (Portuguese-first) é aceitável para validação local e técnica, mas possui impacto negativo na percepção de valor para portfólio e recrutadores internacionais.
-- **Decisão:** O public showcase do EcoPickup deve ser transicionado para **English-first** para maximizar o alcance internacional.
-- **Recomendação:** Fechar EPIC-017B com achados. Tratar a correção da linguagem técnica e a transição de idioma na tarefa futura **EPIC-017C — Make Public Showcase English-First**.
+- **Impacto:** O estado anterior (Portuguese-first) era aceitável para validação local, mas possuía impacto negativo na percepção de valor internacional.
+- **Decisão:** O public showcase do EcoPickup foi transicionado para **English-first** na EPIC-017C.
+- **Recomendação:** EPIC-017C concluída com sucesso (Commit 0c98fce).
+
+## Validação Final EPIC-017C (2026-05-02)
+| Item | Status | Observações |
+|---|---|---|
+| Landing English-first | PASS | Todos os textos traduzidos e focados em valor. |
+| Auth English-first | PASS | Login e Register sem jargão técnico. |
+| CTAs Funcionais | PASS | "Get started" e "Sign in" operacionais em staging. |
+| Session Summary | PASS | Texto refinado para usuário final. |
+
+**Status Final:** Staging/Public validation PASS.
