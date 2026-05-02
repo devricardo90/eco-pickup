@@ -1999,6 +1999,29 @@ Transformar a pagina publica do EcoPickup em uma vitrine funcional minima, com l
 - CTAs principais apontam para rotas reais
 - linguagem de "mock/bootstrap" removida da interface publica
 
+### Fatias de execucao
+
+#### EPIC-017A - Public Landing UI Refinement
+**Status:** DONE
+
+##### Objetivo
+Refinar a landing page para remover linguagem técnica e focar em proposta de valor e CTAs reais.
+
+#### EPIC-017B - Staging Landing Validation
+**Status:** DONE (with findings)
+
+##### Objetivo
+Validar a landing page em staging, garantindo disponibilidade, conectividade e coerência visual/textual.
+
+##### Achados
+- API /health: 200 OK (Healthy).
+- Landing, login e register: 200 OK.
+- Achado MEDIUM: Linguagem técnica remanescente nas páginas de auth.
+- Achado MEDIUM: Landing pública Portuguese-first (impacto negativo em portfólio internacional).
+- Decisão: Public showcase deve ser English-first.
+- Recomendação: Tratar em tarefa futura EPIC-017C — Make Public Showcase English-First.
+
+
 ## Dependencias
 - EPIC-013G
 - EPIC-014I

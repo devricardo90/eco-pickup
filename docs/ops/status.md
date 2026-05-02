@@ -152,9 +152,15 @@ Product Showcase / UI Refinement
 - README reflete stack real, smoke validado em 2026-04-21, lifecycle state machine, features owner/admin/backend, upload/R2 como deferred e links publicos confirmados
 - EPIC-016A concluida com snapshot de runtime do staging registrado
 - API e frontend responderam HTTP 200 em 2026-05-02: API com cold start de ~15.6s e warm de ~0.18s, frontend com titulo e links de navegacao corretos
+- EPIC-017A concluida com Public Landing UI Refinement na web
+- EPIC-017B concluida com staging landing validation (com achados)
+- API /health revalidada como 200 OK em staging
+- Landing, login e register acessiveis com 200 OK em staging
+- Achado MEDIUM: linguagem tecnica remanescente nas paginas de auth (/auth/login e /auth/register)
+- Achado MEDIUM: landing publica Portuguese-first (impacto negativo em portfólio internacional)
 
 ## Objetivo atual
-Transformar a pagina publica em uma vitrine funcional minima para melhor percepcao de valor do produto.
+Consolidar a vitrine funcional e preparar para demo de portfolio.
 
 ## O que ja existe
 - ideia do produto
@@ -170,13 +176,14 @@ Transformar a pagina publica em uma vitrine funcional minima para melhor percepc
 - decisao da foundation do monorepo registrada
 
 ## O que falta antes da proxima frente
-- concluir EPIC-017A (UI Refinement)
+- transicao para English-first (EPIC-017C)
+- corrigir copy tecnica das paginas de auth
 - validar smoke de upload de imagem/R2 (EPIC-009 continuacao, requer sessao dedicada com acesso Render/R2)
 - redeploy do staging com os ajustes de hardening da EPIC-014J (commit `55ce82a`)
 - revisao de descricao curta do repositorio no GitHub
 
 ## Proximo passo recomendado
-Concluir a transformacao da landing page para linguagem de produto (EPIC-017A).
+Iniciar EPIC-017C para transicionar o public showcase para English-first.
 
 ## Riscos atuais
 - comecar implementacao cedo demais

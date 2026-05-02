@@ -35,3 +35,25 @@
 ### Proximos Passos
 - Aguardar autorizacao para commit.
 - Promover para REVIEW no backlog apos commit.
+
+## Sessao: 2026-05-02 (Parte 2)
+**Status:** DONE (EPIC-017B - Validation with Findings)
+
+### Atividades
+- Validacao tecnica de conectividade em staging.
+- Execucao de HEAD/GET requests para landing, auth e health.
+- Registro do arquivo de validacao `docs/ops/staging-landing-validation.md`.
+- Identificacao de achado MEDIUM em paginas de auth.
+
+### Evidencias de Validacao
+- `GET https://ecopickup-api-stg.onrender.com/health` -> 200 OK.
+- `HEAD https://eco-pickup-web.vercel.app` -> 200 OK.
+- `HEAD https://eco-pickup-web.vercel.app/auth/login` -> 200 OK.
+- `HEAD https://eco-pickup-web.vercel.app/auth/register` -> 200 OK.
+
+### Achados
+- Linguagem tecnica remanescente em `/auth/login` e `/auth/register`.
+
+### Proximos Passos
+- Corrigir copy de auth.
+- Seguir para demo de portfolio.
