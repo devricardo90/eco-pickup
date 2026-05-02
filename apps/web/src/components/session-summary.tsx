@@ -16,12 +16,11 @@ export function SessionSummary({ session }: SessionSummaryProps) {
           <p>
             Signed in as <span className="font-semibold text-slate-950">{session.user.email}</span>
           </p>
-          <p>Role: {session.user.role}</p>
-          <p>Session expires: {session.expiresAtUtc}</p>
+          <p className="text-xs text-slate-500 uppercase tracking-wider">Account type: {session.user.role}</p>
         </div>
       ) : (
         <p className="mt-4 text-sm leading-6 text-slate-700">
-          No active web session yet. Use the login surface to switch tracking from env tokens to a real authenticated context.
+          You are not signed in. Sign in to manage your requests and track collections.
         </p>
       )}
     </article>

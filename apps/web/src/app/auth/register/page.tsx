@@ -8,7 +8,7 @@ export default function RegisterPage() {
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
         <AuthForm
           action={registerAction}
-          description="Create a user through the existing backend auth flow. This slice stays focused on session foundation and does not open any new operational mutations."
+          description="Create your EcoPickup account to start requesting sustainable collections for your items today."
           submitLabel="Register"
           title="Create an EcoPickup account"
         />

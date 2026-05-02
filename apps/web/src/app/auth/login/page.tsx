@@ -14,7 +14,7 @@ export default async function LoginPage({
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
         <AuthForm
           action={loginAction}
-          description="Start a real web session backed by the existing EcoPickup auth endpoints. Tracking pages will use this authenticated context instead of env tokens."
+          description="Sign in to your account to manage your collection requests and track their progress in real-time."
           submitLabel="Sign in"
           title="Sign in to EcoPickup"
         />
