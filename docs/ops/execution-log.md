@@ -75,3 +75,19 @@
 
 ### Proximos Passos
 - Manter o repositório sem nova READY task e decidir o próximo passo por Discussion Gate.
+
+## Sessao: 2026-05-02 (Parte 4)
+**Status:** Discussion Gate DONE (EPIC-018A - Demo Readiness)
+
+### Atividades
+- Discussion Gate: decisão de prontidão da jornada baseada em análise técnica e validações anteriores.
+- Análise de tempo estimado da jornada landing -> register/login -> tracking.
+
+### Resultado da Validação
+- Decisão: **PASSA** (prontidão para demo guiada de portfolio).
+- Tempo total estimado: ~1m50s com API aquecida.
+- Ressalva operacional: Cold start da API no Render exige aquecimento prévio.
+- R2/Storage não é bloqueador para a jornada de demo atual.
+
+### Proximos Passos
+- Preparar script de demo e screenshots (EPIC-018B).

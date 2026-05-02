@@ -159,6 +159,7 @@ Product Showcase / UI Refinement
 - Landing, login e register acessiveis com 200 OK em staging
 - Achados de linguagem tecnica e idioma Portuguese-first da EPIC-017B mitigados/resolvidos na vitrine publica
 - Commit 0c98fce (`feat(web): transition public showcase and auth to english-first`) em origin/main
+- EPIC-018A concluida: PASSA (decisão de prontidão para demo baseada em análise técnica; tempo estimado ~1m50s com API aquecida)
 
 ## Objetivo atual
 Consolidar a vitrine funcional e preparar para demo de portfolio.
@@ -182,7 +183,7 @@ Consolidar a vitrine funcional e preparar para demo de portfolio.
 - revisao de descricao curta do repositorio no GitHub
 
 ## Proximo passo recomendado
-Executar uma Discussion Gate antes de abrir nova task, priorizando validação da jornada pública de demo ou retomada explícita do object storage.
+EPIC-018B — Prepare Portfolio Demo Script and Screenshots. Executar Discussion Gate antes de abrir a task como READY.
 
 ## Riscos atuais
 - comecar implementacao cedo demais

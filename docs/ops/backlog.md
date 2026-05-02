@@ -2033,6 +2033,19 @@ Transicionar a superfície pública (Landing, Auth, Nav) para Inglês e remover 
 - Escopo: landing, public auth/login/register, e session-summary.
 - Nenhuma alteração de backend, database, env, migration, seed, auth logic, Zod schema ou React Hook Form binding. Alterações de frontend foram limitadas à copy/superfície pública autorizada.
 
+#### EPIC-018A - Demo Readiness Validation
+**Status:** Discussion Gate DONE (PASSA)
+
+##### Objetivo
+Validar se a jornada pública publicada sustenta uma demo guiada de portfolio em até 2 minutos (decisão de prontidão baseada em análise técnica).
+
+##### Resultado
+- Decisão: **PASSA**.
+- Tempo estimado: ~1m50s com API aquecida.
+- Ponto crítico: Cold start da API no Render (recomendado aquecer via /health antes de demos).
+- R2/Object Storage: Permanece fora do caminho crítico/MVP.
+- Recomendação: Seguir para EPIC-018B (Portfolio Demo Script).
+
 
 ## Dependencias
 - EPIC-013G
