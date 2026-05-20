@@ -1,7 +1,7 @@
 # EcoPickup - Status Executivo
 
 ## Estado atual
-SPR-02 - Product Demo Readiness em execucao. EPIC-019A concluida como auditoria baseline com achado critico: API staging indisponivel no momento da validacao.
+SPR-02 - Product Demo Readiness em execucao. EPIC-019B concluida como diagnostico/documentacao: API staging esta saudavel em `/health` e raiz no diagnostico atual; bloqueio restante e conta demo segura + smoke autenticado controlado.
 
 ## Fase atual da esteira
 Product Demo Readiness / Validation
@@ -168,9 +168,16 @@ Product Demo Readiness / Validation
 - register/login real, sessao autenticada, dashboard, criacao de request e tracking nao foram executados porque a slice proibia mutacao de DB e nao havia conta demo segura aprovada com API disponivel
 - fotos/upload foram apenas observados; Object Storage/R2 permanece sem smoke final nesta slice
 - nenhuma alteracao de codigo, backend, frontend, DB, env, migration, seed, deploy ou storage foi realizada na EPIC-019A
+- EPIC-019B concluida com diagnostico registrado em `docs/ops/api-staging-availability-diagnosis.md`
+- politica segura de conta demo registrada em `docs/ops/demo-account-policy.md`
+- tentativa HTTP sem rede elevada falhou com `curl: (7)` para Render e Vercel, classificada como restricao local/sandbox
+- diagnostico HTTP com rede elevada confirmou API staging saudavel: `/health` HTTP 200 `Healthy` e raiz HTTP 200 com payload bootstrap
+- `/swagger` retornou HTTP 404, classificado como esperado porque Swagger/Scalar sao mapeados apenas em ambiente `Development`
+- frontend Vercel respondeu HTTP 200 no diagnostico atual
+- nenhuma alteracao de codigo, backend, frontend, DB, env, migration, seed, deploy, storage/R2, Render, Vercel ou infraestrutura foi realizada na EPIC-019B
 
 ## Objetivo atual
-Restaurar confianca operacional da demo antes de qualquer UI polish, Object Storage/R2 ou packaging final.
+Validar o fluxo autenticado com conta demo segura antes de qualquer UI polish, Object Storage/R2 ou packaging final.
 
 ## O que ja existe
 - ideia do produto
@@ -187,13 +194,13 @@ Restaurar confianca operacional da demo antes de qualquer UI polish, Object Stor
 
 ## O que falta antes da proxima frente
 - decidir a proxima slice da SPR-02 sem abrir READY automaticamente
-- recuperar/confirmar disponibilidade da API staging
 - definir conta demo segura e politica de dados de demo
-- validar jornada autenticada real quando a API estiver disponivel
+- criar/confirmar conta demo apenas em fatia autorizada, sem expor credenciais
+- validar jornada autenticada real com API saudavel
 - depois disso, executar UI polish, Object Storage/R2 minimo e portfolio packaging em fatias separadas
 
 ## Proximo passo recomendado
-Abrir decisao operacional para a proxima slice candidata: `EPIC-019B - API Staging Availability and Demo Account Gate`. Nao abrir UI polish ou R2 antes de resolver a disponibilidade da API e a conta/demo data segura.
+Abrir decisao operacional para a proxima slice candidata: `EPIC-019C - Authenticated Demo Account and Smoke Validation`. Nao abrir UI polish ou R2 antes de provar login, sessao, dashboard, criacao de request e tracking com conta demo segura.
 
 ## Riscos atuais
 - comecar implementacao cedo demais

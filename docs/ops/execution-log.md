@@ -142,3 +142,38 @@
 
 ### Proximos Passos
 - Recomendada decisao operacional sobre `EPIC-019B - API Staging Availability and Demo Account Gate`.
+
+## Sessao: 2026-05-20 (Parte 2)
+**Status:** DONE (EPIC-019B - API Staging Availability and Demo Account Policy)
+
+### Atividades
+- Promocao e execucao da EPIC-019B como diagnostico/documentacao somente.
+- Execucao de checks Git read-only.
+- Execucao dos diagnosticos HTTP read-only permitidos contra API staging e web publica.
+- Inspecao de docs operacionais e `Program.cs` para interpretar `/swagger`.
+- Criacao de `docs/ops/api-staging-availability-diagnosis.md`.
+- Criacao de `docs/ops/demo-account-policy.md`.
+- Atualizacao de backlog, status e handoff operacional.
+
+### Evidencias de Validacao
+- `git log --oneline -3 --decorate` confirmou `a66fe85 (HEAD -> main, origin/main, origin/HEAD) docs(ops): record product demo baseline audit`.
+- Tentativa HTTP sem rede elevada falhou com `curl: (7)` tanto para Render quanto para Vercel, classificada como restricao local/sandbox.
+- `GET https://ecopickup-api-stg.onrender.com/health` com rede elevada -> HTTP 200, body `Healthy`.
+- `GET https://ecopickup-api-stg.onrender.com/` com rede elevada -> HTTP 200, body `{"service":"EcoPickup.Api","status":"bootstrap"}`.
+- `GET https://ecopickup-api-stg.onrender.com/swagger` com rede elevada -> HTTP 404.
+- `GET https://eco-pickup-web.vercel.app` com rede elevada -> HTTP 200.
+
+### Achados
+- API staging esta disponivel no diagnostico atual.
+- `/swagger` 404 e esperado em staging porque Swagger/Scalar sao mapeados apenas quando `app.Environment.IsDevelopment()`.
+- O bloqueio principal deixou de ser disponibilidade da API e passou a ser falta de conta demo segura e smoke autenticado controlado.
+
+### Confirmacao de Escopo
+- Nenhum codigo foi alterado.
+- Nenhum frontend/backend/produto foi alterado.
+- Nenhum DB, env, migration, seed, deploy, storage/R2, Render, Vercel ou infraestrutura foi alterado.
+- Nenhuma credencial real foi criada, lida, exposta ou versionada.
+- Nenhuma nova READY task foi aberta automaticamente.
+
+### Proximos Passos
+- Recomendada decisao operacional sobre `EPIC-019C - Authenticated Demo Account and Smoke Validation`.

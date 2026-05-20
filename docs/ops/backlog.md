@@ -2159,6 +2159,65 @@ Validar o estado real atual da jornada principal antes de iniciar UI polish, Aut
 - proximas slices recomendadas sem abrir nova READY automaticamente
 - nenhuma alteracao de codigo, produto, backend, frontend, DB, env, migration, seed, deploy ou storage foi realizada
 
+#### EPIC-019B - Diagnose API Staging Availability and Define Demo Account Policy
+**Status:** DONE
+
+##### Objetivo
+Diagnosticar a disponibilidade atual da API staging e definir uma politica segura de conta/dados demo antes de qualquer validacao autenticada, UI polish, storage/R2, README final, screenshots ou portfolio packaging.
+
+##### Escopo
+- rodar checks Git locais read-only
+- rodar diagnosticos HTTP read-only contra URLs publicas/staging
+- inspecionar documentacao existente
+- documentar o diagnostico de disponibilidade da API staging
+- documentar a politica segura de conta demo
+- atualizar documentos operacionais conforme estado real
+
+##### Criterios de aceite
+- evidencias HTTP brutas registradas
+- diferenca entre falha de rede local/sandbox e estado real de staging registrada
+- `/health`, raiz e `/swagger` classificados corretamente
+- politica de conta demo definida sem criar ou expor credenciais
+- nenhuma alteracao de codigo, env, DB, seed, deploy, storage/R2, Render, Vercel ou infraestrutura
+- proxima recomendacao registrada sem abrir nova READY automaticamente
+
+##### Dependencias
+- EPIC-019A
+
+##### Fora de escopo
+- alterar codigo
+- alterar frontend
+- alterar backend
+- alterar DB
+- alterar env
+- criar migration
+- rodar seed
+- fazer deploy/redeploy
+- configurar Render
+- configurar Vercel
+- configurar storage/R2
+- criar conta demo real
+- expor credenciais reais
+- validar login autenticado
+- criar pickup request
+- validar tracking autenticado
+- corrigir UI ou README final
+- capturar screenshots finais
+- abrir nova READY task automaticamente
+
+##### Resultado
+- diagnostico registrado em `docs/ops/api-staging-availability-diagnosis.md`
+- politica demo registrada em `docs/ops/demo-account-policy.md`
+- tentativa inicial sem rede elevada falhou com `curl: (7)` para Render e Vercel, classificada como restricao local/sandbox
+- diagnostico com rede elevada confirmou API staging saudavel: `/health` retornou HTTP 200 `Healthy`
+- raiz da API retornou HTTP 200 com payload bootstrap
+- `/swagger` retornou HTTP 404, classificado como esperado porque Swagger/Scalar sao mapeados apenas em `Development`
+- frontend Vercel retornou HTTP 200
+- disponibilidade de API nao e mais o bloqueio principal no momento da EPIC-019B
+- bloqueio restante: falta de conta demo segura e smoke autenticado controlado
+- nenhuma alteracao de codigo, produto, backend, frontend, DB, env, migration, seed, deploy, storage/R2, Render, Vercel ou infraestrutura foi realizada
+- nenhuma nova READY task foi aberta automaticamente
+
 ---
 
 # Ordem de execucao recomendada
