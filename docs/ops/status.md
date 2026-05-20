@@ -1,7 +1,7 @@
 # EcoPickup - Status Executivo
 
 ## Estado atual
-SPR-02 - Product Demo Readiness is in progress. EPIC-019D is complete as documentation/design handoff: official design brief, current UI handoff, and visual references are now documented before any UI polish implementation.
+SPR-02 - Product Demo Readiness is in progress. EPIC-019E is complete: an external designer handoff package was prepared outside the repository using the official design and product docs.
 
 ## Fase atual da esteira
 Product Demo Readiness / Validation
@@ -192,9 +192,17 @@ Product Demo Readiness / Validation
 - documentation states that the staging authenticated demo flow is validated, while cold starts/timeouts may still occur
 - screenshot checklist for later collection was defined without adding screenshot files
 - no code, frontend implementation, UI polish, screenshots, README final, deploy, env, API/backend, DB, migration, seed, Render/Vercel, storage/R2, image upload, Figma file, commit, or push was performed in EPIC-019D
+- EPIC-019E completed an external designer handoff package at `C:\Users\ricardodev\Desktop\EcoPickup_DesignSystem_Brief`
+- package includes copied product/design/ops markdown docs under `01-product-docs/`
+- package includes `03-message-to-designer/message-to-designer.md`
+- package includes `03-message-to-designer/handoff-checklist.md`
+- package includes `04-notes/package-notes.md`
+- screenshot checklist was defined in the external package, but no screenshot binaries were captured or added
+- external package files were not added to the Git repository
+- no code, UI implementation, frontend polish, backend/API change, DB change, migration, seed, deploy, env change, Render/Vercel change, storage/R2, README final, final screenshots, Figma file, credentials, secrets, commit, or push was performed in EPIC-019E
 
 ## Objetivo atual
-Decide the next SPR-02 slice after design handoff completion, without opening a new READY task automatically.
+Decide the next SPR-02 slice after external designer handoff packaging, without opening a new READY task automatically.
 
 ## O que ja existe
 - ideia do produto
@@ -211,12 +219,13 @@ Decide the next SPR-02 slice after design handoff completion, without opening a 
 
 ## O que falta antes da proxima frente
 - decide whether the next slice is UI polish implementation, Object Storage/R2 minimal smoke, or portfolio packaging
+- collect screenshots only if separately approved
+- send or use the external handoff package with the designer
 - if public portfolio credentials are needed, define a non-repository distribution process
 - keep storage/R2 out of public claims until its own smoke passes
-- collect screenshots only in a separately approved screenshot/package slice
 
 ## Proximo passo recomendado
-Open a Discussion Gate for the next SPR-02 slice. Technical recommendation: proceed to a controlled UI polish implementation using the new design handoff before final README/screenshots packaging.
+Open a Discussion Gate for the next SPR-02 slice after designer feedback or approval. Technical recommendation remains controlled UI polish implementation before final README/screenshots packaging.
 
 ## Riscos atuais
 - comecar implementacao cedo demais
