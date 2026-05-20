@@ -1,7 +1,7 @@
 # EcoPickup - Status Executivo
 
 ## Estado atual
-SPR-02 - Product Demo Readiness em execucao. EPIC-019C concluida: authenticated demo smoke passed with a dedicated staging demo account and fake pickup request data.
+SPR-02 - Product Demo Readiness is in progress. EPIC-019D is complete as documentation/design handoff: official design brief, current UI handoff, and visual references are now documented before any UI polish implementation.
 
 ## Fase atual da esteira
 Product Demo Readiness / Validation
@@ -185,9 +185,16 @@ Product Demo Readiness / Validation
 - request smoke capturada: `b4c8c52f-3dd4-4a34-88f6-b8bb62267494`
 - nenhuma credencial foi documentada ou commitada
 - nenhuma alteracao de codigo, deploy, env, migration, seed, DB manual, Render/Vercel, storage/R2, README final ou pacote de screenshots foi realizada na EPIC-019C
+- EPIC-019D completed the design handoff documentation for UI polish readiness
+- official design brief created at `docs/design/eco-pickup-design-brief.md`
+- current UI handoff created at `docs/design/current-ui-handoff.md`
+- visual references and direction created at `docs/design/visual-references.md`
+- documentation states that the staging authenticated demo flow is validated, while cold starts/timeouts may still occur
+- screenshot checklist for later collection was defined without adding screenshot files
+- no code, frontend implementation, UI polish, screenshots, README final, deploy, env, API/backend, DB, migration, seed, Render/Vercel, storage/R2, image upload, Figma file, commit, or push was performed in EPIC-019D
 
 ## Objetivo atual
-Decidir a proxima fatia da SPR-02 depois do smoke autenticado bem-sucedido, sem abrir nova READY automaticamente.
+Decide the next SPR-02 slice after design handoff completion, without opening a new READY task automatically.
 
 ## O que ja existe
 - ideia do produto
@@ -203,14 +210,13 @@ Decidir a proxima fatia da SPR-02 depois do smoke autenticado bem-sucedido, sem 
 - decisao da foundation do monorepo registrada
 
 ## O que falta antes da proxima frente
-- decidir a proxima slice da SPR-02 sem abrir READY automaticamente
-- definir se o proximo foco sera UI polish, Object Storage/R2 minimo ou portfolio packaging
-- se credenciais publicas de portfolio forem necessarias, criar um processo externo ao repositorio para distribui-las
-- manter storage/R2 fora de claims publicos ate smoke proprio
-- executar UI polish e portfolio packaging em fatias separadas
+- decide whether the next slice is UI polish implementation, Object Storage/R2 minimal smoke, or portfolio packaging
+- if public portfolio credentials are needed, define a non-repository distribution process
+- keep storage/R2 out of public claims until its own smoke passes
+- collect screenshots only in a separately approved screenshot/package slice
 
 ## Proximo passo recomendado
-Abrir Discussion Gate para decidir a proxima slice da SPR-02: UI polish baseline, Object Storage/R2 minimal smoke, ou portfolio packaging. Recomendacao tecnica: UI polish baseline antes do README/screenshots finais.
+Open a Discussion Gate for the next SPR-02 slice. Technical recommendation: proceed to a controlled UI polish implementation using the new design handoff before final README/screenshots packaging.
 
 ## Riscos atuais
 - comecar implementacao cedo demais

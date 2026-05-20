@@ -2288,6 +2288,68 @@ Validate the minimal authenticated product demo flow in staging using a dedicate
 - no code, deploy, env, migration, seed, manual DB edit, Render/Vercel change, storage/R2 work, README final polish, screenshot package, commit, or push was performed
 - no new READY task was opened automatically
 
+#### EPIC-019D - Design System Brief and Current UI Handoff
+**Status:** DONE
+
+##### Objective
+Create the official design handoff documentation for EcoPickup before any UI polish implementation, giving a designer or future frontend implementation agent clear product context, current UI issues, priority screens, expected mini design system components, UX language direction, and success criteria.
+
+##### Scope
+- create an official design brief
+- create a current UI handoff document
+- create a visual references/design direction document
+- update operational docs for EPIC-019D
+- define screenshots to collect later without adding binary screenshot files
+- refine the design direction into English repository documentation
+- align wording with the current state: staging authenticated demo flow is validated, while cold starts/timeouts may still occur
+
+##### Acceptance criteria
+- product context documented
+- current product state documented
+- validated demo flow documented
+- main UX problem documented
+- priority screens documented
+- mini design system deliverables documented
+- core components documented
+- visual direction, palette, language, accessibility, and success criteria documented
+- current UI issues and screenshot checklist documented
+- designer constraints documented
+- no code, frontend implementation, screenshots, README final, deploy, env, API/backend, DB, migration, seed, Render/Vercel, storage/R2, image upload, Figma file, commit, or push
+- no new READY task opened automatically
+
+##### Dependencies
+- EPIC-019C
+
+##### Out of scope
+- code changes
+- frontend implementation
+- UI polish in code
+- screenshot package
+- README final
+- deployment
+- env changes
+- API/backend changes
+- database mutation
+- migration
+- seed
+- Render/Vercel changes
+- storage/R2
+- image uploads
+- Figma file creation inside the repository
+- binary screenshot files
+- opening a new READY task automatically
+- commit or push
+
+##### Result
+- design brief created at `docs/design/eco-pickup-design-brief.md`
+- current UI handoff created at `docs/design/current-ui-handoff.md`
+- visual references and direction created at `docs/design/visual-references.md`
+- documents describe the validated staging demo flow and avoid claiming the API is unavailable
+- documents record cold start/timeout as possible operational behavior, not current API unavailability
+- screenshot checklist was defined for later collection, without adding screenshot files
+- no code, frontend implementation, UI polish, screenshots, README final, deploy, env, API/backend, DB, migration, seed, Render/Vercel, storage/R2, image upload, Figma file, commit, or push was performed
+- no new READY task was opened automatically
+
 ---
 
 # Ordem de execucao recomendada
