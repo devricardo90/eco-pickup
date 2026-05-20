@@ -105,3 +105,14 @@ It does not:
 - create pickup requests
 - upload photos
 - configure Render, Vercel, R2, or secrets
+
+## EPIC-019C Application
+
+EPIC-019C applied this policy through a controlled staging smoke validation:
+
+- a dedicated staging demo account was created through the public register flow
+- the Trigger's personal account was not used or modified
+- credentials were not documented, committed, or intentionally printed
+- fake pickup request data was used
+- no DB edit, seed, migration, provider action, deploy, env change, Render/Vercel change, or storage/R2 change was performed
+- the resulting smoke account is not the final public portfolio credential set

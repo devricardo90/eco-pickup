@@ -1,7 +1,7 @@
 # EcoPickup - Status Executivo
 
 ## Estado atual
-SPR-02 - Product Demo Readiness em execucao. EPIC-019B concluida como diagnostico/documentacao: API staging esta saudavel em `/health` e raiz no diagnostico atual; bloqueio restante e conta demo segura + smoke autenticado controlado.
+SPR-02 - Product Demo Readiness em execucao. EPIC-019C concluida: authenticated demo smoke passed with a dedicated staging demo account and fake pickup request data.
 
 ## Fase atual da esteira
 Product Demo Readiness / Validation
@@ -175,9 +175,19 @@ Product Demo Readiness / Validation
 - `/swagger` retornou HTTP 404, classificado como esperado porque Swagger/Scalar sao mapeados apenas em ambiente `Development`
 - frontend Vercel respondeu HTTP 200 no diagnostico atual
 - nenhuma alteracao de codigo, backend, frontend, DB, env, migration, seed, deploy, storage/R2, Render, Vercel ou infraestrutura foi realizada na EPIC-019B
+- EPIC-019C concluida com smoke report registrado em `docs/ops/authenticated-demo-smoke-validation.md`
+- API `/health` teve um timeout inicial de 30s e passou no retry imediato com HTTP 200 `Healthy`
+- frontend Vercel respondeu HTTP 200
+- uma conta demo staging dedicada foi criada pelo fluxo publico de register
+- a conta pessoal do Trigger nao foi usada nem modificada
+- login/logout com a conta demo foram validados pelo fluxo publico
+- dashboard autenticado, criacao de pickup request fake, visibilidade em lista e tracking/timeline foram validados
+- request smoke capturada: `b4c8c52f-3dd4-4a34-88f6-b8bb62267494`
+- nenhuma credencial foi documentada ou commitada
+- nenhuma alteracao de codigo, deploy, env, migration, seed, DB manual, Render/Vercel, storage/R2, README final ou pacote de screenshots foi realizada na EPIC-019C
 
 ## Objetivo atual
-Validar o fluxo autenticado com conta demo segura antes de qualquer UI polish, Object Storage/R2 ou packaging final.
+Decidir a proxima fatia da SPR-02 depois do smoke autenticado bem-sucedido, sem abrir nova READY automaticamente.
 
 ## O que ja existe
 - ideia do produto
@@ -194,13 +204,13 @@ Validar o fluxo autenticado com conta demo segura antes de qualquer UI polish, O
 
 ## O que falta antes da proxima frente
 - decidir a proxima slice da SPR-02 sem abrir READY automaticamente
-- definir conta demo segura e politica de dados de demo
-- criar/confirmar conta demo apenas em fatia autorizada, sem expor credenciais
-- validar jornada autenticada real com API saudavel
-- depois disso, executar UI polish, Object Storage/R2 minimo e portfolio packaging em fatias separadas
+- definir se o proximo foco sera UI polish, Object Storage/R2 minimo ou portfolio packaging
+- se credenciais publicas de portfolio forem necessarias, criar um processo externo ao repositorio para distribui-las
+- manter storage/R2 fora de claims publicos ate smoke proprio
+- executar UI polish e portfolio packaging em fatias separadas
 
 ## Proximo passo recomendado
-Abrir decisao operacional para a proxima slice candidata: `EPIC-019C - Authenticated Demo Account and Smoke Validation`. Nao abrir UI polish ou R2 antes de provar login, sessao, dashboard, criacao de request e tracking com conta demo segura.
+Abrir Discussion Gate para decidir a proxima slice da SPR-02: UI polish baseline, Object Storage/R2 minimal smoke, ou portfolio packaging. Recomendacao tecnica: UI polish baseline antes do README/screenshots finais.
 
 ## Riscos atuais
 - comecar implementacao cedo demais

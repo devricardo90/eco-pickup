@@ -177,3 +177,53 @@
 
 ### Proximos Passos
 - Recomendada decisao operacional sobre `EPIC-019C - Authenticated Demo Account and Smoke Validation`.
+
+## Session: 2026-05-20 (Part 3)
+**Status:** DONE (EPIC-019C - Authenticated Demo Account and Smoke Validation)
+
+### Activities
+- Promoted and executed EPIC-019C as a controlled staging smoke validation.
+- Confirmed Git baseline at `be07a82`.
+- Confirmed public frontend availability.
+- Confirmed API `/health` after one transient 30s timeout and immediate successful retry.
+- Created a dedicated staging demo account through the public register flow.
+- Logged in through the public login flow.
+- Accessed authenticated dashboard.
+- Created one fake pickup request through the public request form.
+- Verified tracking/detail/status/timeline surface.
+- Verified request visibility in dashboard/list.
+- Logged out through the public logout flow.
+- Created `docs/ops/authenticated-demo-smoke-validation.md`.
+- Updated `docs/ops/demo-account-policy.md`, backlog, status, and session handoff.
+
+### Validation Evidence
+- `git log --oneline -3 --decorate` confirmed `be07a82 (HEAD -> main, origin/main, origin/HEAD) docs(ops): diagnose staging api and demo account policy`.
+- API `/health` first elevated check -> timeout after 30s.
+- API `/health` retry -> HTTP 200, body `Healthy`.
+- Frontend `/` -> HTTP 200.
+- Register page -> HTTP 200.
+- Public register form -> HTTP 303 redirect to login.
+- Login page -> HTTP 200.
+- Public login form -> HTTP 303 redirect to `/`.
+- Authenticated home marker -> PASS.
+- Dashboard `/requests` -> HTTP 200.
+- New request form `/requests/new` -> HTTP 200.
+- Public request form -> HTTP 303 redirect to tracking.
+- Tracking/detail -> HTTP 200.
+- Request visible in dashboard/list -> PASS.
+- Timeline marker -> PASS.
+- Logout form -> HTTP 303 redirect to `/auth/login`.
+- Request id: `b4c8c52f-3dd4-4a34-88f6-b8bb62267494`.
+
+### Scope Confirmation
+- The Trigger personal account was not used or modified.
+- No credentials were documented or committed.
+- No real customer data, address, phone, payment data, provider secret, photo upload, or R2 data was used.
+- No code, deploy, env, migration, seed, manual DB edit, Render/Vercel change, storage/R2 work, README final polish, screenshot package, commit, or push was performed.
+- No new READY task was opened automatically.
+
+### Operational Note
+- An initial automation attempt stopped because of a local PowerShell variable-name conflict after the public register/login sequence had started. The password was not printed or retained, and no DB edit, seed, migration, provider action, deploy, env change, or direct API mutation outside the app flow was performed.
+
+### Next Step
+- Open a Discussion Gate to choose the next SPR-02 slice. Recommended next direction: UI polish baseline before README/screenshots finalization.

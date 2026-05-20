@@ -2218,6 +2218,76 @@ Diagnosticar a disponibilidade atual da API staging e definir uma politica segur
 - nenhuma alteracao de codigo, produto, backend, frontend, DB, env, migration, seed, deploy, storage/R2, Render, Vercel ou infraestrutura foi realizada
 - nenhuma nova READY task foi aberta automaticamente
 
+#### EPIC-019C - Authenticated Demo Account and Smoke Validation
+**Status:** DONE
+
+##### Objective
+Validate the minimal authenticated product demo flow in staging using a dedicated demo account and safe fake data.
+
+##### Scope
+- confirm API `/health`
+- confirm public frontend availability
+- create one dedicated demo account through the public register flow
+- login with the demo account
+- access authenticated dashboard
+- create one fake pickup request
+- verify the request is visible in dashboard/list
+- open tracking/detail/status/timeline
+- logout
+- document pass/fail evidence
+
+##### Acceptance criteria
+- API and frontend availability recorded
+- dedicated demo account created through public app flow
+- Trigger personal account not used or modified
+- login and logout validated
+- dashboard access validated
+- fake pickup request created
+- request visibility validated
+- tracking/status/timeline validated or blocker recorded
+- no credentials documented or committed
+- no code, deploy, env, migration, seed, manual DB edit, Render/Vercel change, storage/R2 work, README final polish, screenshot package, commit, or push
+
+##### Dependencies
+- EPIC-019B
+
+##### Out of scope
+- using or modifying the Trigger personal account
+- exposing credentials
+- storing passwords in the repository
+- real customer data
+- real address, phone, payment data, provider secrets, or photos/uploads/R2
+- code changes
+- UI polish
+- README final
+- screenshot package
+- deploy or redeploy
+- env changes
+- Render/Vercel changes
+- migration
+- seed
+- manual DB edit
+- admin demo account
+- opening a new READY task automatically
+- commit or push
+
+##### Result
+- smoke report created in `docs/ops/authenticated-demo-smoke-validation.md`
+- API `/health` initially timed out in a 30s elevated check, then passed on immediate retry with HTTP 200 `Healthy`
+- frontend Vercel returned HTTP 200
+- dedicated staging demo account was created through the public register flow
+- demo account login returned HTTP 303 and authenticated session marker was observed
+- authenticated dashboard returned HTTP 200
+- one fake pickup request was created through the public request form
+- tracking/detail opened with HTTP 200
+- request was visible in dashboard/list after creation
+- timeline marker was present
+- logout returned HTTP 303 to `/auth/login`
+- request id captured: `b4c8c52f-3dd4-4a34-88f6-b8bb62267494`
+- no credentials were documented or committed
+- no code, deploy, env, migration, seed, manual DB edit, Render/Vercel change, storage/R2 work, README final polish, screenshot package, commit, or push was performed
+- no new READY task was opened automatically
+
 ---
 
 # Ordem de execucao recomendada
