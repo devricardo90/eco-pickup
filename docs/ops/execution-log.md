@@ -107,3 +107,38 @@
 - Roteiro alinhado à jornada validada na EPIC-018A.
 - Nenhuma nova execução de smoke/browser foi realizada nesta task.
 - Nenhuma alteração de código, produto, backend, infraestrutura, env, DB, migration, seed, deploy ou storage foi realizada.
+
+## Sessao: 2026-05-20
+**Status:** DONE (EPIC-019A - Product Demo Baseline Audit)
+
+### Atividades
+- Abertura da SPR-02 - Product Demo Readiness no backlog canonico.
+- Promocao e execucao documental da EPIC-019A como baseline audit.
+- Validacao HTTP nao mutante da landing, auth pages, rotas autenticadas sem sessao e API staging.
+- Registro do relatorio `docs/ops/product-demo-baseline-audit.md`.
+- Atualizacao de backlog, status e handoff operacional.
+
+### Evidencias de Validacao
+- `GET https://eco-pickup-web.vercel.app` -> 200 OK.
+- `GET https://eco-pickup-web.vercel.app/auth/login` -> 200 OK.
+- `GET https://eco-pickup-web.vercel.app/auth/register` -> 200 OK.
+- `GET https://eco-pickup-web.vercel.app/requests` sem auth -> 200 OK com marcador `auth/login`.
+- `GET https://eco-pickup-web.vercel.app/requests/new` sem auth -> 200 OK com marcador `auth/login`.
+- `GET https://ecopickup-api-stg.onrender.com/health` -> timeout em 90s, 180s e 30s controlado.
+- `GET https://ecopickup-api-stg.onrender.com` -> timeout em 30s controlado.
+- `GET https://ecopickup-api-stg.onrender.com/swagger` -> timeout em 30s controlado.
+
+### Achados
+- CRITICAL: API staging indisponivel no momento da auditoria.
+- HIGH: jornada autenticada nao pode ser validada sem API disponivel e sem conta demo segura aprovada.
+- HIGH: UI ainda precisa de polish antes de portfolio final.
+- MEDIUM: Object Storage/R2 permanece sem smoke final.
+
+### Confirmacao de Escopo
+- Nenhum codigo foi alterado.
+- Nenhum frontend/backend/produto foi alterado.
+- Nenhum DB, env, migration, seed, deploy ou storage foi alterado.
+- Nenhuma nova READY task foi aberta automaticamente.
+
+### Proximos Passos
+- Recomendada decisao operacional sobre `EPIC-019B - API Staging Availability and Demo Account Gate`.

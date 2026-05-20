@@ -1,10 +1,10 @@
 # EcoPickup - Status Executivo
 
 ## Estado atual
-EPIC-017A em execucao para transformar a landing page em uma vitrine funcional de produto.
+SPR-02 - Product Demo Readiness em execucao. EPIC-019A concluida como auditoria baseline com achado critico: API staging indisponivel no momento da validacao.
 
 ## Fase atual da esteira
-Product Showcase / UI Refinement
+Product Demo Readiness / Validation
 
 ## Situacao resumida
 - repositorio criado
@@ -161,9 +161,16 @@ Product Showcase / UI Refinement
 - Commit 0c98fce (`feat(web): transition public showcase and auth to english-first`) em origin/main
 - EPIC-018A concluida: PASSA (decisão de prontidão para demo baseada em análise técnica; tempo estimado ~1m50s com API aquecida)
 - EPIC-018B concluida: Roteiro de demo e checklist de screenshots registrados em `docs/ops/demo-script.md`
+- SPR-02 aberta como Product Demo Readiness para transformar o MVP em vitrine funcional apresentavel
+- EPIC-019A concluida com baseline audit registrado em `docs/ops/product-demo-baseline-audit.md`
+- landing, login e register publicos responderam HTTP 200 em staging
+- API staging nao respondeu em `/health`, raiz ou `/swagger` dentro das janelas de timeout testadas, bloqueando validacao autenticada real
+- register/login real, sessao autenticada, dashboard, criacao de request e tracking nao foram executados porque a slice proibia mutacao de DB e nao havia conta demo segura aprovada com API disponivel
+- fotos/upload foram apenas observados; Object Storage/R2 permanece sem smoke final nesta slice
+- nenhuma alteracao de codigo, backend, frontend, DB, env, migration, seed, deploy ou storage foi realizada na EPIC-019A
 
 ## Objetivo atual
-Consolidar a vitrine funcional e preparar para demo de portfolio.
+Restaurar confianca operacional da demo antes de qualquer UI polish, Object Storage/R2 ou packaging final.
 
 ## O que ja existe
 - ideia do produto
@@ -179,12 +186,14 @@ Consolidar a vitrine funcional e preparar para demo de portfolio.
 - decisao da foundation do monorepo registrada
 
 ## O que falta antes da proxima frente
-- validar smoke de upload de imagem/R2 (EPIC-009 continuacao, requer sessao dedicada com acesso Render/R2)
-- redeploy do staging com os ajustes de hardening da EPIC-014J (commit `55ce82a`)
-- revisao de descricao curta do repositorio no GitHub
+- decidir a proxima slice da SPR-02 sem abrir READY automaticamente
+- recuperar/confirmar disponibilidade da API staging
+- definir conta demo segura e politica de dados de demo
+- validar jornada autenticada real quando a API estiver disponivel
+- depois disso, executar UI polish, Object Storage/R2 minimo e portfolio packaging em fatias separadas
 
 ## Proximo passo recomendado
-A documentação inicial da demo de portfólio está consolidada. Recomenda-se um Discussion Gate para decidir entre captura final de screenshots, encerramento formal do MVP atual ou retomada da feature de Object Storage/R2.
+Abrir decisao operacional para a proxima slice candidata: `EPIC-019B - API Staging Availability and Demo Account Gate`. Nao abrir UI polish ou R2 antes de resolver a disponibilidade da API e a conta/demo data segura.
 
 ## Riscos atuais
 - comecar implementacao cedo demais
@@ -193,6 +202,9 @@ A documentação inicial da demo de portfólio está consolidada. Recomenda-se u
 - reabrir decisoes de media foundation ja fechadas em 009A
 - expandir queries de usuario para escopo administrativo antes da hora
 - backlog perder o papel de fonte oficial
+- API staging indisponivel bloquear demo final
+- tentar corrigir UI antes de provar o fluxo autenticado
+- tentar validar R2/storage antes de estabilizar a demo principal
 
 ## Regra operacional
 Cada nova feature deve entrar por fatias controladas, com docs, backlog e validacoes atualizados no mesmo slice.

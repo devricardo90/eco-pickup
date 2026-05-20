@@ -2078,6 +2078,89 @@ Criar o roteiro oficial de demo de portfolio e registrar o checklist de screensh
 
 ---
 
+# SPR-02 - Product Demo Readiness
+**Status:** IN_PROGRESS
+
+## Objetivo
+Transformar o EcoPickup de MVP tecnicamente demonstravel em uma vitrine funcional de portfolio, com fluxo principal validado, superficie visual apresentavel e decisao objetiva sobre fotos/Object Storage.
+
+## Escopo
+- auditar a jornada real antes de polish
+- priorizar problemas visuais e tecnicos
+- definir proximas fatias sem abrir implementacao prematura
+- validar Auth/API demo flow antes de empacotamento final
+- retomar Object Storage/R2 apenas em fatia propria e autorizada
+- preparar portfolio packaging apos baseline funcional e visual
+
+## Criterios de aceite
+- baseline documentada com pass/fail por etapa
+- bloqueios reais classificados
+- proximas fatias recomendadas sem abrir READY automaticamente
+- nenhuma implementacao iniciada antes da auditoria
+
+## Dependencias
+- EPIC-018B
+
+### Fatias de execucao
+
+#### EPIC-019A - Product Demo Baseline Audit
+**Status:** DONE
+
+##### Objetivo
+Validar o estado real atual da jornada principal antes de iniciar UI polish, Auth/API demo flow ou Object Storage/R2.
+
+##### Escopo
+- testar landing publica
+- testar register/login/sign-in ate o limite nao mutante permitido
+- testar acesso autenticado ate o limite nao mutante permitido
+- testar dashboard autenticado ate o limite nao mutante permitido
+- testar criacao de pickup request ate o limite nao mutante permitido
+- testar tracking/status/timeline ate o limite nao mutante permitido
+- observar estado atual de fotos/upload sem configurar storage
+- registrar problemas visuais relevantes
+- registrar problemas tecnicos relevantes
+- recomendar proximas tasks
+- criar `docs/ops/product-demo-baseline-audit.md`
+
+##### Criterios de aceite
+- jornada testada ponta a ponta ou falha registrada no ponto exato
+- pass/fail por etapa registrado
+- problemas visuais priorizados
+- problemas tecnicos priorizados
+- decisao recomendada para proximas slices
+- confirmacao explicita de que nao houve alteracao de codigo, DB, env, deploy, migration, seed ou storage
+
+##### Dependencias
+- EPIC-018B
+
+##### Fora de escopo
+- alterar codigo
+- alterar frontend
+- alterar backend
+- alterar DB
+- alterar env
+- criar migration
+- rodar seed
+- fazer deploy
+- configurar storage/R2
+- corrigir CSS
+- implementar feature
+- capturar screenshots finais
+- mexer no README final
+- abrir nova READY task automaticamente
+
+##### Resultado
+- relatorio criado em `docs/ops/product-demo-baseline-audit.md`
+- landing, login e register publicos responderam HTTP 200
+- API staging falhou por timeout em `/health`, raiz e `/swagger`, bloqueando a validacao autenticada real
+- register, login real, sessao autenticada, dashboard autenticado, criacao de request e tracking foram bloqueados pela indisponibilidade da API e pela restricao de nao mutar DB sem conta demo segura
+- fotos/upload observados apenas documentalmente; R2/Object Storage segue sem smoke final nesta slice
+- problemas visuais e tecnicos priorizados
+- proximas slices recomendadas sem abrir nova READY automaticamente
+- nenhuma alteracao de codigo, produto, backend, frontend, DB, env, migration, seed, deploy ou storage foi realizada
+
+---
+
 # Ordem de execucao recomendada
 
 1. EPIC-000 - Governanca e Foundation Documental
@@ -2095,3 +2178,4 @@ Criar o roteiro oficial de demo de portfolio e registrar o checklist de screensh
 13. EPIC-012 - Pagamentos
 14. EPIC-013 - Tracking e Historico
 15. EPIC-014 - Infra, Deploy e Observabilidade
+16. SPR-02 - Product Demo Readiness
