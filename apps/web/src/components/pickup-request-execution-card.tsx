@@ -1,3 +1,4 @@
+import { ui } from "@/components/ui-primitives";
 import type { PickupRequestExecutionUi } from "@/lib/tracking/types";
 
 type PickupRequestExecutionCardProps = {
@@ -12,13 +13,13 @@ const toneClassNames: Record<PickupRequestExecutionUi["tone"], string> = {
 
 export function PickupRequestExecutionCard({ execution }: PickupRequestExecutionCardProps) {
   return (
-    <section className={`rounded-[1.75rem] border p-6 shadow-[0_18px_48px_rgba(15,23,42,0.08)] ${toneClassNames[execution.tone]}`}>
+    <section className={`rounded-xl border p-6 shadow-[var(--shadow-sm)] ${toneClassNames[execution.tone]}`}>
       <h2 className="text-lg font-semibold tracking-tight text-slate-950">{execution.title}</h2>
       <p className="mt-3 text-sm leading-6 text-slate-700">{execution.description}</p>
 
       {execution.highlightLabel ? (
-        <div className="mt-6 rounded-[1.25rem] border border-slate-200 bg-white/90 px-4 py-4">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Operational window</p>
+        <div className={ui.surfaceTight}>
+          <p className={ui.metricLabel}>Operational window</p>
           <p className="mt-2 text-lg font-semibold tracking-tight text-slate-950">{execution.highlightLabel}</p>
         </div>
       ) : null}

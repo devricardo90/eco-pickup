@@ -300,3 +300,47 @@
 
 ### Next Step
 - Use the external package with the designer or open a Discussion Gate for the next SPR-02 slice after designer feedback.
+
+## Session: 2026-05-21
+**Status:** DONE (EPIC-019F - Implement Approved Design Baseline From Claude Source)
+
+### Activities
+- Promoted EPIC-019F as a controlled frontend UI polish implementation slice.
+- Inspected the existing frontend route/page/component/style structure for landing, auth, requests, create request, and tracking/detail.
+- Confirmed the approved Claude design source at `C:\Users\ricardodev\Downloads\eco picket`.
+- Copied the approved Claude design source into the external handoff package at `C:\Users\ricardodev\Desktop\EcoPickup_DesignSystem_Brief\05-claude-design`.
+- Implemented a local UI baseline using the Claude direction as a visual reference, while preserving existing routes, forms, server actions, auth/session behavior, and tracking/detail access.
+- Added shared UI primitives for page shells, surfaces, buttons, fields, notices, and status badges.
+- Updated landing, login, register, dashboard/request list, create request, request detail/status, and timeline surfaces.
+- Added a minimal Next.js root configuration fix to keep build tooling inside the repository root when another lockfile exists outside the repository.
+
+### Validation Evidence
+- `pnpm.cmd --filter @ecopickup/web lint` passed.
+- `pnpm.cmd --filter @ecopickup/web typecheck` passed.
+- Initial sandboxed `pnpm.cmd --filter @ecopickup/web build` failed after compile with `spawn EPERM`.
+- Elevated `pnpm.cmd --filter @ecopickup/web build` passed.
+- Local dev server public HTTP smoke passed:
+  - `/` returned HTTP 200
+  - `/auth/login` returned HTTP 200
+  - `/auth/register` returned HTTP 200
+
+### Authenticated Smoke Evidence
+- Trigger completed authenticated manual smoke and reported PASS.
+- Landing was reviewed locally at `http://localhost:3019`.
+- Login with the private demo account succeeded.
+- Authenticated dashboard loaded successfully.
+- Existing requests/list view loaded successfully.
+- A new test request was created successfully.
+- Request detail/tracking/timeline loaded successfully.
+- Logout worked and the protected area was no longer accessible without session.
+- Mobile visual smoke was completed through browser DevTools.
+- No credentials, secrets, env values, or demo password were exposed.
+
+### Scope Confirmation
+- No backend/API change was made.
+- No database change, migration, seed, manual DB edit, env change, deploy, Render/Vercel change, storage/R2 work, upload implementation, README final polish, screenshot package, credential, or secret change was made.
+- No commit or push was performed.
+- No new READY task was opened automatically.
+
+### Next Step
+- Request review/commit authorization for EPIC-019F, then open a separate Discussion Gate for the next SPR-02 slice.

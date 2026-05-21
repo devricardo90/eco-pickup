@@ -1,4 +1,5 @@
 import { PickupRequestPaymentForm } from "@/components/pickup-request-payment-form";
+import { ui } from "@/components/ui-primitives";
 import type { PickupRequestFormActionState } from "@/lib/auth/types";
 import type { PickupRequestPaymentUi } from "@/lib/tracking/types";
 
@@ -14,13 +15,13 @@ const toneClassNames: Record<PickupRequestPaymentUi["tone"], string> = {
 
 export function PickupRequestPaymentCard({ payment, action }: PickupRequestPaymentCardProps) {
   return (
-    <section className={`rounded-[1.75rem] border p-6 shadow-[0_18px_48px_rgba(15,23,42,0.08)] ${toneClassNames[payment.tone]}`}>
+    <section className={`rounded-xl border p-6 shadow-[var(--shadow-sm)] ${toneClassNames[payment.tone]}`}>
       <h2 className="text-lg font-semibold tracking-tight text-slate-950">{payment.title}</h2>
       <p className="mt-3 text-sm leading-6 text-slate-700">{payment.description}</p>
 
       {payment.amountLabel ? (
-        <div className="mt-6 rounded-[1.25rem] border border-slate-200 bg-white/90 px-4 py-4">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Payment amount</p>
+        <div className={ui.surfaceTight}>
+          <p className={ui.metricLabel}>Payment amount</p>
           <p className="mt-2 text-2xl font-semibold tracking-tight text-slate-950">{payment.amountLabel}</p>
         </div>
       ) : null}

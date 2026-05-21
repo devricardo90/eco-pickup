@@ -10,6 +10,7 @@ import { PickupRequestSubmitForm } from "@/components/pickup-request-submit-form
 import { PickupRequestSummary } from "@/components/pickup-request-summary";
 import { PickupRequestTimeline } from "@/components/pickup-request-timeline";
 import { PickupRequestTrackingState } from "@/components/pickup-request-tracking-state";
+import { ui } from "@/components/ui-primitives";
 import { createPaymentSessionAction, submitPickupRequestAction } from "@/lib/auth/actions";
 import { requireSession } from "@/lib/auth/session";
 import { getPickupRequestDetail } from "@/lib/tracking/getPickupRequestDetail";
@@ -58,8 +59,8 @@ export async function PickupRequestDetailPage({ requestId, scope, notice }: Pick
 
   if (!detailResult.ok) {
     return (
-      <main className="min-h-screen bg-[radial-gradient(circle_at_top,_#f0f7ee,_#e2ecd6_45%,_#d3dfc8_100%)] px-6 py-16 text-slate-900">
-        <div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
+      <main className={ui.pageShell}>
+        <div className={ui.container}>
           <PickupRequestTrackingState
             title={detailResult.kind === "not-found" ? "Pickup request not found" : "Could not load pickup request"}
             message={detailResult.message}
@@ -88,13 +89,13 @@ export async function PickupRequestDetailPage({ requestId, scope, notice }: Pick
   const paymentAction = scope === "owner" ? createPaymentSessionAction.bind(null, requestId) : null;
 
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top,_#f0f7ee,_#e2ecd6_45%,_#d3dfc8_100%)] px-6 py-16 text-slate-900">
-      <div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
-        <section className="rounded-[2rem] border border-white/70 bg-white/80 p-8 shadow-[0_24px_80px_rgba(55,94,47,0.12)] backdrop-blur">
-          <span className="inline-flex rounded-full border border-emerald-900/10 bg-emerald-900/5 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-emerald-950">
+    <main className={ui.pageShell}>
+      <div className={ui.container}>
+        <section className={ui.heroPanel}>
+          <span className={ui.eyebrow}>
             {copy.badge}
           </span>
-          <h1 className="mt-6 text-4xl font-semibold tracking-tight text-balance text-slate-950">
+          <h1 className="mt-5 text-4xl font-semibold tracking-tight text-slate-950">
             {copy.title}
           </h1>
           <p className="mt-4 max-w-3xl text-base leading-7 text-slate-700">{copy.description}</p>
@@ -103,7 +104,7 @@ export async function PickupRequestDetailPage({ requestId, scope, notice }: Pick
               {canEdit ? (
                 <>
                   <Link
-                    className="inline-flex items-center justify-center rounded-2xl bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
+                    className={ui.primaryButton}
                     href={`/tracking/${requestId}/edit`}
                   >
                     Edit request
@@ -111,7 +112,7 @@ export async function PickupRequestDetailPage({ requestId, scope, notice }: Pick
                   {submitAction ? <PickupRequestSubmitForm action={submitAction} /> : null}
                 </>
               ) : (
-                <p className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">
+                <p className={ui.noticeWarning}>
                   This request has already been submitted or entered operational review. Editing is now locked.
                 </p>
               )}
@@ -120,7 +121,7 @@ export async function PickupRequestDetailPage({ requestId, scope, notice }: Pick
         </section>
 
         {notice ? (
-          <section className="rounded-[1.5rem] border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm text-emerald-950 shadow-[0_18px_48px_rgba(15,23,42,0.05)]">
+          <section className={ui.noticeSuccess}>
             {notice}
           </section>
         ) : null}

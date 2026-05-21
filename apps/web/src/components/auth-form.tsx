@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import { ui } from "@/components/ui-primitives";
 import type { AuthActionState } from "@/lib/auth/types";
 
 type AuthFormProps = {
@@ -21,15 +22,16 @@ export function AuthForm({
   const [state, formAction, isPending] = useActionState(action, initialState);
 
   return (
-    <section className="rounded-[1.75rem] border border-white/70 bg-white/85 p-8 shadow-[0_24px_80px_rgba(55,94,47,0.12)] backdrop-blur">
-      <h1 className="text-3xl font-semibold tracking-tight text-slate-950">{title}</h1>
+    <section className={ui.heroPanel}>
+      <span className={ui.eyebrow}>Secure access</span>
+      <h1 className="mt-5 text-3xl font-semibold tracking-tight text-slate-950">{title}</h1>
       <p className="mt-3 max-w-xl text-sm leading-6 text-slate-700">{description}</p>
 
       <form action={formAction} className="mt-8 flex max-w-xl flex-col gap-5">
         <label className="flex flex-col gap-2">
-          <span className="text-sm font-semibold text-slate-700">Email</span>
+          <span className={ui.label}>Email</span>
           <input
-            className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-950 outline-none transition focus:border-emerald-600"
+            className={ui.field}
             name="email"
             placeholder="you@example.com"
             required
@@ -38,24 +40,24 @@ export function AuthForm({
         </label>
 
         <label className="flex flex-col gap-2">
-          <span className="text-sm font-semibold text-slate-700">Password</span>
+          <span className={ui.label}>Password</span>
           <input
-            className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-950 outline-none transition focus:border-emerald-600"
+            className={ui.field}
             name="password"
-            placeholder="••••••••"
+            placeholder="Enter your password"
             required
             type="password"
           />
         </label>
 
         {state.error ? (
-          <p className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-900">
+          <p className={ui.noticeError}>
             {state.error}
           </p>
         ) : null}
 
         <button
-          className="inline-flex items-center justify-center rounded-2xl bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-70"
+          className={ui.primaryButton}
           disabled={isPending}
           type="submit"
         >

@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
+import { ui } from "@/components/ui-primitives";
 import type { PickupRequestFormActionState, PickupRequestFormValues } from "@/lib/auth/types";
 
 type PickupRequestFormProps = {
@@ -69,8 +70,9 @@ export function PickupRequestForm({
   }
 
   return (
-    <section className="rounded-[1.75rem] border border-white/70 bg-white/85 p-8 shadow-[0_24px_80px_rgba(55,94,47,0.12)] backdrop-blur">
-      <h1 className="text-3xl font-semibold tracking-tight text-slate-950">
+    <section className={ui.heroPanel}>
+      <span className={ui.eyebrow}>{isEdit ? "Draft request" : "New request"}</span>
+      <h1 className="mt-5 text-3xl font-semibold tracking-tight text-slate-950">
         {isEdit ? "Edit pickup request" : "Create a pickup request"}
       </h1>
       <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-700">
@@ -80,12 +82,12 @@ export function PickupRequestForm({
       </p>
 
       <form action={formAction} className="mt-8 grid gap-8">
-        <section className="grid gap-5 md:grid-cols-2">
+        <section className="grid gap-5 rounded-xl border border-slate-200 bg-slate-50 p-5 md:grid-cols-2">
           <div className="md:col-span-2">
             <label className="flex flex-col gap-2">
-              <span className="text-sm font-semibold text-slate-700">Request description</span>
+              <span className={ui.label}>Request description</span>
               <textarea
-                className="min-h-28 rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-950 outline-none transition focus:border-emerald-600"
+                className={ui.textarea}
                 defaultValue={initialValues.description}
                 name="description"
                 placeholder="Describe what needs to be collected and any relevant context."
@@ -95,9 +97,9 @@ export function PickupRequestForm({
           </div>
 
           <label className="flex flex-col gap-2">
-            <span className="text-sm font-semibold text-slate-700">Pickup date</span>
+            <span className={ui.label}>Pickup date</span>
             <input
-              className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-950 outline-none transition focus:border-emerald-600"
+              className={ui.field}
               defaultValue={initialValues.pickupWindowDate}
               name="pickupWindowDate"
               required
@@ -107,9 +109,9 @@ export function PickupRequestForm({
 
           <div className="grid gap-5 md:grid-cols-2">
             <label className="flex flex-col gap-2">
-              <span className="text-sm font-semibold text-slate-700">Window start</span>
+              <span className={ui.label}>Window start</span>
               <input
-                className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-950 outline-none transition focus:border-emerald-600"
+                className={ui.field}
                 defaultValue={initialValues.pickupWindowStartTime}
                 name="pickupWindowStartTime"
                 required
@@ -118,9 +120,9 @@ export function PickupRequestForm({
             </label>
 
             <label className="flex flex-col gap-2">
-              <span className="text-sm font-semibold text-slate-700">Window end</span>
+              <span className={ui.label}>Window end</span>
               <input
-                className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-950 outline-none transition focus:border-emerald-600"
+                className={ui.field}
                 defaultValue={initialValues.pickupWindowEndTime}
                 name="pickupWindowEndTime"
                 required
@@ -130,11 +132,11 @@ export function PickupRequestForm({
           </div>
         </section>
 
-        <section className="grid gap-5 md:grid-cols-2">
+        <section className="grid gap-5 rounded-xl border border-slate-200 bg-slate-50 p-5 md:grid-cols-2">
           <label className="flex flex-col gap-2 md:col-span-2">
-            <span className="text-sm font-semibold text-slate-700">Street</span>
+            <span className={ui.label}>Street</span>
             <input
-              className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-950 outline-none transition focus:border-emerald-600"
+              className={ui.field}
               defaultValue={initialValues.street}
               name="street"
               required
@@ -143,9 +145,9 @@ export function PickupRequestForm({
           </label>
 
           <label className="flex flex-col gap-2">
-            <span className="text-sm font-semibold text-slate-700">City</span>
+            <span className={ui.label}>City</span>
             <input
-              className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-950 outline-none transition focus:border-emerald-600"
+              className={ui.field}
               defaultValue={initialValues.city}
               name="city"
               required
@@ -154,9 +156,9 @@ export function PickupRequestForm({
           </label>
 
           <label className="flex flex-col gap-2">
-            <span className="text-sm font-semibold text-slate-700">Postal code</span>
+            <span className={ui.label}>Postal code</span>
             <input
-              className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-950 outline-none transition focus:border-emerald-600"
+              className={ui.field}
               defaultValue={initialValues.postalCode}
               name="postalCode"
               required
@@ -165,24 +167,24 @@ export function PickupRequestForm({
           </label>
 
           <label className="flex flex-col gap-2">
-            <span className="text-sm font-semibold text-slate-700">Floor</span>
+            <span className={ui.label}>Floor</span>
             <input
-              className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-950 outline-none transition focus:border-emerald-600"
+              className={ui.field}
               defaultValue={initialValues.floor}
               name="floor"
               type="text"
             />
           </label>
 
-          <label className="flex items-center gap-3 rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-800">
+          <label className="flex items-center gap-3 rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm text-slate-800">
             <input className="h-4 w-4" defaultChecked={initialValues.hasElevator} name="hasElevator" type="checkbox" />
             Elevator available
           </label>
 
           <label className="flex flex-col gap-2 md:col-span-2">
-            <span className="text-sm font-semibold text-slate-700">Access notes</span>
+            <span className={ui.label}>Access notes</span>
             <textarea
-              className="min-h-24 rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-950 outline-none transition focus:border-emerald-600"
+              className={ui.textarea}
               defaultValue={initialValues.accessNotes}
               name="accessNotes"
               placeholder="Door code, intercom notes or other relevant access details."
@@ -190,16 +192,16 @@ export function PickupRequestForm({
           </label>
         </section>
 
-        <section className="grid gap-5">
+        <section className="grid gap-5 rounded-xl border border-slate-200 bg-slate-50 p-5">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <h2 className="text-lg font-semibold tracking-tight text-slate-950">Items</h2>
               <p className="mt-1 text-sm leading-6 text-slate-700">
-                Add every item that should be part of the request. Photos remain outside this slice.
+                Add every item that should be part of the pickup request.
               </p>
             </div>
             <button
-              className="inline-flex items-center justify-center rounded-2xl border border-emerald-700/20 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-900 transition hover:bg-emerald-100"
+              className={ui.softButton}
               onClick={addItem}
               type="button"
             >
@@ -211,7 +213,7 @@ export function PickupRequestForm({
             {items.map((item, index) => (
               <section className="rounded-[1.5rem] border border-slate-200 bg-slate-50/80 p-5" key={`item-${index}`}>
                 <div className="flex flex-wrap items-center justify-between gap-3">
-                  <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-600">
+                  <h3 className="text-sm font-semibold uppercase text-slate-600">
                     Item {index + 1}
                   </h3>
                   {items.length > 1 ? (
@@ -227,9 +229,9 @@ export function PickupRequestForm({
 
                 <div className="mt-4 grid gap-5 md:grid-cols-2">
                   <label className="flex flex-col gap-2">
-                    <span className="text-sm font-semibold text-slate-700">Item category</span>
+                    <span className={ui.label}>Item category</span>
                     <input
-                      className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-950 outline-none transition focus:border-emerald-600"
+                      className={ui.field}
                       name="itemCategory[]"
                       onChange={(event) => updateItem(index, "category", event.target.value)}
                       placeholder="sofa, wardrobe, table"
@@ -240,9 +242,9 @@ export function PickupRequestForm({
                   </label>
 
                   <label className="flex flex-col gap-2">
-                    <span className="text-sm font-semibold text-slate-700">Estimated size</span>
+                    <span className={ui.label}>Estimated size</span>
                     <select
-                      className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-950 outline-none transition focus:border-emerald-600"
+                      className={ui.field}
                       name="itemEstimatedSize[]"
                       onChange={(event) => updateItem(index, "estimatedSize", event.target.value)}
                       value={item.estimatedSize}
@@ -254,9 +256,9 @@ export function PickupRequestForm({
                   </label>
 
                   <label className="flex flex-col gap-2 md:col-span-2">
-                    <span className="text-sm font-semibold text-slate-700">Item description</span>
+                    <span className={ui.label}>Item description</span>
                     <textarea
-                      className="min-h-24 rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-950 outline-none transition focus:border-emerald-600"
+                      className={ui.textarea}
                       name="itemDescription[]"
                       onChange={(event) => updateItem(index, "description", event.target.value)}
                       placeholder="Describe the item's condition and the pickup context."
@@ -271,14 +273,14 @@ export function PickupRequestForm({
         </section>
 
         {state.error ? (
-          <p className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-900">
+          <p className={ui.noticeError}>
             {state.error}
           </p>
         ) : null}
 
         <div className="flex flex-wrap gap-3">
           <button
-            className="inline-flex items-center justify-center rounded-2xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:border-slate-400 disabled:cursor-not-allowed disabled:opacity-70"
+            className={ui.secondaryButton}
             disabled={isPending}
             name="intent"
             type="submit"
@@ -287,7 +289,7 @@ export function PickupRequestForm({
             {isPending ? "Saving..." : isEdit ? "Save draft changes" : "Save draft"}
           </button>
           <button
-            className="inline-flex items-center justify-center rounded-2xl bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-70"
+            className={ui.primaryButton}
             disabled={isPending}
             name="intent"
             type="submit"

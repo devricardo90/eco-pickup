@@ -2407,6 +2407,75 @@ Prepare an external designer handoff package outside the repository, using the o
 - no code, UI implementation, frontend polish, backend/API change, DB change, migration, seed, deploy, env change, Render/Vercel change, storage/R2, README final, final screenshots, Figma file, credentials, secrets, commit, or push was performed
 - no new READY task was opened automatically
 
+#### EPIC-019F - Implement Approved Design Baseline From Claude Source
+**Status:** DONE
+
+##### Objective
+Integrate the approved Claude design direction into the existing EcoPickup frontend as a controlled UI polish baseline, without breaking the already validated product flow.
+
+##### Scope
+- inspect the current frontend route/page/component/style structure
+- copy the approved Claude design source into the external designer package reference folder
+- apply UI polish only to the validated product flow
+- improve visual hierarchy, spacing, typography, colors, buttons, inputs, cards, badges, status, timeline, and responsive layout
+- preserve routes, forms, submit behavior, auth/session behavior, and tracking/detail access
+- update operational docs with the real validation state
+
+##### Acceptance criteria
+- landing, login, register, dashboard/request list, create request, request detail/tracking, and mobile-responsive surfaces receive a coherent baseline visual treatment
+- approved Claude design is used as visual reference, not as an application rewrite
+- existing product logic and route behavior are preserved
+- lint passes
+- typecheck passes
+- build passes
+- local public smoke passes for landing, login, and register
+- authenticated smoke is either validated or explicitly recorded as pending/blocking without exposing credentials or creating avoidable duplicate data
+- no backend/API change, DB change, migration, seed, env change, deploy, Render/Vercel change, storage/R2 work, upload implementation, README final, screenshot package, credentials, secrets, commit, or push
+- no new READY task opened automatically
+
+##### Dependencies
+- EPIC-019E
+- approved Claude visual direction in `C:\Users\ricardodev\Downloads\eco picket`
+
+##### Out of scope
+- backend/API changes
+- database changes
+- migrations
+- seed
+- env changes
+- deploy or redeploy
+- Render/Vercel changes
+- storage/R2
+- upload implementation
+- auth behavior changes
+- route restructuring
+- README final
+- screenshot package
+- credentials or secrets
+- opening a new READY task automatically
+- commit or push
+
+##### Result
+- approved Claude design source copied into the external handoff package under `C:\Users\ricardodev\Desktop\EcoPickup_DesignSystem_Brief\05-claude-design`
+- UI baseline implementation completed locally across the priority product flow
+- shared frontend UI primitives were introduced for consistent surfaces, buttons, fields, notices, and status badges
+- Next.js root configuration was fixed so local build no longer infers `C:\Users\ricardodev` as the workspace root when another lockfile exists outside the repository
+- `pnpm.cmd --filter @ecopickup/web lint` passed
+- `pnpm.cmd --filter @ecopickup/web typecheck` passed
+- `pnpm.cmd --filter @ecopickup/web build` passed with elevated execution after sandbox `spawn EPERM`
+- local dev server public HTTP smoke passed for `/`, `/auth/login`, and `/auth/register`
+- authenticated manual smoke was completed by the Trigger and passed:
+  - landing reviewed locally at `http://localhost:3019`
+  - private demo account login succeeded
+  - authenticated dashboard loaded successfully
+  - existing requests/list view loaded successfully
+  - one new test request was created successfully
+  - request detail/tracking/timeline loaded successfully
+  - logout worked and protected area was no longer accessible without session
+  - mobile visual smoke completed through browser DevTools
+  - no credentials, secrets, env values, or demo password were exposed
+- no backend/API, DB, migration, seed, env, deploy, Render/Vercel, storage/R2, upload, README final, screenshot package, credential, secret, commit, or push change was performed
+
 ---
 
 # Ordem de execucao recomendada

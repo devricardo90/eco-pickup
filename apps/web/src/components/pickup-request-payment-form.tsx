@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import { ui } from "@/components/ui-primitives";
 import type { PickupRequestFormActionState } from "@/lib/auth/types";
 
 type PickupRequestPaymentFormProps = {
@@ -16,12 +17,12 @@ export function PickupRequestPaymentForm({ action, label }: PickupRequestPayment
   return (
     <form action={formAction} className="flex flex-col gap-3">
       {state.error ? (
-        <p className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-900">
+        <p className={ui.noticeError}>
           {state.error}
         </p>
       ) : null}
       <button
-        className="inline-flex items-center justify-center rounded-2xl bg-amber-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-amber-700 disabled:cursor-not-allowed disabled:opacity-70"
+        className="inline-flex min-h-10 items-center justify-center rounded-lg bg-amber-600 px-4 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-xs)] transition hover:bg-amber-700 disabled:cursor-not-allowed disabled:opacity-70"
         disabled={isPending}
         type="submit"
       >

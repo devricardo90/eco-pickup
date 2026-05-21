@@ -12,7 +12,7 @@ const toneClassNames: Record<PickupRequestLifecycleUi["tone"], string> = {
 
 export function PickupRequestLifecycleCard({ lifecycle }: PickupRequestLifecycleCardProps) {
   return (
-    <section className={`rounded-[1.75rem] border p-6 shadow-[0_18px_48px_rgba(15,23,42,0.08)] ${toneClassNames[lifecycle.tone]}`}>
+    <section className={`rounded-xl border p-6 shadow-[var(--shadow-sm)] ${toneClassNames[lifecycle.tone]}`}>
       <h2 className="text-lg font-semibold tracking-tight text-slate-950">{lifecycle.title}</h2>
       <p className="mt-3 text-sm leading-6 text-slate-700">{lifecycle.description}</p>
     </section>

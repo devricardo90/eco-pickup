@@ -1,7 +1,7 @@
 # EcoPickup - Status Executivo
 
 ## Estado atual
-SPR-02 - Product Demo Readiness is in progress. EPIC-019E is complete: an external designer handoff package was prepared outside the repository using the official design and product docs.
+SPR-02 - Product Demo Readiness is in progress. EPIC-019F is DONE: the approved Claude design baseline was implemented locally and the authenticated smoke passed manually.
 
 ## Fase atual da esteira
 Product Demo Readiness / Validation
@@ -200,9 +200,18 @@ Product Demo Readiness / Validation
 - screenshot checklist was defined in the external package, but no screenshot binaries were captured or added
 - external package files were not added to the Git repository
 - no code, UI implementation, frontend polish, backend/API change, DB change, migration, seed, deploy, env change, Render/Vercel change, storage/R2, README final, final screenshots, Figma file, credentials, secrets, commit, or push was performed in EPIC-019E
+- EPIC-019F completed the local UI baseline implementation across landing, auth, dashboard/list, create request, detail/status, and timeline surfaces
+- approved Claude design source was copied into the external package under `C:\Users\ricardodev\Desktop\EcoPickup_DesignSystem_Brief\05-claude-design`
+- shared frontend UI primitives now provide consistent page shells, surfaces, buttons, fields, notices, and status badges
+- `apps/web/next.config.ts` now pins the repository root for output tracing and Turbopack so local builds do not infer `C:\Users\ricardodev` when another lockfile exists outside the repo
+- EPIC-019F validation passed lint, typecheck, and build; build required elevated execution after sandbox `spawn EPERM`
+- local public smoke passed for `/`, `/auth/login`, and `/auth/register`
+- authenticated manual smoke passed using the private demo account: login, authenticated dashboard, request list, new test request creation, request detail/tracking/timeline, logout, protected-area check, and mobile visual smoke were validated
+- no credentials, secrets, env values, or demo password were exposed
+- no backend/API, DB, migration, seed, env, deploy, Render/Vercel, storage/R2, upload, README final, screenshot package, credential, secret, commit, or push change was performed in EPIC-019F
 
 ## Objetivo atual
-Decide the next SPR-02 slice after external designer handoff packaging, without opening a new READY task automatically.
+Review the EPIC-019F completed local UI baseline and decide whether to authorize commit or open a separate next Discussion Gate for portfolio packaging, screenshots, or storage/R2.
 
 ## O que ja existe
 - ideia do produto
@@ -218,14 +227,13 @@ Decide the next SPR-02 slice after external designer handoff packaging, without 
 - decisao da foundation do monorepo registrada
 
 ## O que falta antes da proxima frente
-- decide whether the next slice is UI polish implementation, Object Storage/R2 minimal smoke, or portfolio packaging
+- authorize commit for EPIC-019F if the current scope is approved
 - collect screenshots only if separately approved
-- send or use the external handoff package with the designer
 - if public portfolio credentials are needed, define a non-repository distribution process
 - keep storage/R2 out of public claims until its own smoke passes
 
 ## Proximo passo recomendado
-Open a Discussion Gate for the next SPR-02 slice after designer feedback or approval. Technical recommendation remains controlled UI polish implementation before final README/screenshots packaging.
+Authorize an EPIC-019F commit if the current scope is approved, then open a separate Discussion Gate for the next SPR-02 slice.
 
 ## Riscos atuais
 - comecar implementacao cedo demais
