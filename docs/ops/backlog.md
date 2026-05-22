@@ -2478,6 +2478,67 @@ Integrate the approved Claude design direction into the existing EcoPickup front
 
 ---
 
+#### EPIC-020A — Apply Figma UI Refinement Baseline
+**Status:** READY
+
+##### Objective
+Apply the refined EcoPickup UI baseline from the provided Figma reference to the existing web app, making it cleaner, lighter, and more premium while preserving all existing product logic, routes, authentication flow, API contracts, and MVP behavior.
+
+##### Visual Reference
+- Figma: https://www.figma.com/make/WaTK2QnMA9WyDrUVZL4pr7/Refinar-design-EcoPickup (not directly inspectable by agent — use screenshot as visual source of truth if Figma access is unavailable)
+- Screenshot reference provided by user (2026-05-22): cleaner white/green UI, softer cards, better spacing, clearer hierarchy, less harsh contrast, modern buttons, subtle interactions, better responsive behavior
+- Visual direction: lighter page backgrounds, softer card surfaces with gentle shadows, green/white identity preserved, premium readable typography, clean button hierarchy, consistent badge styling, improved timeline/status UI
+
+##### Scope
+- improve the visual UI across public and authenticated screens in `apps/web/`
+- refine layout, spacing, typography, colors, card surfaces, buttons, badges, empty states, timeline/status UI, and responsive mobile behavior
+- keep the EcoPickup identity: sustainable pickup service, green/white palette, clean product feel, trustworthy dashboard
+- reuse existing components and UI primitives where possible
+- add or refine small UI primitives only if strictly needed
+- update operational docs for task state, evidence, and validation
+
+##### Primary implementation areas
+- `apps/web/src/app/page.tsx`
+- `apps/web/src/app/globals.css`
+- `apps/web/src/app/auth/login/page.tsx`
+- `apps/web/src/app/auth/register/page.tsx`
+- `apps/web/src/app/requests/page.tsx` and related list/create pages
+- `apps/web/src/app/tracking/[requestId]/page.tsx` and related detail pages
+- `apps/web/src/components/ui-primitives.ts`
+- `apps/web/src/components/pickup-request-*.tsx` (status card, timeline, summary, list card)
+- `apps/web/src/features/tracking/*.tsx`
+- `docs/ops/status.md`, `docs/ops/backlog.md`, `docs/ops/session-handoff.md`, `docs/ops/execution-log.md`
+
+##### Acceptance criteria
+- UI visually follows the Figma/screenshot direction: lighter, cleaner, premium, readable, green sustainability identity, less scaffold-like
+- main public and authenticated screens remain functional
+- buttons, cards, forms, badges, and timeline/status elements are visually consistent
+- mobile layout remains usable and does not overflow
+- no backend/API/auth/database behavior is changed
+- `pnpm --filter @ecopickup/web typecheck` passes
+- `pnpm --filter @ecopickup/web lint` passes
+- `pnpm --filter @ecopickup/web build` passes
+- manual browser smoke is performed where possible and reported
+- any limitation caused by missing direct Figma access is documented honestly
+- no commit or push is performed without explicit authorization
+
+##### Dependencies
+- EPIC-019F (UI baseline already applied locally)
+
+##### Out of scope
+- backend/API behavior changes
+- authentication logic changes
+- database, migrations, seed, env vars, deploy config, storage, or image upload logic
+- new product features
+- new dependencies unless strictly justified and approved
+- app structure rewrites
+- hiding broken auth/demo behavior with visual changes
+- editing unrelated files
+- claiming Figma parity unless validated visually
+- commit or push without authorization
+
+---
+
 # Ordem de execucao recomendada
 
 1. EPIC-000 - Governanca e Foundation Documental

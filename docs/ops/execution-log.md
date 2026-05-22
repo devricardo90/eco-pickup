@@ -344,3 +344,31 @@
 
 ### Next Step
 - Request review/commit authorization for EPIC-019F, then open a separate Discussion Gate for the next SPR-02 slice.
+
+## Session: 2026-05-22
+**Status:** TASK OPENED (EPIC-020A — Apply Figma UI Refinement Baseline — READY)
+
+### Activities
+- Received EPIC-020A task request from user with Figma reference link and screenshot.
+- Explored project structure: apps/web/src routes, components, UI primitives, features, globals.css.
+- Read all four operational docs (status.md, backlog.md, session-handoff.md, execution-log.md) to understand current state and format conventions.
+- Registered EPIC-020A as READY in backlog.md with full scope, forbidden scope, acceptance criteria, visual reference, and primary implementation areas.
+- Updated status.md to reflect EPIC-020A READY state and updated current objective and next step.
+- Replaced session-handoff.md with current 2026-05-22 state including EPIC-020A task gate details.
+- Appended this session entry to execution-log.md.
+
+### Visual Reference
+- Figma link: https://www.figma.com/make/WaTK2QnMA9WyDrUVZL4pr7/Refinar-design-EcoPickup
+- Figma direct inspection: not confirmed accessible by agent.
+- Screenshot provided by user (2026-05-22): cleaner white/green UI, softer cards, better spacing, clearer hierarchy, less harsh contrast, modern buttons, subtle interactions, better responsive behavior.
+- Screenshot is used as primary visual source of truth if Figma is not directly inspectable.
+
+### Scope Confirmation
+- No code, UI implementation, backend/API, DB, migration, seed, env, deploy, Render/Vercel, storage/R2, upload, README final, screenshot package, credential, secret, commit, or push was performed.
+- Only operational docs were updated to register EPIC-020A as READY.
+- EPIC-019F local DONE state is preserved; commit authorization is still pending and independent.
+
+### Next Step
+- Execute EPIC-020A: implement the Figma UI refinement baseline across web app surfaces.
+- Run validation commands and report evidence before committing.
+- Return planned scope, changed files, and validation evidence for user review first.

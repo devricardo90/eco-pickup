@@ -1,4 +1,4 @@
-# Session Handoff - 2026-05-21
+# Session Handoff - 2026-05-22
 
 ## Current State
 - SPR-02 - Product Demo Readiness is in progress.
@@ -8,45 +8,25 @@
 - EPIC-019C remains Remote DONE at commit `4ccf211`.
 - EPIC-019D remains Remote DONE at commit `4ffe303`.
 - EPIC-019E remains Remote DONE at commit `98c9dec`.
-- EPIC-019F is DONE locally after authenticated manual smoke PASS.
+- EPIC-019F is DONE locally (authenticated manual smoke PASS). Commit not yet authorized.
+- EPIC-020A is READY: Apply Figma UI Refinement Baseline — task opened 2026-05-22.
 
-## Design Source
-- Approved Claude design source was found at `C:\Users\ricardodev\Downloads\eco picket`.
-- The source was copied into the external package at `C:\Users\ricardodev\Desktop\EcoPickup_DesignSystem_Brief\05-claude-design`.
-- External package files remain outside the Git repository.
-
-## Implementation Summary
-- Frontend polish was applied to landing, login, register, dashboard/request list, create request, request detail/status, and timeline surfaces.
-- Shared UI primitives were added for page shell, containers, surfaces, buttons, fields, notices, and status badges.
-- Existing routes, forms, server actions, auth/session behavior, and tracking/detail access were preserved.
-- `apps/web/next.config.ts` now pins the repository root for output tracing and Turbopack to avoid local build root inference outside the repository.
-
-## Validation
-- `pnpm.cmd --filter @ecopickup/web lint` passed.
-- `pnpm.cmd --filter @ecopickup/web typecheck` passed.
-- Sandboxed `pnpm.cmd --filter @ecopickup/web build` compiled and then failed with `spawn EPERM`.
-- Elevated `pnpm.cmd --filter @ecopickup/web build` passed.
-- Local public HTTP smoke passed for:
-  - `/`
-  - `/auth/login`
-  - `/auth/register`
-- Trigger completed authenticated manual smoke and reported PASS:
-  - landing reviewed locally at `http://localhost:3019`
-  - private demo account login succeeded
-  - authenticated dashboard loaded successfully
-  - existing requests/list view loaded successfully
-  - one new test request was created successfully
-  - request detail/tracking/timeline loaded successfully
-  - logout worked and protected area was no longer accessible without session
-  - mobile visual smoke completed through browser DevTools
-  - no credentials, secrets, env values, or demo password were exposed
+## EPIC-020A Task Gate
+- Figma reference: https://www.figma.com/make/WaTK2QnMA9WyDrUVZL4pr7/Refinar-design-EcoPickup
+- Figma direct inspection: not confirmed available to agent — screenshot is used as primary visual source of truth.
+- Screenshot direction (provided by user 2026-05-22): cleaner white/green UI, softer cards, better spacing, clearer hierarchy, less harsh contrast, modern buttons, subtle interactions, better responsive behavior.
+- Scope: UI polish only across public and authenticated web surfaces. No backend/API/auth/DB changes.
+- Forbidden: backend changes, auth changes, DB/migration/seed/env/deploy/storage changes, new features, new dependencies without approval, structural rewrites, Figma parity claims without visual validation.
+- Required before any commit: return planned scope, changed files, and validation evidence for user review.
 
 ## Pending / Next Steps
-- Request review/commit authorization for EPIC-019F if the current scope is approved.
-- Open a separate Discussion Gate for the next SPR-02 slice after EPIC-019F is committed.
+- Implement EPIC-020A: apply Figma/screenshot UI refinement across the web app.
+- Run and report: `pnpm --filter @ecopickup/web typecheck`, `pnpm --filter @ecopickup/web lint`, `pnpm --filter @ecopickup/web build`.
+- Run git validation: `git status --short --untracked-files=all`, `git status -sb`, `git diff --stat`, `git diff --check`.
+- Perform manual browser smoke on public and authenticated screens where possible.
+- Return full scope summary, file change list, and validation evidence before committing.
+- Decide separately whether to bundle EPIC-019F commit with EPIC-020A or authorize them independently.
 
-## Scope Confirmation
-- No backend/API change was made.
-- No database change, migration, seed, manual DB edit, env change, deploy, Render/Vercel change, storage/R2 work, upload implementation, README final polish, screenshot package, credential, or secret change was made.
-- No commit or push was performed.
-- No new READY task was opened automatically.
+## Scope Confirmation (EPIC-020A task opening)
+- No code, UI implementation, backend/API, DB, migration, seed, env, deploy, Render/Vercel, storage/R2, upload, README final, screenshot package, credential, secret, commit, or push was performed in this task-opening step.
+- Only operational docs were updated to register EPIC-020A as READY.
