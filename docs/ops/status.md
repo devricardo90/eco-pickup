@@ -1,7 +1,7 @@
 # EcoPickup - Status Executivo
 
 ## Estado atual
-SPR-02 - Product Demo Readiness is in progress. EPIC-019F is DONE locally (authenticated smoke PASS). EPIC-020A is now READY: Apply Figma UI Refinement Baseline — controlled UI improvement task opened from Figma reference and provided screenshot (2026-05-22).
+SPR-02 - Product Demo Readiness is in progress. EPIC-019F is DONE locally (authenticated smoke PASS). EPIC-020A is DONE locally: Figma UI refinement baseline applied to 7 web files; typecheck, lint, and build all pass.
 
 ## Fase atual da esteira
 Product Demo Readiness / Validation
@@ -201,7 +201,7 @@ Product Demo Readiness / Validation
 - external package files were not added to the Git repository
 - no code, UI implementation, frontend polish, backend/API change, DB change, migration, seed, deploy, env change, Render/Vercel change, storage/R2, README final, final screenshots, Figma file, credentials, secrets, commit, or push was performed in EPIC-019E
 - EPIC-019F completed the local UI baseline implementation across landing, auth, dashboard/list, create request, detail/status, and timeline surfaces
-- EPIC-020A opened as READY: Apply Figma UI Refinement Baseline from provided Figma link and screenshot reference (2026-05-22)
+- EPIC-020A completed locally: Figma UI refinement baseline applied; 7 files changed; typecheck, lint, and build pass; manual smoke pending authorization (2026-05-22)
 - approved Claude design source was copied into the external package under `C:\Users\ricardodev\Desktop\EcoPickup_DesignSystem_Brief\05-claude-design`
 - shared frontend UI primitives now provide consistent page shells, surfaces, buttons, fields, notices, and status badges
 - `apps/web/next.config.ts` now pins the repository root for output tracing and Turbopack so local builds do not infer `C:\Users\ricardodev` when another lockfile exists outside the repo
@@ -212,7 +212,7 @@ Product Demo Readiness / Validation
 - no backend/API, DB, migration, seed, env, deploy, Render/Vercel, storage/R2, upload, README final, screenshot package, credential, secret, commit, or push change was performed in EPIC-019F
 
 ## Objetivo atual
-Execute EPIC-020A: apply the Figma UI refinement baseline to the EcoPickup web app, following the provided screenshot direction (cleaner white/green UI, softer cards, better spacing, clearer hierarchy, modern buttons), without changing any backend/API/auth/database behavior.
+Review EPIC-020A completed local implementation. Authorize manual browser smoke, then commit EPIC-019F and EPIC-020A together or as separate controlled commits.
 
 ## O que ja existe
 - ideia do produto
@@ -228,13 +228,13 @@ Execute EPIC-020A: apply the Figma UI refinement baseline to the EcoPickup web a
 - decisao da foundation do monorepo registrada
 
 ## O que falta antes da proxima frente
-- execute EPIC-020A UI refinement and validate with lint, typecheck, build, and manual browser smoke
-- authorize EPIC-019F commit if the current scope is still approved (can be bundled with EPIC-020A or committed separately)
+- manual browser smoke for EPIC-020A (run dev server, verify public and authenticated surfaces visually)
+- authorize commit for EPIC-019F + EPIC-020A (can be bundled or separate)
 - collect screenshots only if separately approved
 - keep storage/R2 out of public claims until its own smoke passes
 
 ## Proximo passo recomendado
-Execute EPIC-020A — implement the Figma UI refinement baseline across the EcoPickup web app surfaces, then return planned scope, changed files, and validation evidence for review before committing.
+Run the dev server and perform manual browser smoke for EPIC-020A visual changes. Authorize commit after smoke PASS.
 
 ## Riscos atuais
 - comecar implementacao cedo demais

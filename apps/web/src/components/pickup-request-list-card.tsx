@@ -9,7 +9,7 @@ type PickupRequestListCardProps = {
 export function PickupRequestListCard({ item }: PickupRequestListCardProps) {
   return (
     <Link
-      className="block rounded-xl border border-slate-200 bg-white p-5 shadow-[var(--shadow-sm)] transition hover:-translate-y-0.5 hover:border-emerald-300 hover:shadow-[var(--shadow-md)]"
+      className="block rounded-2xl border border-slate-200/80 bg-white p-5 shadow-[var(--shadow-sm)] transition hover:-translate-y-0.5 hover:border-emerald-200 hover:shadow-[var(--shadow-md)]"
       href={item.href}
     >
       <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">

@@ -372,3 +372,42 @@
 - Execute EPIC-020A: implement the Figma UI refinement baseline across web app surfaces.
 - Run validation commands and report evidence before committing.
 - Return planned scope, changed files, and validation evidence for user review first.
+
+## Session: 2026-05-22 (EPIC-020A Implementation)
+**Status:** DONE locally — manual smoke and commit pending authorization
+
+### Activities
+- Read all relevant frontend files before editing: `globals.css`, `ui-primitives.ts`, `page.tsx`, `auth/login/page.tsx`, `auth/register/page.tsx`, `auth-form.tsx`, `logout-form.tsx`, `session-summary.tsx`, `pickup-request-list-page.tsx`, `pickup-request-list-card.tsx`, `pickup-request-list.tsx`, `pickup-request-timeline.tsx`, `pickup-request-status-card.tsx`, `pickup-request-summary.tsx`, `pickup-request-tracking-state.tsx`, `pickup-request-detail-page.tsx`, `pickup-request-metadata.tsx`, `pickup-request-form.tsx`.
+- Applied Figma/screenshot UI refinement baseline across 7 web files.
+- Visual source of truth: user-provided screenshot (Figma link was not confirmed directly inspectable by agent).
+
+### Files Changed
+- `apps/web/src/app/globals.css` — page background `#eef0ed`; softer shadows; antialiasing; smooth scroll
+- `apps/web/src/components/ui-primitives.ts` — `primaryButton` emerald green; cards `rounded-2xl`; softer border opacity
+- `apps/web/src/app/page.tsx` — "Why use EcoPickup?" light card; step badges soft tint; numbered step headings; SVG checkmark icon circles; hero timeline panel softened
+- `apps/web/src/components/pickup-request-timeline.tsx` — full rewrite from dark to light surface
+- `apps/web/src/components/session-summary.tsx` — user icon circle; upgraded heading
+- `apps/web/src/components/pickup-request-list-card.tsx` — `rounded-2xl`; softer border
+- `apps/web/src/components/pickup-request-list.tsx` — empty state `rounded-2xl`; softer border
+
+### Validation Evidence
+- `pnpm.cmd --filter @ecopickup/web typecheck` passed
+- `pnpm.cmd --filter @ecopickup/web lint` passed (placeholder)
+- `pnpm.cmd --filter @ecopickup/web build` passed — Turbopack, compiled in 13.3s, all 10 routes generated
+- `git diff --check` passed — no whitespace issues
+- 7 files changed, 81 insertions(+), 51 deletions(-)
+- `git status -sb` shows only the 7 expected modified files, no untracked files
+
+### Visual Caveats
+- Figma direct inspection not confirmed — screenshot used as primary visual source of truth.
+- No pixel-perfect Figma parity is claimed.
+- Manual browser smoke not yet performed (requires dev server).
+
+### Scope Confirmation
+- No backend/API, DB, migration, seed, env, deploy, Render/Vercel, storage/R2, auth logic, new dependencies, or product feature change was made.
+- No commit or push was performed.
+- No credentials or secrets were exposed.
+
+### Next Step
+- Run dev server locally and perform manual visual smoke on all surfaces.
+- Authorize commit for EPIC-019F and/or EPIC-020A.

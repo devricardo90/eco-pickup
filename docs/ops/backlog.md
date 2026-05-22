@@ -2479,7 +2479,7 @@ Integrate the approved Claude design direction into the existing EcoPickup front
 ---
 
 #### EPIC-020A — Apply Figma UI Refinement Baseline
-**Status:** READY
+**Status:** DONE (locally — manual smoke and commit pending authorization)
 
 ##### Objective
 Apply the refined EcoPickup UI baseline from the provided Figma reference to the existing web app, making it cleaner, lighter, and more premium while preserving all existing product logic, routes, authentication flow, API contracts, and MVP behavior.
@@ -2536,6 +2536,23 @@ Apply the refined EcoPickup UI baseline from the provided Figma reference to the
 - editing unrelated files
 - claiming Figma parity unless validated visually
 - commit or push without authorization
+
+##### Result
+- `apps/web/src/app/globals.css` — background `#f6f8f5` → `#eef0ed` (more visible off-white-green); shadows softened; `scroll-behavior: smooth` added; `-webkit-font-smoothing: antialiased` and `text-rendering: optimizeLegibility` added
+- `apps/web/src/components/ui-primitives.ts` — `primaryButton` changed from `bg-slate-950` (black) to `bg-emerald-800` (dark green); `heroPanel`, `surface`, and `surfaceTight` upgraded to `rounded-2xl`/`rounded-xl` with `border-slate-200/80`; `mutedSurface` softened
+- `apps/web/src/app/page.tsx` — "Why use EcoPickup?" section changed from dark card (`bg-slate-950`) to light `ui.surface`; step badge indicators changed from solid green to soft emerald-50 tinted with border; step headings updated to include number prefix ("1. Request", "2. Review", "3. Track"); "OK" placeholder indicators replaced with inline SVG checkmark circles; hero timeline mockup panel updated to `rounded-2xl`
+- `apps/web/src/components/pickup-request-timeline.tsx` — rewritten from dark `bg-slate-950` surface to light `ui.surface`; timeline event cards changed to `bg-slate-50/80` on white background; actor badges changed from dark glass tints to light `bg-emerald-50`/`bg-amber-50` with proper borders; text colors updated to slate palette
+- `apps/web/src/components/session-summary.tsx` — added icon circle (inline SVG user/person icon in emerald-50 background) next to "Your account" heading; heading upgraded from small-caps to `text-base font-semibold`; added shield icon for account type row; "Your account" now uses `text-slate-950`
+- `apps/web/src/components/pickup-request-list-card.tsx` — card upgraded to `rounded-2xl`; border opacity softened to `border-slate-200/80`; hover border changed from `emerald-300` to `emerald-200`
+- `apps/web/src/components/pickup-request-list.tsx` — empty state card upgraded to `rounded-2xl`; border softened
+- `pnpm.cmd --filter @ecopickup/web typecheck` passed
+- `pnpm.cmd --filter @ecopickup/web lint` passed
+- `pnpm.cmd --filter @ecopickup/web build` passed (Turbopack, compiled in 13.3s, all routes generated)
+- `git diff --check` passed (no whitespace issues)
+- 7 files changed, 81 insertions(+), 51 deletions(-)
+- Figma direct inspection: not confirmed — screenshot used as visual source of truth; no pixel-perfect parity claimed
+- no backend/API, DB, migration, seed, env, deploy, Render/Vercel, storage/R2, auth, new dependencies, or product feature changes were made
+- no commit or push was performed
 
 ---
 
