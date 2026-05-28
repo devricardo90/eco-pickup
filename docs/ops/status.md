@@ -1,7 +1,7 @@
 # EcoPickup - Status Executivo
 
 ## Estado atual
-SPR-02 - Product Demo Readiness is in progress. EPIC-019F is DONE locally (authenticated smoke PASS). EPIC-020A is DONE locally: Figma UI refinement baseline applied to 7 web files; typecheck, lint, and build all pass.
+SPR-02 - Product Demo Readiness is in progress. EPIC-019F is DONE locally. EPIC-020A is DONE locally. ECO-UPLOAD-01A is DONE locally: item photo upload restored with frontend upload UI, backend storage fix, and full smoke evidence. All three commits pending authorization.
 
 ## Fase atual da esteira
 Product Demo Readiness / Validation
@@ -212,7 +212,7 @@ Product Demo Readiness / Validation
 - no backend/API, DB, migration, seed, env, deploy, Render/Vercel, storage/R2, upload, README final, screenshot package, credential, secret, commit, or push change was performed in EPIC-019F
 
 ## Objetivo atual
-Review EPIC-020A completed local implementation. Authorize manual browser smoke, then commit EPIC-019F and EPIC-020A together or as separate controlled commits.
+Review ECO-UPLOAD-01A completed local implementation. Authorize commit for EPIC-019F, EPIC-020A, and ECO-UPLOAD-01A (separate or bundled commits as preferred).
 
 ## O que ja existe
 - ideia do produto
@@ -229,12 +229,12 @@ Review EPIC-020A completed local implementation. Authorize manual browser smoke,
 
 ## O que falta antes da proxima frente
 - manual browser smoke for EPIC-020A (run dev server, verify public and authenticated surfaces visually)
-- authorize commit for EPIC-019F + EPIC-020A (can be bundled or separate)
+- authorize commit for EPIC-019F + EPIC-020A + ECO-UPLOAD-01A (can be bundled or separate)
 - collect screenshots only if separately approved
-- keep storage/R2 out of public claims until its own smoke passes
+- staging R2 smoke (requires redeploying API to Render with updated `DisablePayloadSigning` logic)
 
 ## Proximo passo recomendado
-Run the dev server and perform manual browser smoke for EPIC-020A visual changes. Authorize commit after smoke PASS.
+Authorize commit(s). Then perform a staged deploy to validate the `DisablePayloadSigning` fix on the HTTPS R2 endpoint.
 
 ## Riscos atuais
 - comecar implementacao cedo demais

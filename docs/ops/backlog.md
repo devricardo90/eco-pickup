@@ -2556,6 +2556,45 @@ Apply the refined EcoPickup UI baseline from the provided Figma reference to the
 
 ---
 
+#### ECO-UPLOAD-01A — Restore Item Photo Upload for Publishable MVP
+**Status:** DONE (locally — commit pending authorization)
+
+##### Objective
+Validate, fix if necessary, and restore item photo upload as part of the publishable MVP. Photo upload is required for the portfolio demo and real user flow.
+
+##### Scope
+- Preflight: confirm repo clean, locate existing upload implementation
+- R2/env audit: verify config section names, no value exposure
+- Real upload smoke: valid PNG accepted, DB record created, object stored in Minio, photo associated with correct item and owner
+- Fix path: minimal HTTPS-conditional `DisablePayloadSigning` fix for local HTTP Minio compatibility
+- Frontend integration: new `uploadItemPhoto` API client, `uploadItemPhotoAction` server action, `ItemPhotoUploadForm` client component, integrated into detail page for editable requests
+- Rejection smoke: invalid type, oversized file, max 5 photos, ownership protection
+
+##### Files changed
+- `apps/api/src/EcoPickup.Infrastructure/Storage/S3ItemPhotoStorage.cs` — `DisablePayloadSigning` now conditional on HTTPS endpoint (required for local Minio HTTP; R2 staging uses HTTPS so behavior unchanged)
+- `apps/web/src/lib/tracking/uploadItemPhoto.ts` — new API client function for multipart photo upload
+- `apps/web/src/lib/auth/types.ts` — added `UploadPhotoActionState`
+- `apps/web/src/lib/auth/actions.ts` — added `uploadItemPhotoAction` server action with session gate and `revalidatePath`
+- `apps/web/src/components/item-photo-upload-form.tsx` — new client component with file input, loading state, error/success notice, max-photos guard, consistent UI primitives
+- `apps/web/src/features/tracking/pickup-request-detail-page.tsx` — added "Item photos" section visible when `canEdit` is true, one `ItemPhotoUploadForm` per item
+
+##### Acceptance criteria validated
+- `dotnet build` — PASS (0 warnings, 0 errors)
+- `dotnet test` — PASS (40/40)
+- `pnpm --filter @ecopickup/web typecheck` — PASS
+- `pnpm --filter @ecopickup/web lint` — PASS
+- `pnpm --filter @ecopickup/web build` — PASS (all 10 routes)
+- `git diff --check` — PASS (no whitespace issues)
+- Smoke 1 — valid PNG upload: HTTP 201, ItemPhoto DB record created, object stored in Minio bucket `ecopickup-media-dev` under correct key
+- Smoke 2 — invalid file type (text declared as image/jpeg): HTTP 400, "File signature does not match a supported image type."
+- Smoke 3 — oversized file (11 MB > 10 MB limit): HTTP 400, "File size must be at most 10485760 bytes."
+- Smoke 4 — ownership protection (other authenticated user): HTTP 404 (not leaking item existence)
+- Smoke 5 — max 5 photos: uploads 2–5 accepted (HTTP 201), 6th rejected HTTP 400, "A pickup item may have at most 5 photos."
+
+##### No commit or push performed
+
+---
+
 # Ordem de execucao recomendada
 
 1. EPIC-000 - Governanca e Foundation Documental

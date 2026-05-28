@@ -46,3 +46,8 @@ export type PickupRequestFormValues = {
 export type PickupRequestFormActionState = {
   error?: string;
 };
+
+export type UploadPhotoActionState = {
+  error?: string;
+  ok?: boolean;
+};

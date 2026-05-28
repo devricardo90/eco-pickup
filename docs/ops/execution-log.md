@@ -1,3 +1,55 @@
+# Execution Log - ECO-UPLOAD-01A
+
+## Session: 2026-05-28
+**Status:** DONE (Waiting for Review — commit pending authorization)
+
+### Activities
+- Preflight: confirmed clean repo, HEAD = a3eaace (origin/main synced)
+- Located all existing upload implementation: domain entity, EF config + migration, service (10MB/5-photo/magic-byte validation), S3 storage client with prior R2 fixes, upload endpoint registered at Program.cs:92, full DI chain wired
+- R2/env audit: config section `ObjectStorage` with keys ServiceUrl, BucketName, AccessKey, SecretKey, Region, ForcePathStyle, AutoCreateBucket; no secrets exposed; all R2 compat fixes already present from EPIC-014J/014K history
+- Identified root cause for local smoke failure: `DisablePayloadSigning=true` requires HTTPS; local Minio runs on HTTP (`http://localhost:9000`) → SDK throws at request signing
+- Applied minimal fix: `DisablePayloadSigning = isHttps` (conditional on endpoint protocol); R2/staging uses HTTPS so behavior there is unchanged
+- Built frontend upload layer: `uploadItemPhoto.ts` API client, `UploadPhotoActionState` type, `uploadItemPhotoAction` server action with `revalidatePath`, `ItemPhotoUploadForm` client component, integrated into `pickup-request-detail-page.tsx` under `canEdit` guard
+- Ran full smoke suite against local stack (Postgres + Minio via Docker, API at localhost:5081)
+
+### Validation Evidence
+- `dotnet build apps/api/EcoPickup.Backend.sln` — PASS (0 warnings, 0 errors)
+- `dotnet test EcoPickup.UnitTests.csproj` — PASS (40/40)
+- `pnpm --filter @ecopickup/web typecheck` — PASS
+- `pnpm --filter @ecopickup/web lint` — PASS (placeholder)
+- `pnpm --filter @ecopickup/web build` — PASS (Turbopack, 10 routes)
+- `git diff --check` — PASS (no whitespace issues)
+- `git diff --stat`: 4 files changed, 60 insertions(+), 3 deletions(-) + 2 new files
+
+**Smoke results:**
+
+| Smoke | Input | Expected | Result |
+|-------|-------|----------|--------|
+| 1 | Valid PNG (69B) | HTTP 201, DB record, object in Minio | PASS |
+| 2 | Text file declared as image/jpeg | HTTP 400, signature mismatch | PASS |
+| 3 | 11 MB PNG (> 10 MB limit) | HTTP 400, size error | PASS |
+| 4 | Other authenticated user uploading to owner's item | HTTP 404 (ownership) | PASS |
+| 5a | Photos 2–5 on same item | HTTP 201 × 4 | PASS |
+| 5b | 6th photo (> 5 limit) | HTTP 400, max photos error | PASS |
+
+**Object storage:** Minio bucket `ecopickup-media-dev` confirmed 9 objects under `pickup-requests/` prefix after smoke run. Sample key: `pickup-requests/2a7a2341-.../items/b7e55905-.../photos/03989e27-....png`
+
+### Files Changed
+- `apps/api/src/EcoPickup.Infrastructure/Storage/S3ItemPhotoStorage.cs` — `DisablePayloadSigning = isHttps`
+- `apps/web/src/lib/tracking/uploadItemPhoto.ts` — new (API client)
+- `apps/web/src/lib/auth/types.ts` — added `UploadPhotoActionState`
+- `apps/web/src/lib/auth/actions.ts` — added `uploadItemPhotoAction`
+- `apps/web/src/components/item-photo-upload-form.tsx` — new (client component)
+- `apps/web/src/features/tracking/pickup-request-detail-page.tsx` — integrated item photos section
+
+### Boundary
+- No unrelated UI redesign, map work, auth refactor, request flow redesign, database reset, seed, migration, deploy, push, or new READY task.
+- No secrets or credential values exposed or printed.
+- No `git add .` used.
+- No commit performed without authorization.
+
+---
+
 # Execution Log - EPIC-017A
 
 ## Sessao: 2026-05-02

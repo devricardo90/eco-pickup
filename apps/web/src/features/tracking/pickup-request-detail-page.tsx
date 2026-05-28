@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ItemPhotoUploadForm } from "@/components/item-photo-upload-form";
 import { PickupRequestExecutionCard } from "@/components/pickup-request-execution-card";
 import { PickupRequestLifecycleCard } from "@/components/pickup-request-lifecycle-card";
 import { PickupRequestMetadata } from "@/components/pickup-request-metadata";
@@ -11,7 +12,7 @@ import { PickupRequestSummary } from "@/components/pickup-request-summary";
 import { PickupRequestTimeline } from "@/components/pickup-request-timeline";
 import { PickupRequestTrackingState } from "@/components/pickup-request-tracking-state";
 import { ui } from "@/components/ui-primitives";
-import { createPaymentSessionAction, submitPickupRequestAction } from "@/lib/auth/actions";
+import { createPaymentSessionAction, submitPickupRequestAction, uploadItemPhotoAction } from "@/lib/auth/actions";
 import { requireSession } from "@/lib/auth/session";
 import { getPickupRequestDetail } from "@/lib/tracking/getPickupRequestDetail";
 import { getPickupRequestHistory } from "@/lib/tracking/getPickupRequestHistory";
@@ -136,6 +137,28 @@ export async function PickupRequestDetailPage({ requestId, scope, notice }: Pick
             totalEvents={historyResult.ok ? historyResult.data.events.length : 0}
           />
         </div>
+
+        {canEdit && detailResult.data.items.length > 0 ? (
+          <section className={ui.surface}>
+            <h2 className="text-lg font-semibold tracking-tight text-slate-950">Item photos</h2>
+            <p className="mt-1 text-sm text-slate-600">
+              Attach photos to help the team assess each item. Up to 5 photos per item — JPEG, PNG or WebP, max 10 MB each.
+            </p>
+            <div className="mt-4 flex flex-col gap-3">
+              {detailResult.data.items.map((item) => {
+                const boundAction = uploadItemPhotoAction.bind(null, requestId, item.id);
+                return (
+                  <ItemPhotoUploadForm
+                    action={boundAction}
+                    category={item.category}
+                    key={item.id}
+                    photoCount={item.photos.length}
+                  />
+                );
+              })}
+            </div>
+          </section>
+        ) : null}
 
         {pricing ? <PickupRequestPricingCard pricing={pricing} /> : null}
 

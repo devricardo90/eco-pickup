@@ -1,13 +1,15 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import { createPaymentSession } from "@/lib/tracking/createPaymentSession";
 import { clearSession, getSession, setSession } from "@/lib/auth/session";
 import { createPickupRequest } from "@/lib/tracking/createPickupRequest";
 import { submitPickupRequest } from "@/lib/tracking/submitPickupRequest";
 import { updatePickupRequest } from "@/lib/tracking/updatePickupRequest";
 import { buildPickupRequestPayload } from "@/lib/tracking/createPickupRequestPayload";
-import type { AuthActionState, PickupRequestFormActionState } from "@/lib/auth/types";
+import { uploadItemPhoto } from "@/lib/tracking/uploadItemPhoto";
+import type { AuthActionState, PickupRequestFormActionState, UploadPhotoActionState } from "@/lib/auth/types";
 import { loginWithApi, registerWithApi } from "@/lib/auth/api";
 
 function readString(formData: FormData, key: string) {
@@ -264,4 +266,29 @@ export async function createPaymentSessionAction(
   }
 
   redirect(result.data.checkoutUrl);
+}
+
+export async function uploadItemPhotoAction(
+  requestId: string,
+  itemId: string,
+  _previousState: UploadPhotoActionState,
+  formData: FormData
+): Promise<UploadPhotoActionState> {
+  const session = await getSession();
+  if (!session) {
+    return { error: "You need an active session to upload photos." };
+  }
+
+  const file = formData.get("file");
+  if (!(file instanceof File) || file.size === 0) {
+    return { error: "Select a valid image file before uploading." };
+  }
+
+  const result = await uploadItemPhoto(itemId, session.accessToken, file);
+  if (!result.ok) {
+    return { error: result.error };
+  }
+
+  revalidatePath(`/tracking/${requestId}`);
+  return { ok: true };
 }

@@ -1,4 +1,4 @@
-# Session Handoff - 2026-05-22
+# Session Handoff - 2026-05-28
 
 ## Current State
 - SPR-02 - Product Demo Readiness is in progress.
@@ -11,35 +11,68 @@
 - EPIC-020A task-opening docs are Remote DONE at commit `b1b2dd9`.
 - EPIC-019F is DONE locally (authenticated manual smoke PASS). Commit not yet authorized.
 - EPIC-020A implementation is DONE locally. Typecheck, lint, and build pass. Manual smoke and commit pending authorization.
+- ECO-UPLOAD-01A is DONE locally. Full smoke suite PASS. Commit pending authorization.
 
-## Implementation Summary (EPIC-020A)
-- `apps/web/src/app/globals.css` — page background lightened to `#eef0ed`; shadows softened; antialiasing and smooth scroll added
-- `apps/web/src/components/ui-primitives.ts` — `primaryButton` → emerald green; cards upgraded to `rounded-2xl` with softer border opacity
-- `apps/web/src/app/page.tsx` — "Why use EcoPickup?" → light white card; step badges → soft emerald tint; step headings numbered ("1. Request", etc.); "OK" text → SVG checkmark icon circles; hero timeline panel softened
-- `apps/web/src/components/pickup-request-timeline.tsx` — completely rewritten from dark `bg-slate-950` to light `ui.surface`
-- `apps/web/src/components/session-summary.tsx` — added inline SVG user icon circle; heading upgraded
-- `apps/web/src/components/pickup-request-list-card.tsx` — `rounded-2xl`, softer border
-- `apps/web/src/components/pickup-request-list.tsx` — empty state card `rounded-2xl`, softer border
+## Implementation Summary (ECO-UPLOAD-01A)
+
+### Root Cause Fixed
+`DisablePayloadSigning = true` in `S3ItemPhotoStorage.cs` caused the AWS SDK to throw at request signing when the endpoint is HTTP (local Minio). The SDK requires HTTPS for disabled payload signing.
+
+**Fix:** Changed to `DisablePayloadSigning = isHttps` where `isHttps = options.ServiceUrl.StartsWith("https://")`. R2/staging uses HTTPS so the original behavior (disabled payload signing, required for R2 compatibility) is preserved. Local Minio (HTTP) now uses signed payload, which works correctly.
+
+### Frontend Added
+- `apps/web/src/lib/tracking/uploadItemPhoto.ts` — API client: forwards `File` as multipart to `POST /api/v1/pickup-items/{itemId}/photos`; parses validation errors from RFC 9110 problem details; returns typed result
+- `apps/web/src/lib/auth/types.ts` — added `UploadPhotoActionState { error?, ok? }`
+- `apps/web/src/lib/auth/actions.ts` — added `uploadItemPhotoAction(requestId, itemId, prev, formData)`: session gate, file presence check, calls `uploadItemPhoto`, `revalidatePath` on success
+- `apps/web/src/components/item-photo-upload-form.tsx` — client component: file input (accept image/jpeg,png,webp), format hint, loading state, error/success notice, form auto-reset on success, max-photos guard at limit
+- `apps/web/src/features/tracking/pickup-request-detail-page.tsx` — "Item photos" section rendered when `canEdit && items.length > 0`; one `ItemPhotoUploadForm` per item with pre-bound `uploadItemPhotoAction`
 
 ## Validation
-- `pnpm.cmd --filter @ecopickup/web typecheck` passed
-- `pnpm.cmd --filter @ecopickup/web lint` passed (placeholder)
-- `pnpm.cmd --filter @ecopickup/web build` passed — Turbopack, compiled in 13.3s, all 10 routes generated
-- `git diff --check` passed — no whitespace issues
-- 7 files changed, 81 insertions(+), 51 deletions(-)
+- `dotnet build` — PASS (0 warnings, 0 errors)
+- `dotnet test` — PASS (40/40)
+- `pnpm --filter @ecopickup/web typecheck` — PASS
+- `pnpm --filter @ecopickup/web lint` — PASS
+- `pnpm --filter @ecopickup/web build` — PASS (10 routes)
+- `git diff --check` — PASS
+- 4 files modified + 2 new files; 60 insertions(+), 3 deletions(-)
 
-## Visual Caveats
-- Figma link was provided but direct agent inspection was not confirmed accessible.
-- Screenshot (provided by user 2026-05-22) was used as the primary visual source of truth.
-- No pixel-perfect Figma parity is claimed.
-- Manual browser smoke was not yet performed — requires running the dev server locally.
+### Smoke results (local stack: Postgres + Minio via Docker, API localhost:5081)
+| Smoke | Result |
+|-------|--------|
+| Valid PNG → HTTP 201, DB record created, object in Minio | PASS |
+| Text declared as image/jpeg → HTTP 400 (signature mismatch) | PASS |
+| 11 MB file → HTTP 400 (size limit) | PASS |
+| Other user's token uploading to owner's item → HTTP 404 | PASS |
+| Photos 2–5 accepted → HTTP 201 × 4 | PASS |
+| 6th photo → HTTP 400 ("at most 5 photos") | PASS |
+
+## R2/Env Audit
+Config section: `ObjectStorage` (not individual env vars).
+Runtime env var names (platform convention):
+- `ObjectStorage__ServiceUrl` — Cloudflare R2 S3-compatible endpoint (HTTPS)
+- `ObjectStorage__BucketName`
+- `ObjectStorage__AccessKey`
+- `ObjectStorage__SecretKey`
+- `ObjectStorage__Region` (default: us-east-1)
+- `ObjectStorage__ForcePathStyle` (default: true)
+- `ObjectStorage__AutoCreateBucket` — must remain `false` in staging/prod
+
+Dev defaults (Minio local): `http://localhost:9000`, bucket `ecopickup-media-dev`, AutoCreateBucket=true.
+
+No secrets printed. No env values changed.
+
+## Staging Note
+The `DisablePayloadSigning` fix is backward-compatible with staging R2: staging uses HTTPS so `isHttps=true` → `DisablePayloadSigning=true`, preserving the R2 fix from EPIC-014J. A staging re-deploy and upload smoke should validate the end-to-end HTTPS flow after commit.
 
 ## Pending / Next Steps
-- Run `pnpm.cmd --filter @ecopickup/web dev` locally and verify visual changes in browser.
-- Perform manual authenticated smoke: landing, login, register, dashboard/list, create request, detail/tracking, timeline.
-- Check mobile layout in browser DevTools.
-- Authorize commit for EPIC-019F + EPIC-020A (can be bundled or separate commits).
+- Run `pnpm.cmd --filter @ecopickup/web dev` locally and verify EPIC-020A visual changes in browser.
+- Authorize commit for EPIC-019F + EPIC-020A + ECO-UPLOAD-01A (separate or bundled).
+- After staging re-deploy: run an upload smoke against the live R2 endpoint to confirm HTTPS path works.
 
-## Scope Confirmation (EPIC-020A)
-- No backend/API change was made.
-- No database change, migration, seed, manual DB edit, env change, deploy, Render/Vercel change, storage/R2 work, upload, auth logic, new dependencies, README final, screenshot package, credential, secret, commit, or push was performed.
+## Scope Confirmation (ECO-UPLOAD-01A)
+- No unrelated UI redesign, map work, auth refactor, request flow redesign, database reset, seed, or migration.
+- No migration was needed — `item_photos` table already existed from EPIC-009B.
+- No deploy, push, or new READY task.
+- No secrets or credential values were exposed.
+- No `git add .` used.
+- No commit performed without authorization.
