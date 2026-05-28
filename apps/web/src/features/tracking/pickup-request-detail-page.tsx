@@ -16,7 +16,7 @@ import { createPaymentSessionAction, submitPickupRequestAction, uploadItemPhotoA
 import { requireSession } from "@/lib/auth/session";
 import { getPickupRequestDetail } from "@/lib/tracking/getPickupRequestDetail";
 import { getPickupRequestHistory } from "@/lib/tracking/getPickupRequestHistory";
-import { isPickupRequestEditable } from "@/lib/tracking/isPickupRequestEditable";
+import { isPickupRequestEditable, isPickupRequestPhotoUploadAllowed } from "@/lib/tracking/isPickupRequestEditable";
 import {
   mapPickupRequestExecutionToUi,
   mapPickupRequestLifecycleToUi,
@@ -86,6 +86,7 @@ export async function PickupRequestDetailPage({ requestId, scope, notice }: Pick
   const execution = scope === "owner" ? mapPickupRequestExecutionToUi(detailResult.data) : null;
   const lifecycle = scope === "owner" ? mapPickupRequestLifecycleToUi(detailResult.data) : null;
   const canEdit = scope === "owner" && isPickupRequestEditable(detailResult.data.status);
+  const canUploadPhotos = scope === "owner" && isPickupRequestPhotoUploadAllowed(detailResult.data.status);
   const submitAction = scope === "owner" ? submitPickupRequestAction.bind(null, requestId) : null;
   const paymentAction = scope === "owner" ? createPaymentSessionAction.bind(null, requestId) : null;
 
@@ -138,7 +139,7 @@ export async function PickupRequestDetailPage({ requestId, scope, notice }: Pick
           />
         </div>
 
-        {canEdit && detailResult.data.items.length > 0 ? (
+        {canUploadPhotos && detailResult.data.items.length > 0 ? (
           <section className={ui.surface}>
             <h2 className="text-lg font-semibold tracking-tight text-slate-950">Item photos</h2>
             <p className="mt-1 text-sm text-slate-600">
