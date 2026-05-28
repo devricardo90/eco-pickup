@@ -38,14 +38,10 @@ public sealed class S3ItemPhotoStorage : IItemPhotoStorage
       options.AutoCreateBucket,
       shouldEnsureBucket);
 
-    Amazon.AWSConfigsS3.UseSignatureVersion4 = true;
-
     var config = new AmazonS3Config
     {
       ServiceURL = options.ServiceUrl,
       ForcePathStyle = options.ForcePathStyle,
-      AuthenticationRegion = "us-east-1",
-      SignatureVersion = "4",
       RequestChecksumCalculation = Amazon.Runtime.RequestChecksumCalculation.WHEN_REQUIRED,
       UseHttp = options.ServiceUrl.StartsWith("http://", StringComparison.OrdinalIgnoreCase)
     };
