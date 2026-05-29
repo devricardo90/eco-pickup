@@ -61,7 +61,6 @@ public sealed class S3ItemPhotoStorage : IItemPhotoStorage
     }
 
     await using var stream = new MemoryStream(content);
-    var isHttps = options.ServiceUrl.StartsWith("https://", StringComparison.OrdinalIgnoreCase);
     var request = new PutObjectRequest
     {
       BucketName = options.BucketName,
@@ -69,8 +68,8 @@ public sealed class S3ItemPhotoStorage : IItemPhotoStorage
       InputStream = stream,
       ContentType = contentType,
       UseChunkEncoding = false,
-      // DisablePayloadSigning requires HTTPS; for HTTP endpoints (local Minio) keep payload signing enabled.
-      DisablePayloadSigning = isHttps,
+      // R2 rejects UNSIGNED-PAYLOAD; always include the real SHA256 payload hash.
+      DisablePayloadSigning = false,
       DisableDefaultChecksumValidation = true
     };
 
