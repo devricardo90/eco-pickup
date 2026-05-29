@@ -53,7 +53,7 @@ public sealed class S3ItemPhotoStorage : IItemPhotoStorage
       config);
   }
 
-  public async Task SaveAsync(string key, string contentType, byte[] content, CancellationToken cancellationToken)
+  public async Task<string> SaveAsync(string key, string contentType, byte[] content, CancellationToken cancellationToken)
   {
     if (shouldEnsureBucket)
     {
@@ -103,6 +103,8 @@ public sealed class S3ItemPhotoStorage : IItemPhotoStorage
         ex.Message);
       throw;
     }
+
+    return key;
   }
 
   public async Task DeleteAsync(string key, CancellationToken cancellationToken)

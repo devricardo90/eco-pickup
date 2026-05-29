@@ -37,7 +37,8 @@ public static class InfrastructureServiceCollectionExtensions
     services.Configure<PaymentOptions>(configuration.GetSection(PaymentOptions.SectionName));
     services.AddSingleton<IPaymentGateway, FakePaymentGateway>();
     services.Configure<ObjectStorageOptions>(configuration.GetSection(ObjectStorageOptions.SectionName));
-    services.AddSingleton<IItemPhotoStorage, S3ItemPhotoStorage>();
+    services.Configure<CloudinaryOptions>(configuration.GetSection(CloudinaryOptions.SectionName));
+    services.AddSingleton<IItemPhotoStorage, CloudinaryItemPhotoStorage>();
 
     var connectionString = configuration.GetConnectionString("Database")
       ?? throw new InvalidOperationException(

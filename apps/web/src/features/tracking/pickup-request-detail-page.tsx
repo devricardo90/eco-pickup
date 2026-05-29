@@ -139,9 +139,32 @@ export async function PickupRequestDetailPage({ requestId, scope, notice }: Pick
           />
         </div>
 
-        {canUploadPhotos && detailResult.data.items.length > 0 ? (
+        {detailResult.data.items.some((item) => item.photos.length > 0) ? (
           <section className={ui.surface}>
             <h2 className="text-lg font-semibold tracking-tight text-slate-950">Item photos</h2>
+            <div className="mt-4 flex flex-col gap-6">
+              {detailResult.data.items.filter((item) => item.photos.length > 0).map((item) => (
+                <div key={item.id}>
+                  <p className="mb-2 text-sm font-medium text-slate-700">{item.category}</p>
+                  <div className="flex flex-wrap gap-3">
+                    {item.photos.map((photo) => (
+                      <img
+                        alt={photo.originalFileName}
+                        className="h-24 w-24 rounded-md border border-slate-200 object-cover"
+                        key={photo.id}
+                        src={photo.storageKey}
+                      />
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        ) : null}
+
+        {canUploadPhotos && detailResult.data.items.length > 0 ? (
+          <section className={ui.surface}>
+            <h2 className="text-lg font-semibold tracking-tight text-slate-950">Upload photos</h2>
             <p className="mt-1 text-sm text-slate-600">
               Attach photos to help the team assess each item. Up to 5 photos per item — JPEG, PNG or WebP, max 10 MB each.
             </p>

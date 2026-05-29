@@ -63,18 +63,19 @@ public sealed class PickupItemPhotoService(
     var photoId = Guid.NewGuid();
     var storageKey = BuildStorageKey(pickupItem.PickupRequestId, pickupItem.Id, photoId, detectedContentType);
     var originalFileName = Path.GetFileName(command.OriginalFileName.Trim());
+
+    var effectiveKey = await itemPhotoStorage.SaveAsync(storageKey, detectedContentType, command.Content, cancellationToken);
+
     var photo = new ItemPhoto
     {
       Id = photoId,
       PickupItemId = pickupItem.Id,
-      StorageKey = storageKey,
+      StorageKey = effectiveKey,
       OriginalFileName = originalFileName,
       ContentType = detectedContentType,
       SizeBytes = command.Content.LongLength,
       CreatedUtc = DateTime.UtcNow
     };
-
-    await itemPhotoStorage.SaveAsync(storageKey, detectedContentType, command.Content, cancellationToken);
 
     try
     {
@@ -83,7 +84,7 @@ public sealed class PickupItemPhotoService(
     }
     catch
     {
-      await itemPhotoStorage.DeleteAsync(storageKey, cancellationToken);
+      await itemPhotoStorage.DeleteAsync(effectiveKey, cancellationToken);
       throw;
     }
 

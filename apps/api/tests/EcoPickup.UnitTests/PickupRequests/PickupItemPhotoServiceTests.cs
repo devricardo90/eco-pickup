@@ -178,10 +178,10 @@ public sealed class PickupItemPhotoServiceTests
 
     public List<string> DeletedKeys { get; } = [];
 
-    public Task SaveAsync(string key, string contentType, byte[] content, CancellationToken cancellationToken)
+    public Task<string> SaveAsync(string key, string contentType, byte[] content, CancellationToken cancellationToken)
     {
       SavedObjects.Add((key, contentType, content));
-      return Task.CompletedTask;
+      return Task.FromResult(key);
     }
 
     public Task DeleteAsync(string key, CancellationToken cancellationToken)
